@@ -14,7 +14,7 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const url = u => (/^https:\/\/[^\s"'<>]+$/.test(String(u || '')) ? esc(u) : '');
 const REPO = 'https://github.com/PrompTugal/PrompTugal__News__Cyber';
 
-const NAV = [['/', 'Pulse'], ['/sources/', 'Sources'], ['/api/', 'API'], ['/how/', 'How'], ['/security/', 'Security']];
+const NAV = [['/', 'Pulse'], ['/explore/', 'Explore'], ['/sources/', 'Sources'], ['/api/', 'API'], ['/how/', 'How'], ['/security/', 'Security']];
 const mast = cur => `<a class="skip" href="#main">Skip to the content</a>
 <header class="mast">
 <div class="mast-in">

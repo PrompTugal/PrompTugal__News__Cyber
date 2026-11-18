@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self' https://data.promptugal.news; img-src 'self' data:; style-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Explore the data: PrompTugal.news Cyber</title>
+<meta name="description" content="Browse, chart, graph and query with SQL the known-exploited and NVD vulnerability data, all in your browser, read from the published JSON.">
+<link rel="canonical" href="https://cyber.promptugal.news/explore/">
+<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/brand/brand-tokens.css">
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/vendor/sql.js-1.10.3/sql-wasm.js" defer></script>
+<script src="/assets/explore/explore.js" defer></script>
+</head>
+<body>
+<!--@mast:/explore/-->
+<main id="main" class="x-main">
+<h1>Explore the data</h1>
+<p>Everything on this page runs in your browser. It reads the published JSON from <a href="https://data.promptugal.news/">data.promptugal.news</a> (CISA's known-exploited list and the latest NVD window) and from this site, then draws it, lets you browse every record and query it with SQL (SQLite, running locally). Nothing you do here is sent anywhere.</p>
+<p class="caveat">Worldwide data. Counts reflect the activity of public catalogues, not how secure anyone is. Weak signals, not an audit. Product and vendor names only: no hosts, IPs or victims.</p>
+<p id="x-status" class="x-status" role="status">Starting…</p>
+<div role="tablist" class="x-tabs" aria-label="Views">
+<button type="button" role="tab" id="x-tab-overview" aria-selected="true">Charts</button>
+<button type="button" role="tab" id="x-tab-kev" aria-selected="false">Browse KEV</button>
+<button type="button" role="tab" id="x-tab-nvd" aria-selected="false">Browse NVD</button>
+<button type="button" role="tab" id="x-tab-graph" aria-selected="false">Graph</button>
+<button type="button" role="tab" id="x-tab-sql" aria-selected="false">SQL</button>
+</div>
+
+<section id="x-p-overview" role="tabpanel" aria-labelledby="x-tab-overview">
+<div class="x-grid">
+<figure id="x-kev-months" class="x-fig x-wide"></figure>
+<figure id="x-kev-vendors" class="x-fig"></figure>
+<figure id="x-kev-cwes" class="x-fig"></figure>
+<figure id="x-kev-ransom" class="x-fig"></figure>
+<figure id="x-nvd-sev" class="x-fig"></figure>
+<figure id="x-nvd-score" class="x-fig"></figure>
+<figure id="x-nvd-vendors" class="x-fig"></figure>
+</div>
+</section>
+
+<section id="x-p-kev" role="tabpanel" aria-labelledby="x-tab-kev" hidden>
+<p class="x-ctl"><label>Search <input id="x-kev-q" type="search" placeholder="CVE, vendor, product, CWE"></label>
+<label>Ransomware <select id="x-kev-r"><option value="">any</option><option value="Known">known</option><option value="Unknown">unknown</option></select></label></p>
+<div id="x-kev-table"></div>
+</section>
+
+<section id="x-p-nvd" role="tabpanel" aria-labelledby="x-tab-nvd" hidden>
+<p class="x-ctl"><label>Search <input id="x-nvd-q" type="search" placeholder="CVE, product, CNA"></label>
+<label>Severity <select id="x-nvd-s"><option value="">any</option><option>CRITICAL</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option><option>NONE</option><option value="unscored">not scored</option></select></label></p>
+<div id="x-nvd-table"></div>
+</section>
+
+<section id="x-p-graph" role="tabpanel" aria-labelledby="x-tab-graph" hidden>
+<p>The vendors with most entries in CISA's known-exploited list, linked to the weakness types (CWE) of their CVEs; a thicker line means more CVEs. Click a node to browse its CVEs.</p>
+<p class="x-ctl"><label>Vendors <input id="x-g-n" type="range" min="5" max="40" value="12"> <span id="x-g-nv">12</span></label> <label>Weakness types <input id="x-g-c" type="range" min="5" max="40" value="15"> <span id="x-g-cv">15</span></label></p>
+<div id="x-graph" class="x-graph"></div>
+</section>
+
+<section id="x-p-sql" role="tabpanel" aria-labelledby="x-tab-sql" hidden>
+<p>Tables: <code>kev</code>(cve, vendor, product, name, date_added, due_date, ransomware, cwes), <code>kev_cwe</code>(cve, cwe), <code>nvd</code>(cve, published, last_modified, status, cna, cvss_version, score, severity, products_from), <code>nvd_product</code>(cve, vendor, product), <code>kev_weekly</code>(week, total, partial). SQLite runs in your browser; Ctrl+Enter runs.</p>
+<p id="x-sql-ex" class="x-ex"></p>
+<textarea id="x-sql" rows="6" spellcheck="false" aria-label="SQL query">SELECT vendor, COUNT(*) AS cves FROM kev GROUP BY vendor ORDER BY cves DESC LIMIT 20;</textarea>
+<p class="x-ctl"><button type="button" id="x-sql-run">Run</button> <button type="button" id="x-sql-csv">Download CSV</button></p>
+<div id="x-sql-out"></div>
+</section>
+
+<h2>Where the data comes from</h2>
+<p id="x-prov-kev" class="caveat"></p>
+<p id="x-prov-nvd" class="caveat"></p>
+<p class="caveat">SQLite in the browser: <a href="https://github.com/sql-js/sql.js">sql.js</a> 1.10.3 (MIT), kept in this site at <code>/assets/vendor/sql.js-1.10.3/</code>, checked against npm's published hash. Our totals and this page: CC BY 4.0.</p>
+</main>
+<!--@foot-->
+</body>
+</html>

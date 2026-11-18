@@ -67,3 +67,21 @@ blockquote a, p a, li a { overflow-wrap: anywhere; }
 .chart svg { width: 100%; height: auto; } .chart .b { fill: var(--red); } .chart .b-part { fill: var(--red); opacity: .45; } .chart .b-low { fill: var(--muted); }
 .chart .v { font: 600 12px var(--font-meta, monospace); fill: var(--ink); } .chart .w { font: 11px var(--font-meta, monospace); fill: var(--muted); }
 figure.chart { margin: 1rem 0; } figcaption, .caveat, .notice { font-size: .85rem; color: var(--muted); }
+/* the explorer (cyber.b@PrompTugal.dinis, 19 Nov 2026) */
+main.x-main { max-width: 80rem; }
+.x-status { font: .85rem var(--font-meta, monospace); color: var(--muted); }
+.x-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 1rem 0; border-bottom: 2px solid var(--rule); }
+.x-tabs button, .x-ex button, .x-ctl button, .x-nav button { font: 600 .9rem var(--font-interface, Arial, sans-serif); background: var(--panel); color: var(--ink); border: 1px solid var(--rule); border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+.x-tabs button[aria-selected="true"] { background: var(--red); color: var(--paper); border-color: var(--red); }
+.x-ex { display: flex; flex-wrap: wrap; gap: 6px; } .x-ex button { font-weight: 400; font-size: .8rem; }
+.x-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr)); gap: 8px 32px; }
+.x-wide { grid-column: 1 / -1; } .x-fig { margin: 0; } .x-fig svg, .x-graph svg { width: 100%; height: auto; }
+.x-bar { fill: var(--red); } .x-bar2 { fill: var(--green); } .x-lab, .x-val, .x-tick { font: 12px var(--font-interface, Arial, sans-serif); fill: var(--ink); } .x-tick { font-size: 11px; fill: var(--muted); }
+.x-click { cursor: pointer; } .x-click:hover .x-bar { opacity: .75; }
+.x-graph { border: 1px solid var(--rule); border-radius: 10px; background: var(--paper); }
+.x-edge { stroke: var(--rule); } .x-nv circle { fill: var(--red); } .x-nc circle { fill: var(--green); } .x-glab { font: 11px var(--font-interface, Arial, sans-serif); fill: var(--ink); pointer-events: none; }
+.x-ctl { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; } .x-ctl input[type="search"] { min-width: 16rem; padding: 6px; }
+#x-sql { width: 100%; font: .9rem var(--font-meta, monospace); padding: 8px; background: var(--panel); color: var(--ink); border: 1px solid var(--rule); border-radius: 6px; }
+.x-err { color: var(--red); } .x-sort { cursor: pointer; white-space: nowrap; }
+.x-glab-v { font-weight: 700; font-size: 13px; }
+@media (min-width: 1181px) { main.x-main { padding-right: 96px; } }
