@@ -76,7 +76,7 @@ ${row('JSON', `<a href="/api/v1/sources/index.json">/api/v1/sources/index.json</
 
 // The pulse on the home page (<!--@pulse-->), from src/api/v1/pulse/index.json: numbers and our own labels only.
 const fmtTime = t => esc(String(t).replace('T', ' ').replace(/:\d\d(\.\d+)?Z$/, ' UTC'));
-const shown = p => (p.fewer_than_5 ? 'fewer than 5' : String(p.total));
+const shown = p => String(p.total);
 function pulseHtml() {
   if (pulse.state !== 'live') return '';
   const kev = pulse.series.find(x => x.id === 'kev-added-weekly');
@@ -88,15 +88,15 @@ function pulseHtml() {
     const W = 720, H = 220, bw = W / pts.length;
     const bars = pts.map((p, i) => {
       const x = i * bw + 6, w = bw - 12;
-      const v = p.fewer_than_5 ? 0 : p.total, bh = Math.round((v / max) * (H - 50));
-      const label = p.fewer_than_5 ? '&lt;5' : esc(p.total);
-      const bar = p.fewer_than_5 ? `<rect class="b-low" x="${x}" y="${H - 34}" width="${w}" height="4"/>` : `<rect class="${p.partial ? 'b-part' : 'b'}" x="${x}" y="${H - 30 - bh}" width="${w}" height="${bh}"/>`;
+      const v = p.total, bh = Math.max(2, Math.round((v / max) * (H - 50)));
+      const label = esc(p.total);
+      const bar = `<rect class="${p.partial ? 'b-part' : 'b'}" x="${x}" y="${H - 30 - bh}" width="${w}" height="${bh}"/>`;
       return `${bar}<text class="v" x="${x + w / 2}" y="${H - 36 - bh}" text-anchor="middle">${label}</text><text class="w" x="${x + w / 2}" y="${H - 12}" text-anchor="middle">${esc(p.week.slice(5))}</text>`;
     }).join('');
     h += `<h2>Known exploited, week by week</h2>
 <p>${esc(kev.title)}. The last 12 weeks, by the Monday each week starts; the current week is still open and drawn lighter.</p>
 <figure class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(kev.title)}: ${esc(pts.map(p => `${p.week} ${shown(p)}`).join('; '))}">${bars}</svg>
-<figcaption>Source: ${esc(kev.source)}. Underlying data <a href="${url(kev.source_license.url)}">${esc(kev.source_license.name)}</a>; our totals <a href="${url(kev.license.url)}">${esc(kev.license.name)}</a>. Read ${fmtTime(kev.read_at)}. A total under 5 is shown as "&lt;5". ${esc(pulse.caveat)}</figcaption></figure>
+<figcaption>Source: ${esc(kev.source)}. Underlying data <a href="${url(kev.source_license.url)}">${esc(kev.source_license.name)}</a>; our totals <a href="${url(kev.license.url)}">${esc(kev.license.name)}</a>. Read ${fmtTime(kev.read_at)}. ${esc(pulse.caveat)}</figcaption></figure>
 <div class="scroll"><table><tr><th>Week starting</th><th>Added</th></tr>${pts.slice().reverse().map(p => `<tr><td>${esc(p.week)}${p.partial ? ' (so far)' : ''}</td><td>${esc(shown(p))}</td></tr>`).join('')}</table></div>
 <p>Every week since the list began (${esc(kev.points.length)} weeks): <a href="/api/v1/pulse/index.json">/api/v1/pulse/index.json</a>.</p>`;
   }
@@ -117,7 +117,7 @@ const pulse = JSON.parse(readFileSync('src/api/v1/pulse/index.json', 'utf8'));
 const count = st => reg.sources.filter(x => x.state.startsWith(st)).length;
 const figures = pulse.series.reduce((n, x) => n + x.points.length, 0);
 const kevS = pulse.series.find(x => x.id === 'kev-added-weekly'), nvdS = pulse.series.find(x => x.id === 'nvd-new-24h');
-const shownT = p => (!p ? '0' : p.fewer_than_5 ? '<5' : String(p.total));
+const shownT = p => (!p ? '0' : String(p.total));
 const lastDone = kevS ? kevS.points.filter(p => !p.partial).at(-1) : null;
 const tiles = pulse.state === 'live'
   ? [[shownT(lastDone), 'exploited, added last week'], [shownT(nvdS && nvdS.points.at(-1)), 'new CVEs, last 24 hours'], [String(kevS ? kevS.points.length : 0), 'weeks of history']]

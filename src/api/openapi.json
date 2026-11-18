@@ -61,7 +61,7 @@
     },
     "/api/v1/pulse/history/kev-weekly.json": {
       "get": {
-        "summary": "KEV additions per week, unfloored counts kept as history (append-only)",
+        "summary": "KEV additions per week, counts kept as history (append-only)",
         "responses": {
           "200": {
             "description": "History"
@@ -198,19 +198,12 @@
                         "description": "nvd-new-24h: the window before read_at"
                       },
                       "total": {
-                        "type": [
-                          "integer",
-                          "null"
-                        ],
-                        "minimum": 5,
-                        "description": "null with fewer_than_5 true when under 5"
-                      },
-                      "fewer_than_5": {
-                        "type": "boolean"
+                        "type": "integer",
+                        "minimum": 0
                       },
                       "by_band": {
                         "type": "object",
-                        "description": "nvd-new-24h: CRITICAL, HIGH, MEDIUM, LOW, NONE, unscored; each {total, fewer_than_5}"
+                        "description": "nvd-new-24h: CRITICAL, HIGH, MEDIUM, LOW, NONE, unscored; each {total}"
                       }
                     }
                   }

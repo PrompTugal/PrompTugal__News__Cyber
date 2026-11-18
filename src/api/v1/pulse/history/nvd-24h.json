@@ -1,36 +1,54 @@
 {
-  "about": "New CVEs in NVD in the 24 hours before each read, by CVSS base severity band, as read by data.b@ every 6 hours; a total under 5 is kept as null with fewer_than_5. Snapshots overlap: never add them up. Append-only.",
+  "about": "New CVEs in NVD in the 24 hours before each read, by CVSS base severity band, as read by data.b@ every 6 hours. Snapshots overlap: never add them up. Append-only.",
   "notice": "This product uses the NVD API but is not endorsed or certified by the NVD.",
   "points": [
     {
       "read_at": "2026-11-18T22:14:51Z",
       "window_hours": 24,
       "total": 1322,
-      "fewer_than_5": false,
       "by_band": {
         "CRITICAL": {
-          "total": 139,
-          "fewer_than_5": false
+          "total": 139
         },
         "HIGH": {
-          "total": 486,
-          "fewer_than_5": false
+          "total": 486
         },
         "MEDIUM": {
-          "total": 546,
-          "fewer_than_5": false
+          "total": 546
         },
         "LOW": {
-          "total": 110,
-          "fewer_than_5": false
+          "total": 110
         },
         "NONE": {
-          "total": null,
-          "fewer_than_5": true
+          "total": 0
         },
         "unscored": {
-          "total": 41,
-          "fewer_than_5": false
+          "total": 41
+        }
+      }
+    },
+    {
+      "read_at": "2026-11-18T23:40:50Z",
+      "window_hours": 24,
+      "total": 722,
+      "by_band": {
+        "CRITICAL": {
+          "total": 96
+        },
+        "HIGH": {
+          "total": 285
+        },
+        "MEDIUM": {
+          "total": 257
+        },
+        "LOW": {
+          "total": 44
+        },
+        "NONE": {
+          "total": 0
+        },
+        "unscored": {
+          "total": 40
         }
       }
     }
