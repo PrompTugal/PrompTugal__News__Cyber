@@ -3,7 +3,7 @@
   "site": "https://cyber.promptugal.news",
   "updated": "2026-11-18T23:00:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
-  "passes": "opening conductor, security pre-review, AppSec post-review (clean, two low notes, one fixed), closing conductor: all ran as Sonnet sub-agents",
+  "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed)",
   "done": [
     "Key made with sgit pki keygen; public bundle in team/keys.json (id cyber.b-promptugal)",
     "Commit check accepts role@PrompTugal.dinis (exact domain), its own commit",
@@ -15,19 +15,18 @@
     "The pulse reader (scripts/pulse-read.mjs) and the first figures on the home page: worldwide KEV additions per week, NVD 24-hour snapshot by band; floor of 5 everywhere; append-only floored history (wake 22:18 UTC)"
   ],
   "next": [
+    "Run node scripts/pulse-read.mjs, then node scripts/preview-png.mjs, before each release (the reader is not in CI)",
     "Publish the list of vendors relevant to Portugal, with reasons (vendor and product names only), then the Portugal lens of both series",
     "A scheduled rebuild in CI that runs the pulse reader (it needs the reader's checks reviewed by security@ first); a stale mark after 8 days without a read",
     "When dev@ and designer@ publish the sites bar: vendor it pinned by version and sha256, render promptugal.news/api/v1/sites.json escaped with only https links to *.promptugal.news, and replace the sites rail",
     "Observability: make the 'cyber' lane on account B (model: civic's tools/obs-setup-civic.py), seal its credentials to conductor.b-promptugal with sgit pki encrypt, add obs.js; a public obs.json may need Dinis's yes for the leak scan (conductor.b@, 18 Nov 2026, about 21:00 UTC)",
-    "When data.b@ publishes the cyber collections: build the pulse reader to its threat model, weekly totals, the history file",
-    "Publish the list of vendors relevant to Portugal, with reasons (vendor and product names only)",
-    "A scheduled rebuild in CI once there is data to follow",
     "An OpenAPI per source, listed in data.promptugal.news's Swagger of Swaggers"
   ],
   "asks": [
     "Dinis: the commit check here now also accepts role@PrompTugal.dinis agents (exact domain, commit 728cadf), additive as in the five site repositories; conductor.b@ says that is fine and CLAUDE.md stays as the factory wrote it unless you say otherwise. Please confirm or say revert.",
     "Dinis: should cyber.promptugal.news be on the reading meter, or free like the IPMA pages? The chip says 'free here' until you decide.",
     "Dinis: totals by sector need our own mapping of products to sectors. Build it (published, with its reasons), or leave sector out?",
+    "Dinis: the published floor (no total under 5 shown on its own) also hides small worldwide counts, e.g. a week with 4 KEV additions shows as 'fewer than 5'. Keep it for every figure, or apply it only to figures that could point at an organisation (the Portugal lens)?",
     "Dinis: ENISA's robots.txt disallows named AI crawlers everywhere; its /publications is open to all, and data.b@'s collector is plain code, but this site is built by AI agents. Read it, or leave ENISA out? (data.b@ holds the code in on-hold/enisa-pubs.)",
     "data.b@: whole-day NVD counts (published per calendar day, UTC) so that weekly NVD totals can be built; today only rolling 24-hour windows exist"
   ],
