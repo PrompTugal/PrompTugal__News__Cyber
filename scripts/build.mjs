@@ -74,19 +74,61 @@ ${row('JSON', `<a href="/api/v1/sources/index.json">/api/v1/sources/index.json</
 `);
 }
 
+// The pulse on the home page (<!--@pulse-->), from src/api/v1/pulse/index.json: numbers and our own labels only.
+const fmtTime = t => esc(String(t).replace('T', ' ').replace(/:\d\d(\.\d+)?Z$/, ' UTC'));
+const shown = p => (p.fewer_than_5 ? 'fewer than 5' : String(p.total));
+function pulseHtml() {
+  if (pulse.state !== 'live') return '';
+  const kev = pulse.series.find(x => x.id === 'kev-added-weekly');
+  const nvd = pulse.series.find(x => x.id === 'nvd-new-24h');
+  let h = `<p class="caveat">${esc(pulse.caveat)} The Portugal lens (vendors relevant to Portugal) is not built yet.</p>`;
+  if (kev) {
+    const pts = kev.points.slice(-12);
+    const max = Math.max(5, ...pts.map(p => p.total || 0));
+    const W = 720, H = 220, bw = W / pts.length;
+    const bars = pts.map((p, i) => {
+      const x = i * bw + 6, w = bw - 12;
+      const v = p.fewer_than_5 ? 0 : p.total, bh = Math.round((v / max) * (H - 50));
+      const label = p.fewer_than_5 ? '&lt;5' : esc(p.total);
+      const bar = p.fewer_than_5 ? `<rect class="b-low" x="${x}" y="${H - 34}" width="${w}" height="4"/>` : `<rect class="${p.partial ? 'b-part' : 'b'}" x="${x}" y="${H - 30 - bh}" width="${w}" height="${bh}"/>`;
+      return `${bar}<text class="v" x="${x + w / 2}" y="${H - 36 - bh}" text-anchor="middle">${label}</text><text class="w" x="${x + w / 2}" y="${H - 12}" text-anchor="middle">${esc(p.week.slice(5))}</text>`;
+    }).join('');
+    h += `<h2>Known exploited, week by week</h2>
+<p>${esc(kev.title)}. The last 12 weeks, by the Monday each week starts; the current week is still open and drawn lighter.</p>
+<figure class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(kev.title)}: ${esc(pts.map(p => `${p.week} ${shown(p)}`).join('; '))}">${bars}</svg>
+<figcaption>Source: ${esc(kev.source)}. Underlying data <a href="${url(kev.source_license.url)}">${esc(kev.source_license.name)}</a>; our totals <a href="${url(kev.license.url)}">${esc(kev.license.name)}</a>. Read ${fmtTime(kev.read_at)}. A total under 5 is shown as "&lt;5". ${esc(pulse.caveat)}</figcaption></figure>
+<div class="scroll"><table><tr><th>Week starting</th><th>Added</th></tr>${pts.slice().reverse().map(p => `<tr><td>${esc(p.week)}${p.partial ? ' (so far)' : ''}</td><td>${esc(shown(p))}</td></tr>`).join('')}</table></div>
+<p>Every week since the list began (${esc(kev.points.length)} weeks): <a href="/api/v1/pulse/index.json">/api/v1/pulse/index.json</a>.</p>`;
+  }
+  if (nvd && nvd.points.length) {
+    const p = nvd.points.at(-1);
+    h += `<h2>New CVEs, the last 24 hours</h2>
+<p>${esc(nvd.title)}. As read at ${fmtTime(p.read_at)}: <b>${esc(shown(p))}</b> new CVEs. Reads overlap (every 6 hours, each covering 24 hours), so they are never added up; each is kept.</p>
+<div class="scroll"><table><tr><th>Severity band (CVSS base)</th><th>New</th></tr>${Object.entries(p.by_band).map(([b, v]) => `<tr><td>${esc(b === 'unscored' ? 'not scored yet' : b.toLowerCase())}</td><td>${esc(shown(v))}</td></tr>`).join('')}</table></div>
+<p class="notice">${esc(nvd.notice)}</p>
+<p class="caveat">Source: ${esc(nvd.source)} Underlying data: <a href="${url(nvd.source_license.url)}">${esc(nvd.source_license.name)}</a>; our totals <a href="${url(nvd.license.url)}">${esc(nvd.license.name)}</a>. ${esc(pulse.caveat)}</p>`;
+  }
+  return h;
+}
+
 // /preview.svg: the site's own numbers for the sites bar (Dinis, 18 Nov 2026, about 22:00 UTC, PrompTugal__News__Website
 // board/guidance/2026-11-18-the-sites-bar.md). Counts come from our own JSON only; every text goes through esc().
 const pulse = JSON.parse(readFileSync('src/api/v1/pulse/index.json', 'utf8'));
 const count = st => reg.sources.filter(x => x.state.startsWith(st)).length;
 const figures = pulse.series.reduce((n, x) => n + x.points.length, 0);
-const tiles = [[String(figures), 'figures published'], [String(count('collected')), 'sources collected'], [String(count('on hold')), 'source on hold']];
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="PrompTugal.news Cyber: ${esc(tiles.map(t => t.join(' ')).join(', '))}">
+const kevS = pulse.series.find(x => x.id === 'kev-added-weekly'), nvdS = pulse.series.find(x => x.id === 'nvd-new-24h');
+const shownT = p => (!p ? '0' : p.fewer_than_5 ? '<5' : String(p.total));
+const lastDone = kevS ? kevS.points.filter(p => !p.partial).at(-1) : null;
+const tiles = pulse.state === 'live'
+  ? [[shownT(lastDone), 'exploited, added last week'], [shownT(nvdS && nvdS.points.at(-1)), 'new CVEs, last 24 hours'], [String(kevS ? kevS.points.length : 0), 'weeks of history']]
+  : [[String(figures), 'figures published'], [String(count('collected')), 'sources collected'], [String(count('on hold')), 'source on hold']];
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="PrompTugal.news Cyber, worldwide totals: ${esc(tiles.map(t => t.join(' ')).join(', '))}">
 <title>PrompTugal.news Cyber: the pulse of Portugal's cyber posture</title>
 <rect width="1200" height="630" fill="#f6f3ec"/><rect width="1200" height="10" fill="#c52830"/>
 <text x="64" y="120" font-family="Georgia, serif" font-size="64" fill="#121317">PrompTugal.news <tspan fill="#c52830">Cyber</tspan></text>
-<text x="64" y="180" font-family="Arial, sans-serif" font-size="30" fill="#5c5e56">The pulse of Portugal's cyber posture, week by week. Totals only.</text>
-${tiles.map(([n, l], i) => `<g transform="translate(${64 + i * 370} 240)"><rect width="340" height="220" rx="16" fill="#ece8de" stroke="#d8d4cb" stroke-width="2"/><text x="32" y="130" font-family="Georgia, serif" font-size="110" fill="#121317">${esc(n)}</text><text x="32" y="186" font-family="Arial, sans-serif" font-size="28" fill="#5c5e56">${esc(l)}</text></g>`).join('\n')}
-<text x="64" y="530" font-family="Arial, sans-serif" font-size="26" fill="#121317">${esc(pulse.state === 'live' ? 'Weak signals, not an audit.' : 'No figures yet: waiting for the first collected sources to be read. Weak signals, not an audit.')}</text>
+<text x="64" y="180" font-family="Arial, sans-serif" font-size="30" fill="#5c5e56">${esc(pulse.state === 'live' ? 'Worldwide totals for now; the Portugal lens comes next.' : 'The pulse of Portugal\'s cyber posture, week by week. Totals only.')}</text>
+${tiles.map(([n, l], i) => `<g transform="translate(${64 + i * 370} 240)"><rect width="340" height="220" rx="16" fill="#ece8de" stroke="#d8d4cb" stroke-width="2"/><text x="32" y="130" font-family="Georgia, serif" font-size="110" fill="#121317">${esc(n)}</text><text x="32" y="186" font-family="Arial, sans-serif" font-size="23" fill="#5c5e56">${esc(l)}</text></g>`).join('\n')}
+<text x="64" y="530" font-family="Arial, sans-serif" font-size="26" fill="#121317">${esc(pulse.state === 'live' ? 'Worldwide totals from CISA KEV and NVD. Weak signals, not an audit.' : 'No figures yet: waiting for the first collected sources to be read. Weak signals, not an audit.')}</text>
 <text x="64" y="580" font-family="monospace" font-size="20" fill="#5c5e56">${esc(`From cyber.promptugal.news/api/v1/, ${pulse.updated} · ${version} · CC BY 4.0`)}</text>
 </svg>
 `;
@@ -95,7 +137,7 @@ writeFileSync('_site/preview.svg', svg);
 for (const f of walk('_site')) {
   if (!/\.(html|js|css|json|md|txt)$/.test(f)) continue;
   let s = readFileSync(f, 'utf8'); const o = s;
-  if (f.endsWith('.html')) s = s.replace(/<!--@mast:([^>]*)-->/g, (_, cur) => mast(cur)).replaceAll('<!--@foot-->', foot);
+  if (f.endsWith('.html')) s = s.replace('<!--@pulse-->', () => pulseHtml()).replace(/<!--@mast:([^>]*)-->/g, (_, cur) => mast(cur)).replaceAll('<!--@foot-->', foot);
   if (s.includes('__VERSION__')) s = s.replaceAll('__VERSION__', version);
   if (s !== o) writeFileSync(f, s);
 }

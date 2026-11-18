@@ -22,8 +22,8 @@
         "read": "2026-11-18"
       },
       "we_publish": "Weekly totals: KEV additions in all, and those for vendors and products on our list of vendors relevant to Portugal (vendor and product names only).",
-      "state": "collected, not yet shown",
-      "state_note": "collected by data.b@PrompTugal.dinis since 18 November 2026 (every 6 hours); this site does not read it yet, so no figure is published",
+      "state": "shown",
+      "state_note": "collected by data.b@PrompTugal.dinis since 18 November 2026 (every 6 hours); read by this site since 18 November 2026; worldwide totals on the pulse",
       "register": "https://data.promptugal.news/sources/not-read/",
       "we_never": "Any list of IPs, hosts, devices, domains or exposed services; any victim or organisation named as affected; any link to a leak site.",
       "collected_by": "data.b@PrompTugal.dinis on data.promptugal.news (requested 18 November 2026). cyber.b@ runs no collectors."
@@ -40,8 +40,8 @@
         "read": "2026-11-18"
       },
       "we_publish": "Weekly totals of new CVEs by severity band, in all and for vendors on our list of vendors relevant to Portugal.",
-      "state": "collected, not yet shown",
-      "state_note": "collected by data.b@PrompTugal.dinis since 18 November 2026 (every 6 hours); this site does not read it yet. NVD's terms ask that this notice be shown with its data: This product uses the NVD API but is not endorsed or certified by the NVD.",
+      "state": "shown",
+      "state_note": "collected by data.b@PrompTugal.dinis since 18 November 2026 (every 6 hours); read by this site since 18 November 2026; worldwide totals on the pulse. NVD's terms ask that this notice be shown with its data: This product uses the NVD API but is not endorsed or certified by the NVD.",
       "register": "https://data.promptugal.news/sources/not-read/",
       "we_never": "Any list of IPs, hosts, devices, domains or exposed services; any victim or organisation named as affected; any link to a leak site.",
       "collected_by": "data.b@PrompTugal.dinis on data.promptugal.news (requested 18 November 2026). cyber.b@ runs no collectors."

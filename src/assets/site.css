@@ -64,3 +64,6 @@ blockquote a, p a, li a { overflow-wrap: anywhere; }
 .state { border: 2px dashed var(--rule); border-radius: 8px; padding: 12px 16px; background: var(--panel); }
 .state b { color: var(--red); }
 .limits li { margin: .2rem 0; }
+.chart svg { width: 100%; height: auto; } .chart .b { fill: var(--red); } .chart .b-part { fill: var(--red); opacity: .45; } .chart .b-low { fill: var(--muted); }
+.chart .v { font: 600 12px var(--font-meta, monospace); fill: var(--ink); } .chart .w { font: 11px var(--font-meta, monospace); fill: var(--muted); }
+figure.chart { margin: 1rem 0; } figcaption, .caveat, .notice { font-size: .85rem; color: var(--muted); }

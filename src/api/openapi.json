@@ -4,34 +4,286 @@
     "title": "PrompTugal.news Cyber",
     "version": "__VERSION__",
     "description": "Weekly totals from public vulnerability sources, for products and vendors relevant to Portugal. Aggregates only; weak signals, not an audit. Static JSON, read by GET.",
-    "license": { "name": "CC BY 4.0 (our totals; each source keeps its own licence, linked in each file)", "url": "https://creativecommons.org/licenses/by/4.0/" }
+    "license": {
+      "name": "CC BY 4.0 (our totals; each source keeps its own licence, linked in each file)",
+      "url": "https://creativecommons.org/licenses/by/4.0/"
+    }
   },
-  "servers": [{ "url": "https://cyber.promptugal.news" }],
+  "servers": [
+    {
+      "url": "https://cyber.promptugal.news"
+    }
+  ],
   "paths": {
-    "/api/v1/pulse/index.json": { "get": { "summary": "The pulse: state, limits and weekly series", "responses": { "200": { "description": "The pulse", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Pulse" } } } } } } },
-    "/api/v1/sources/index.json": { "get": { "summary": "The sources, their licences, and those not read", "responses": { "200": { "description": "The sources", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sources" } } } } } } },
-    "/version.json": { "get": { "summary": "The version of this build", "responses": { "200": { "description": "Version, commit and build time" } } } }
+    "/api/v1/pulse/index.json": {
+      "get": {
+        "summary": "The pulse: state, limits and weekly series",
+        "responses": {
+          "200": {
+            "description": "The pulse",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pulse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sources/index.json": {
+      "get": {
+        "summary": "The sources, their licences, and those not read",
+        "responses": {
+          "200": {
+            "description": "The sources",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sources"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/version.json": {
+      "get": {
+        "summary": "The version of this build",
+        "responses": {
+          "200": {
+            "description": "Version, commit and build time"
+          }
+        }
+      }
+    },
+    "/api/v1/pulse/history/kev-weekly.json": {
+      "get": {
+        "summary": "KEV additions per week, unfloored counts kept as history (append-only)",
+        "responses": {
+          "200": {
+            "description": "History"
+          }
+        }
+      }
+    },
+    "/api/v1/pulse/history/nvd-24h.json": {
+      "get": {
+        "summary": "NVD 24-hour snapshots, one per read (append-only)",
+        "responses": {
+          "200": {
+            "description": "History"
+          }
+        }
+      }
+    }
   },
   "components": {
     "schemas": {
-      "License": { "type": "object", "required": ["name", "url"], "properties": { "name": { "type": "string" }, "url": { "type": "string", "format": "uri" }, "holder": { "type": "string" }, "note": { "type": "string" } } },
-      "Pulse": { "type": "object", "required": ["license", "state", "limits", "series"], "properties": {
-        "license": { "$ref": "#/components/schemas/License" },
-        "state": { "type": "string", "enum": ["awaiting data", "live"] },
-        "state_note": { "type": "string" },
-        "updated": { "type": "string", "format": "date" },
-        "limits": { "type": "array", "items": { "type": "string" } },
-        "series": { "type": "array", "items": { "type": "object", "required": ["id", "source", "license", "points"], "properties": {
-          "id": { "type": "string" }, "source": { "type": "string" }, "license": { "$ref": "#/components/schemas/License" },
-          "points": { "type": "array", "items": { "type": "object", "required": ["week", "read_at"], "properties": {
-            "week": { "type": "string", "description": "ISO week, e.g. 2026-W47" },
-            "total": { "type": ["integer", "null"], "minimum": 5, "description": "null with fewer_than_5 true when the total is under 5" },
-            "fewer_than_5": { "type": "boolean" },
-            "read_at": { "type": "string", "format": "date-time" } } } } } } } } },
-      "Sources": { "type": "object", "required": ["license", "sources", "not_read"], "properties": {
-        "license": { "$ref": "#/components/schemas/License" },
-        "sources": { "type": "array", "items": { "type": "object", "required": ["id", "name", "url", "license", "state"], "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "url": { "type": "string", "format": "uri" }, "license": { "$ref": "#/components/schemas/License" }, "state": { "type": "string" } } } },
-        "not_read": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "url": { "type": "string" }, "why": { "type": "string" } } } } } }
+      "License": {
+        "type": "object",
+        "required": [
+          "name",
+          "url"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "holder": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "Pulse": {
+        "type": "object",
+        "required": [
+          "license",
+          "state",
+          "limits",
+          "series"
+        ],
+        "properties": {
+          "license": {
+            "$ref": "#/components/schemas/License"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "awaiting data",
+              "live"
+            ]
+          },
+          "state_note": {
+            "type": "string"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date"
+          },
+          "limits": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "title",
+                "source",
+                "license",
+                "read_at",
+                "points"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "enum": [
+                    "kev-added-weekly",
+                    "nvd-new-24h"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "source_license": {
+                  "$ref": "#/components/schemas/License"
+                },
+                "license": {
+                  "$ref": "#/components/schemas/License"
+                },
+                "notice": {
+                  "type": "string"
+                },
+                "read_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "points": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "week": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "kev-added-weekly: the Monday the week starts"
+                      },
+                      "partial": {
+                        "type": "boolean",
+                        "description": "the current, still open week"
+                      },
+                      "read_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "window_hours": {
+                        "type": "integer",
+                        "description": "nvd-new-24h: the window before read_at"
+                      },
+                      "total": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 5,
+                        "description": "null with fewer_than_5 true when under 5"
+                      },
+                      "fewer_than_5": {
+                        "type": "boolean"
+                      },
+                      "by_band": {
+                        "type": "object",
+                        "description": "nvd-new-24h: CRITICAL, HIGH, MEDIUM, LOW, NONE, unscored; each {total, fewer_than_5}"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "caveat": {
+            "type": "string"
+          }
+        }
+      },
+      "Sources": {
+        "type": "object",
+        "required": [
+          "license",
+          "sources",
+          "not_read"
+        ],
+        "properties": {
+          "license": {
+            "$ref": "#/components/schemas/License"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "url",
+                "license",
+                "state"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "license": {
+                  "$ref": "#/components/schemas/License"
+                },
+                "state": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "not_read": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "why": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
