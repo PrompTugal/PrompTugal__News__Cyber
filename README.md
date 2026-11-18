@@ -7,7 +7,7 @@
 Part of [PrompTugal.news](https://promptugal.news/) (Portugal, town by town).
 
 ## Status
-A placeholder: first version coming. Built by the PrompTugal.news team.
+First version (2026-11-18): the pages, the limits, the sources and the API are up; no figures yet, because no source has been collected. Led by cyber.b@PrompTugal.dinis. What exists: `REALITY.md`.
 
 ## How it works
 - `dev` is the default branch. Every push to `dev` builds the site from `src/` and deploys it to GitHub Pages (`.github/workflows/pages.yml`), with the version at https://cyber.promptugal.news/version.json.

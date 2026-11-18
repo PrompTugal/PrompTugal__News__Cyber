@@ -3,18 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PrompTugal.news Cyber: first version coming</title>
-<meta name="description" content="Cyber security and threat intelligence for PrompTugal.news. First version coming.">
+<title>PrompTugal.news Cyber: the pulse</title>
+<meta name="description" content="A pulse of Portugal's cyber posture over time, from public vulnerability sources: weekly totals only, weak signals, not an audit.">
 <link rel="canonical" href="https://cyber.promptugal.news/">
-<style>body{margin:0;font:18px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;background:#fbf7f0;color:#222}main{max-width:40rem;margin:0 auto;padding:3rem 1rem}h1{font-size:2rem;line-height:1.2;margin:0 0 .3rem}.tag{display:inline-block;background:#222;color:#fbf7f0;border-radius:2rem;padding:.15rem .8rem;font-size:.85rem;font-weight:600}.muted{color:#666;font-size:.9rem}@media(prefers-color-scheme:dark){body{background:#17140f;color:#eee}.tag{background:#eee;color:#17140f}.muted{color:#aaa}}</style>
+<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/brand/brand-tokens.css">
+<link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
-<main>
-<p class="muted">Part of <a href="https://promptugal.news/">PrompTugal.news</a>: Portugal, town by town.</p>
-<h1>PrompTugal.news Cyber</h1>
-<p>Cyber security and threat intelligence for PrompTugal.news.</p>
-<p><span class="tag">First version coming</span></p>
-<p class="muted">Independent: not an official or government site. Version __VERSION__ · Code Apache-2.0, text CC BY 4.0.</p>
+<!--@mast:/-->
+<main id="main">
+<h1>The pulse of Portugal's cyber posture</h1>
+<p>How exposed are the products and vendors that Portugal relies on, and how does that change week by week? This site will answer with totals from public vulnerability sources, kept as a history, so that the trend shows over time.</p>
+<div class="state"><p><b>No figures yet.</b> None of our sources has been collected so far. data.b@PrompTugal.dinis collects them on <a href="https://data.promptugal.news/">data.promptugal.news</a> once each one's collector is built. Until then this page publishes no number, and it will never publish a number without its source, the time it was read and its licence.</p><p>The state as JSON: <a href="/api/v1/pulse/index.json">/api/v1/pulse/index.json</a>.</p></div>
+<h2>What the pulse will show</h2>
+<ul>
+<li><b>Known exploited, week by week:</b> how many CVEs were added to <a href="/sources/cisa-kev/">CISA's known-exploited list</a>, in all and for vendors and products relevant to Portugal.</li>
+<li><b>New CVEs, week by week:</b> from <a href="/sources/nvd/">NVD</a> and <a href="/sources/cve-org/">CVE.org</a>, by severity band, in all and for products of Portuguese vendors.</li>
+<li><b>The European picture:</b> figures from <a href="/sources/enisa/">ENISA</a>'s published reports, each with its report linked.</li>
+<li><b>Proposed, not yet built:</b> totals by sector (energy, health, finance, public administration, telecoms). No source gives sector directly, so this needs our own published mapping of products to sectors first.</li>
+</ul>
+<p>The list of vendors relevant to Portugal will be published with its reasons, and will hold vendor and product names only, never their customers.</p>
+<h2>What it is not</h2>
+<p>These are weak signals from public sources, not an audit. A count of vulnerabilities is not a measure of how well any organisation is protected. We show totals only: never a list of IPs, hosts, devices or exposed services, never a victim, never a link to a leak site. We scan and probe nothing ourselves. The full limits are on <a href="/how/">How it works</a>.</p>
 </main>
+<!--@foot-->
 </body>
 </html>

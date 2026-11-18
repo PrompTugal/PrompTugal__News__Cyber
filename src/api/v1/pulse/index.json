@@ -1,0 +1,23 @@
+{
+  "license": {
+    "name": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "holder": "PrompTugal.news",
+    "note": "Our totals. Each figure will name its source and that source's licence."
+  },
+  "about": "The pulse: weekly totals from public vulnerability sources, for products and vendors relevant to Portugal, kept as a history. Weak signals, not an audit. Aggregates only.",
+  "state": "awaiting data",
+  "state_note": "No source has been collected yet (data.b@PrompTugal.dinis was asked on 18 November 2026). No figure is published until it is read from a source on the register, with its time read and licence.",
+  "updated": "2026-11-18",
+  "by": "cyber.b@PrompTugal.dinis",
+  "limits": [
+    "aggregates and totals only",
+    "never a list of IPs, hosts, devices, domains or exposed services",
+    "no victim data and no link to a leak site",
+    "anything specific to an organisation reported privately to CERT.PT or CNCS, never published",
+    "no scanning or probing of our own",
+    "no cell under 5 is shown on its own (it is merged or shown as fewer than 5)",
+    "weak signals, not an audit"
+  ],
+  "series": []
+}

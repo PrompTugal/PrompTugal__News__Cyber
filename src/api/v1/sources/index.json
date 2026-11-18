@@ -1,0 +1,133 @@
+{
+  "license": {
+    "name": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "holder": "PrompTugal.news",
+    "note": "This list is ours. Each source keeps its own licence or terms, linked in its entry."
+  },
+  "about": "The sources of cyber.promptugal.news. Only sources on data.b@PrompTugal.dinis's register whose terms allow reuse by a commercial publication are used; the rest are listed with why not. Licence quotes are as quoted on that register.",
+  "register": "https://data.promptugal.news/sources/not-read/",
+  "updated": "2026-11-18",
+  "by": "cyber.b@PrompTugal.dinis",
+  "sources": [
+    {
+      "id": "cisa-kev",
+      "name": "CISA Known Exploited Vulnerabilities (KEV) catalogue",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "what": "The list of CVEs that CISA (the US Cybersecurity and Infrastructure Security Agency) knows to be exploited, with the date each was added.",
+      "license": {
+        "name": "CC0 1.0 (the kev-data repository's licence file)",
+        "url": "https://raw.githubusercontent.com/cisagov/kev-data/develop/LICENSE",
+        "quote": "The KEV database is distributed under the Creative Commons 0 1.0 License. You may use this data in any legal manner but note that information provided at any 3rd party links included in the KEV database are bound by t...",
+        "read": "2026-11-18"
+      },
+      "we_publish": "Weekly totals: KEV additions in all, and those for vendors and products on our list of vendors relevant to Portugal (vendor and product names only).",
+      "state": "awaiting collection",
+      "state_note": "terms checked by data.b@PrompTugal.dinis on 18 November 2026; no collector yet, so no figure is published",
+      "register": "https://data.promptugal.news/sources/not-read/",
+      "we_never": "Any list of IPs, hosts, devices, domains or exposed services; any victim or organisation named as affected; any link to a leak site.",
+      "collected_by": "data.b@PrompTugal.dinis on data.promptugal.news (requested 18 November 2026). cyber.b@ runs no collectors."
+    },
+    {
+      "id": "nvd",
+      "name": "NVD (National Vulnerability Database, NIST)",
+      "url": "https://nvd.nist.gov/",
+      "what": "CVE records with CVSS scores, affected products (CPE) and weakness types (CWE), through the CVE API 2.0.",
+      "license": {
+        "name": "NIST copyright notice (general NIST site, not an NVD-specific terms page)",
+        "url": "https://www.nist.gov/oism/copyrights",
+        "quote": "The software developed by NIST employees is not subject to copyright protection within the United States.",
+        "read": "2026-11-18"
+      },
+      "we_publish": "Weekly totals of new CVEs by severity band, in all and for vendors on our list of vendors relevant to Portugal.",
+      "state": "awaiting collection",
+      "state_note": "terms checked by data.b@PrompTugal.dinis on 18 November 2026; no collector yet, so no figure is published",
+      "register": "https://data.promptugal.news/sources/not-read/",
+      "we_never": "Any list of IPs, hosts, devices, domains or exposed services; any victim or organisation named as affected; any link to a leak site.",
+      "collected_by": "data.b@PrompTugal.dinis on data.promptugal.news (requested 18 November 2026). cyber.b@ runs no collectors."
+    },
+    {
+      "id": "cve-org",
+      "name": "CVE Program (cve.org)",
+      "url": "https://www.cve.org/",
+      "what": "CVE identifiers and records (CVE JSON 5), including the assigning organisation (CNA) of each.",
+      "license": {
+        "name": "CVE Program terms of use",
+        "url": "https://www.cve.org/Legal/TermsOfUse",
+        "quote": "MITRE hereby grants you a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to reproduce, prepare derivative works of, publicly display, publicly perform, sublicense, and dist...",
+        "read": "2026-11-18"
+      },
+      "we_publish": "Weekly totals of CVEs published for products of Portuguese vendors, and by Portuguese CNAs where any exist.",
+      "state": "awaiting collection",
+      "state_note": "terms checked by data.b@PrompTugal.dinis on 18 November 2026; no collector yet, so no figure is published",
+      "register": "https://data.promptugal.news/sources/not-read/",
+      "we_never": "Any list of IPs, hosts, devices, domains or exposed services; any victim or organisation named as affected; any link to a leak site.",
+      "collected_by": "data.b@PrompTugal.dinis on data.promptugal.news (requested 18 November 2026). cyber.b@ runs no collectors."
+    },
+    {
+      "id": "enisa",
+      "name": "ENISA (European Union Agency for Cybersecurity)",
+      "url": "https://www.enisa.europa.eu/",
+      "what": "EU threat landscape reports, advisories and publications.",
+      "license": {
+        "name": "ENISA legal notice, 1.2 Authorization",
+        "url": "https://www.enisa.europa.eu/about-enisa/legal-notice",
+        "quote": "Reproduction of ENISA material published on this website is authorized, provided the source is acknowledged, unless it is stated otherwise.",
+        "read": "2026-11-18"
+      },
+      "we_publish": "Counts of ENISA publications per month and, where a report gives EU or country figures, those figures, each with its report linked.",
+      "state": "awaiting collection",
+      "state_note": "terms checked by data.b@PrompTugal.dinis on 18 November 2026; no collector yet, so no figure is published",
+      "register": "https://data.promptugal.news/sources/not-read/",
+      "we_never": "Any list of IPs, hosts, devices, domains or exposed services; any victim or organisation named as affected; any link to a leak site.",
+      "collected_by": "data.b@PrompTugal.dinis on data.promptugal.news (requested 18 November 2026). cyber.b@ runs no collectors."
+    }
+  ],
+  "not_read": [
+    {
+      "name": "CNCS and CERT.PT",
+      "url": "https://www.cncs.gov.pt/",
+      "why": "unreachable when data.b@ tried on 18 November 2026; terms not read"
+    },
+    {
+      "name": "EUVD (European Vulnerability Database)",
+      "url": "https://euvd.enisa.europa.eu/",
+      "why": "application unavailable when read on 18 November 2026; terms not found"
+    },
+    {
+      "name": "CNPD decisions",
+      "url": "https://www.cnpd.pt/decisoes/deliberacoes/",
+      "why": "terms allow reproduction only under conditions (free distribution); unread until Dinis decides"
+    },
+    {
+      "name": "Shadowserver Foundation",
+      "url": "https://dashboard.shadowserver.org/",
+      "why": "terms allow non-profit research; unread until Dinis decides (licence request, non-commercial, or not at all)"
+    },
+    {
+      "name": "Cloudflare Radar",
+      "url": "https://radar.cloudflare.com/",
+      "why": "API data under CC BY-NC 4.0 (non-commercial); unread until Dinis decides"
+    },
+    {
+      "name": "RIPEstat (RIPE NCC)",
+      "url": "https://stat.ripe.net/",
+      "why": "terms forbid re-distribution and commercial use; unread until Dinis decides"
+    },
+    {
+      "name": "IODA (Georgia Tech)",
+      "url": "https://ioda.inetintel.cc.gatech.edu/",
+      "why": "no terms or licence found; unread"
+    },
+    {
+      "name": "abuse.ch URLhaus and ThreatFox",
+      "url": "https://abuse.ch/",
+      "why": "terms allow not-for-profit use by authenticated users; unread until Dinis decides"
+    },
+    {
+      "name": "Shodan and Censys",
+      "url": "https://www.shodan.io/",
+      "why": "need a key Dinis has not added; aggregates only if he does"
+    }
+  ]
+}

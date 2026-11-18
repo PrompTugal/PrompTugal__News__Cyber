@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>API: PrompTugal.news Cyber</title>
+<meta name="description" content="The JSON of cyber.promptugal.news, read by GET, and its OpenAPI description.">
+<link rel="canonical" href="https://cyber.promptugal.news/api/">
+<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/brand/brand-tokens.css">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<!--@mast:/api/-->
+<main id="main">
+<h1>API</h1>
+<p>Everything on this site is also JSON, read by GET from this site. Each file carries its <code>license</code>. The OpenAPI 3.1 description: <a href="/api/openapi.json">/api/openapi.json</a>.</p>
+<div class="scroll"><table>
+<tr><th>Path</th><th>What it holds</th></tr>
+<tr><td><a href="/api/v1/pulse/index.json">/api/v1/pulse/index.json</a></td><td>The pulse: its state, its limits, and its weekly series (empty until the first source is collected).</td></tr>
+<tr><td><a href="/api/v1/sources/index.json">/api/v1/sources/index.json</a></td><td>The sources we will read, each with its licence, and those we do not read and why.</td></tr>
+<tr><td><a href="/version.json">/version.json</a></td><td>The version and commit of this build.</td></tr>
+</table></div>
+<p>Next: an OpenAPI description per source, once each is collected, listed in data.promptugal.news's Swagger of Swaggers.</p>
+</main>
+<!--@foot-->
+</body>
+</html>
