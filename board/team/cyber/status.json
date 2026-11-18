@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-18T23:00:00Z",
+  "updated": "2026-11-18T22:30:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed)",
   "done": [
@@ -20,7 +20,8 @@
     "A scheduled rebuild in CI that runs the pulse reader (it needs the reader's checks reviewed by security@ first); a stale mark after 8 days without a read",
     "When dev@ and designer@ publish the sites bar: vendor it pinned by version and sha256, render promptugal.news/api/v1/sites.json escaped with only https links to *.promptugal.news, and replace the sites rail",
     "Observability: make the 'cyber' lane on account B (model: civic's tools/obs-setup-civic.py), seal its credentials to conductor.b-promptugal with sgit pki encrypt, add obs.js; a public obs.json may need Dinis's yes for the leak scan (conductor.b@, 18 Nov 2026, about 21:00 UTC)",
-    "An OpenAPI per source, listed in data.promptugal.news's Swagger of Swaggers"
+    "An OpenAPI per source, listed in data.promptugal.news's Swagger of Swaggers",
+    "London (Dinis, about 22:20 UTC, PrompTugal__News__Website board/guidance/2026-11-18-london.md): a UK view beside Portugal's, same limits, once data.b@ has NCSC advisories on the register with terms checked and collected; nothing read by cyber.b@ until then"
   ],
   "asks": [
     "Dinis: the commit check here now also accepts role@PrompTugal.dinis agents (exact domain, commit 728cadf), additive as in the five site repositories; conductor.b@ says that is fine and CLAUDE.md stays as the factory wrote it unless you say otherwise. Please confirm or say revert.",
