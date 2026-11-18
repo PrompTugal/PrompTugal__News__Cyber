@@ -74,6 +74,24 @@ ${row('JSON', `<a href="/api/v1/sources/index.json">/api/v1/sources/index.json</
 `);
 }
 
+// /preview.svg: the site's own numbers for the sites bar (Dinis, 18 Nov 2026, about 22:00 UTC, PrompTugal__News__Website
+// board/guidance/2026-11-18-the-sites-bar.md). Counts come from our own JSON only; every text goes through esc().
+const pulse = JSON.parse(readFileSync('src/api/v1/pulse/index.json', 'utf8'));
+const count = st => reg.sources.filter(x => x.state.startsWith(st)).length;
+const figures = pulse.series.reduce((n, x) => n + x.points.length, 0);
+const tiles = [[String(figures), 'figures published'], [String(count('collected')), 'sources collected'], [String(count('on hold')), 'source on hold']];
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="PrompTugal.news Cyber: ${esc(tiles.map(t => t.join(' ')).join(', '))}">
+<title>PrompTugal.news Cyber: the pulse of Portugal's cyber posture</title>
+<rect width="1200" height="630" fill="#f6f3ec"/><rect width="1200" height="10" fill="#c52830"/>
+<text x="64" y="120" font-family="Georgia, serif" font-size="64" fill="#121317">PrompTugal.news <tspan fill="#c52830">Cyber</tspan></text>
+<text x="64" y="180" font-family="Arial, sans-serif" font-size="30" fill="#5c5e56">The pulse of Portugal's cyber posture, week by week. Totals only.</text>
+${tiles.map(([n, l], i) => `<g transform="translate(${64 + i * 370} 240)"><rect width="340" height="220" rx="16" fill="#ece8de" stroke="#d8d4cb" stroke-width="2"/><text x="32" y="130" font-family="Georgia, serif" font-size="110" fill="#121317">${esc(n)}</text><text x="32" y="186" font-family="Arial, sans-serif" font-size="28" fill="#5c5e56">${esc(l)}</text></g>`).join('\n')}
+<text x="64" y="530" font-family="Arial, sans-serif" font-size="26" fill="#121317">${esc(pulse.state === 'live' ? 'Weak signals, not an audit.' : 'No figures yet: waiting for the first collected sources to be read. Weak signals, not an audit.')}</text>
+<text x="64" y="580" font-family="monospace" font-size="20" fill="#5c5e56">${esc(`From cyber.promptugal.news/api/v1/, ${pulse.updated} · ${version} · CC BY 4.0`)}</text>
+</svg>
+`;
+writeFileSync('_site/preview.svg', svg);
+
 for (const f of walk('_site')) {
   if (!/\.(html|js|css|json|md|txt)$/.test(f)) continue;
   let s = readFileSync(f, 'utf8'); const o = s;

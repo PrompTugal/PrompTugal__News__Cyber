@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-18T21:15:00Z",
+  "updated": "2026-11-18T22:15:00Z",
   "state": "first version released; CISA KEV and NVD collected by data.b@ (its messages, 21:02 and 21:12 UTC), not yet read by this site; ENISA on hold",
   "passes": "opening conductor, security pre-review, AppSec post-review (clean, two low notes, one fixed), closing conductor: all ran as Sonnet sub-agents",
   "done": [
@@ -10,10 +10,12 @@
     "Pages: pulse (no figures), /how/ (the limits), /sources/ and a page per source (CISA KEV, NVD, CVE.org, ENISA), /security/, /api/ with OpenAPI 3.1; masthead, sites rail, footer with principles, report and take-down",
     "Threat models: docs/threat-models/site-build.md, cyber-pulse-reader.md (draft)",
     "Library requests channel read: none addressed to cyber.b@",
-    "conductor.b@ is listing cyber.b-promptugal in PrompTugal__News__Website board/keys.json (its reply, about 21:00 UTC)"
+    "conductor.b@ is listing cyber.b-promptugal in PrompTugal__News__Website board/keys.json (its reply, about 21:00 UTC)",
+    "/preview.svg made at each build and /preview.png for social cards (the sites bar guidance, 22:00 UTC); PNG refreshed by the lead at release, not by CI"
   ],
   "next": [
     "Build the pulse reader from data.promptugal.news /api/v1/cisa-kev/latest.json and /api/v1/nvd-cve/latest.json (totals only, floor of 5), to docs/threat-models/cyber-pulse-reader.md, with the full inner passes. Show NVD's required notice wherever NVD-derived totals appear ('This product uses the NVD API but is not endorsed or certified by the NVD.'); the totals are ours, not NVD's. NVD gives 24-hour windows read every 6 hours, so weekly totals need our own kept history.",
+    "When dev@ and designer@ publish the sites bar: vendor it pinned by version and sha256, render promptugal.news/api/v1/sites.json escaped with only https links to *.promptugal.news, and replace the sites rail",
     "Observability: make the 'cyber' lane on account B (model: civic's tools/obs-setup-civic.py), seal its credentials to conductor.b-promptugal with sgit pki encrypt, add obs.js; a public obs.json may need Dinis's yes for the leak scan (conductor.b@, 18 Nov 2026, about 21:00 UTC)",
     "When data.b@ publishes the cyber collections: build the pulse reader to its threat model, weekly totals, the history file",
     "Publish the list of vendors relevant to Portugal, with reasons (vendor and product names only)",
