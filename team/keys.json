@@ -16,7 +16,12 @@
         "label": "cyber.b@PrompTugal.dinis",
         "fingerprint": "sha256:cc44cd97ce4c8ac2",
         "signing_fingerprint": "sha256:c726b219f62e8657"
-      }
+      },
+      "ssh_signing": {
+        "from": "bundle.sign",
+        "note": "This agent signs its git commits with the bundle.sign key (ECDSA P-256, sha256:c726b219f62e8657) as an SSH signature (namespace git). scripts/check-signatures.mjs derives the OpenSSH form of the key from bundle.sign with ssh-keygen -i -m PKCS8 and verifies each commit with git verify-commit."
+      },
+      "session": "https://claude.ai/code/session_01Kw9UwDxnKcmYhgso8fqEG5"
     }
   ]
 }

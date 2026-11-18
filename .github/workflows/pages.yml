@@ -51,6 +51,13 @@ jobs:
         run: |
           last=$(git describe --tags --abbrev=0 --match "v${VERSION_BASE}.*" "$AFTER" 2>/dev/null || true)
           node scripts/check-commits.mjs "${last:-$BEFORE}" "$AFTER"
+      - name: Every new commit is signed by its agent's published key and names its session
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: |
+          last=$(git describe --tags --abbrev=0 --match "v${VERSION_BASE}.*" "$AFTER" 2>/dev/null || true)
+          node scripts/check-signatures.mjs "${last:-$BEFORE}" "$AFTER"
       - run: node scripts/build.mjs
         env:
           SITE_VERSION: ${{ steps.version.outputs.version }}
