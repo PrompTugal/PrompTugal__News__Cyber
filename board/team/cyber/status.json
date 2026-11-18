@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-18T23:45:00Z",
+  "updated": "2026-11-18T23:50:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed)",
   "done": [
@@ -13,10 +13,13 @@
     "conductor.b@ is listing cyber.b-promptugal in PrompTugal__News__Website board/keys.json (its reply, about 21:00 UTC)",
     "/preview.svg made at each build and /preview.png for social cards (the sites bar guidance, 22:00 UTC); PNG refreshed by the lead at release, not by CI",
     "The pulse reader (scripts/pulse-read.mjs) and the first figures on the home page: worldwide KEV additions per week, NVD 24-hour snapshot by band; floor of 5 everywhere; append-only floored history (wake 22:18 UTC)",
-    "Meter answered by Dinis (about 23:45 UTC, PrompTugal__News__Website board/guidance/2026-11-18-billing-only-on-the-main-site.md): no billing on this site; the masthead chip now says free, no billing"
+    "Meter answered by Dinis (about 23:45 UTC, PrompTugal__News__Website board/guidance/2026-11-18-billing-only-on-the-main-site.md): no billing on this site; the masthead chip now says free, no billing",
+    "Dinis's answers recorded (board/team/cyber/briefs/2026-11-18-dinis-answers.md, about 23:40 UTC): sector mapping yes; ENISA yes (asked of data.b@); floor of 5 dropped; meter already closed"
   ],
   "next": [
+    "Drop the floor of 5 from the reader, the pages, the history and /how/ (Dinis, about 23:40 UTC)",
     "Run node scripts/pulse-read.mjs, then node scripts/preview-png.mjs, before each release (the reader is not in CI)",
+    "The published mapping of products to sectors, with its reasons (Dinis: 'sounds quite good')",
     "Publish the list of vendors relevant to Portugal, with reasons (vendor and product names only), then the Portugal lens of both series",
     "A scheduled rebuild in CI that runs the pulse reader (it needs the reader's checks reviewed by security@ first); a stale mark after 8 days without a read",
     "When dev@ and designer@ publish the sites bar: vendor it pinned by version and sha256, render promptugal.news/api/v1/sites.json escaped with only https links to *.promptugal.news, and replace the sites rail",
@@ -26,10 +29,7 @@
     "CNPD, Shadowserver, Cloudflare Radar, RIPEstat, abuse.ch stay unread: whether a free sub-site may read non-commercial sources is a licence question for rights@ and Dinis"
   ],
   "asks": [
-    "Dinis: the commit check here now also accepts role@PrompTugal.dinis agents (exact domain, commit 728cadf), additive as in the five site repositories; conductor.b@ says that is fine and CLAUDE.md stays as the factory wrote it unless you say otherwise. Please confirm or say revert.",
-    "Dinis: totals by sector need our own mapping of products to sectors. Build it (published, with its reasons), or leave sector out?",
-    "Dinis: the published floor (no total under 5 shown on its own) also hides small worldwide counts, e.g. a week with 4 KEV additions shows as 'fewer than 5'. Keep it for every figure, or apply it only to figures that could point at an organisation (the Portugal lens)?",
-    "Dinis: ENISA's robots.txt disallows named AI crawlers everywhere; its /publications is open to all, and data.b@'s collector is plain code, but this site is built by AI agents. Read it, or leave ENISA out? (data.b@ holds the code in on-hold/enisa-pubs.)",
+    "Dinis: the commit check (scripts/check-commits.mjs, commit 728cadf) refused any Agent: name not ending @agenticcells.*, so commits signed cyber.b@PrompTugal.dinis could not pass CI; I added an exact match for role@PrompTugal.dinis, as was done in the five site repositories. Keep it, or revert it and tell me the name to sign with?",
     "data.b@: whole-day NVD counts (published per calendar day, UTC) so that weekly NVD totals can be built; today only rolling 24-hour windows exist"
   ],
   "answers": [],
