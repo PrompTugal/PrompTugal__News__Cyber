@@ -22,8 +22,8 @@
         "read": "2026-11-18"
       },
       "we_publish": "Weekly totals: KEV additions in all, and those for vendors and products on our list of vendors relevant to Portugal (vendor and product names only).",
-      "state": "awaiting collection",
-      "state_note": "terms checked by data.b@PrompTugal.dinis on 18 November 2026; no collector yet, so no figure is published",
+      "state": "collected, not yet shown",
+      "state_note": "collected by data.b@PrompTugal.dinis since 18 November 2026 (every 6 hours); this site does not read it yet, so no figure is published",
       "register": "https://data.promptugal.news/sources/not-read/",
       "we_never": "Any list of IPs, hosts, devices, domains or exposed services; any victim or organisation named as affected; any link to a leak site.",
       "collected_by": "data.b@PrompTugal.dinis on data.promptugal.news (requested 18 November 2026). cyber.b@ runs no collectors."
@@ -40,8 +40,8 @@
         "read": "2026-11-18"
       },
       "we_publish": "Weekly totals of new CVEs by severity band, in all and for vendors on our list of vendors relevant to Portugal.",
-      "state": "awaiting collection",
-      "state_note": "terms checked by data.b@PrompTugal.dinis on 18 November 2026; no collector yet, so no figure is published",
+      "state": "collected, not yet shown",
+      "state_note": "collected by data.b@PrompTugal.dinis since 18 November 2026 (every 6 hours); this site does not read it yet. NVD's terms ask that this notice be shown with its data: This product uses the NVD API but is not endorsed or certified by the NVD.",
       "register": "https://data.promptugal.news/sources/not-read/",
       "we_never": "Any list of IPs, hosts, devices, domains or exposed services; any victim or organisation named as affected; any link to a leak site.",
       "collected_by": "data.b@PrompTugal.dinis on data.promptugal.news (requested 18 November 2026). cyber.b@ runs no collectors."
@@ -58,8 +58,8 @@
         "read": "2026-11-18"
       },
       "we_publish": "Weekly totals of CVEs published for products of Portuguese vendors, and by Portuguese CNAs where any exist.",
-      "state": "awaiting collection",
-      "state_note": "terms checked by data.b@PrompTugal.dinis on 18 November 2026; no collector yet, so no figure is published",
+      "state": "covered by NVD",
+      "state_note": "not collected separately: NVD's records carry the CNA and the affected products (data.b@, 18 November 2026)",
       "register": "https://data.promptugal.news/sources/not-read/",
       "we_never": "Any list of IPs, hosts, devices, domains or exposed services; any victim or organisation named as affected; any link to a leak site.",
       "collected_by": "data.b@PrompTugal.dinis on data.promptugal.news (requested 18 November 2026). cyber.b@ runs no collectors."
@@ -76,8 +76,8 @@
         "read": "2026-11-18"
       },
       "we_publish": "Counts of ENISA publications per month and, where a report gives EU or country figures, those figures, each with its report linked.",
-      "state": "awaiting collection",
-      "state_note": "terms checked by data.b@PrompTugal.dinis on 18 November 2026; no collector yet, so no figure is published",
+      "state": "on hold",
+      "state_note": "its robots.txt disallows named AI crawlers; whether we read it is Dinis's decision (asked 18 November 2026)",
       "register": "https://data.promptugal.news/sources/not-read/",
       "we_never": "Any list of IPs, hosts, devices, domains or exposed services; any victim or organisation named as affected; any link to a leak site.",
       "collected_by": "data.b@PrompTugal.dinis on data.promptugal.news (requested 18 November 2026). cyber.b@ runs no collectors."

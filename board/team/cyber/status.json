@@ -1,8 +1,8 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-18T21:08:00Z",
-  "state": "first version released; CISA KEV collected by data.b@ (its message, 21:02 UTC), not yet read by this site",
+  "updated": "2026-11-18T21:15:00Z",
+  "state": "first version released; CISA KEV and NVD collected by data.b@ (its messages, 21:02 and 21:12 UTC), not yet read by this site; ENISA on hold",
   "passes": "opening conductor, security pre-review, AppSec post-review (clean, two low notes, one fixed), closing conductor: all ran as Sonnet sub-agents",
   "done": [
     "Key made with sgit pki keygen; public bundle in team/keys.json (id cyber.b-promptugal)",
@@ -13,7 +13,7 @@
     "conductor.b@ is listing cyber.b-promptugal in PrompTugal__News__Website board/keys.json (its reply, about 21:00 UTC)"
   ],
   "next": [
-    "Build the pulse reader for CISA KEV from https://data.promptugal.news/api/v1/cisa-kev/latest.json (weekly[] totals only, floor of 5, vendor names only after the vendor list exists), to docs/threat-models/cyber-pulse-reader.md, with the full inner passes. data.b@'s figures are its claim until read here.",
+    "Build the pulse reader from data.promptugal.news /api/v1/cisa-kev/latest.json and /api/v1/nvd-cve/latest.json (totals only, floor of 5), to docs/threat-models/cyber-pulse-reader.md, with the full inner passes. Show NVD's required notice wherever NVD-derived totals appear ('This product uses the NVD API but is not endorsed or certified by the NVD.'); the totals are ours, not NVD's. NVD gives 24-hour windows read every 6 hours, so weekly totals need our own kept history.",
     "Observability: make the 'cyber' lane on account B (model: civic's tools/obs-setup-civic.py), seal its credentials to conductor.b-promptugal with sgit pki encrypt, add obs.js; a public obs.json may need Dinis's yes for the leak scan (conductor.b@, 18 Nov 2026, about 21:00 UTC)",
     "When data.b@ publishes the cyber collections: build the pulse reader to its threat model, weekly totals, the history file",
     "Publish the list of vendors relevant to Portugal, with reasons (vendor and product names only)",
@@ -24,7 +24,7 @@
     "Dinis: the commit check here now also accepts role@PrompTugal.dinis agents (exact domain, commit 728cadf), additive as in the five site repositories; conductor.b@ says that is fine and CLAUDE.md stays as the factory wrote it unless you say otherwise. Please confirm or say revert.",
     "Dinis: should cyber.promptugal.news be on the reading meter, or free like the IPMA pages? The chip says 'free here' until you decide.",
     "Dinis: totals by sector need our own mapping of products to sectors. Build it (published, with its reasons), or leave sector out?",
-    "data.b@: NVD and ENISA collectors next (it says so, 21:02 UTC); CVE.org only if NVD's CNA and CPE fields are not enough"
+    "Dinis: ENISA's robots.txt disallows named AI crawlers everywhere; its /publications is open to all, and data.b@'s collector is plain code, but this site is built by AI agents. Read it, or leave ENISA out? (data.b@ holds the code in on-hold/enisa-pubs.)"
   ],
   "answers": [],
   "debrief": "board/team/cyber/debriefs/2026-11-18-handover.md"
