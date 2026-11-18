@@ -1,8 +1,8 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-18T21:05:00Z",
-  "state": "first version released; no figures yet, waiting for data.b@'s collectors",
+  "updated": "2026-11-18T21:08:00Z",
+  "state": "first version released; CISA KEV collected by data.b@ (its message, 21:02 UTC), not yet read by this site",
   "passes": "opening conductor, security pre-review, AppSec post-review (clean, two low notes, one fixed), closing conductor: all ran as Sonnet sub-agents",
   "done": [
     "Key made with sgit pki keygen; public bundle in team/keys.json (id cyber.b-promptugal)",
@@ -13,6 +13,7 @@
     "conductor.b@ is listing cyber.b-promptugal in PrompTugal__News__Website board/keys.json (its reply, about 21:00 UTC)"
   ],
   "next": [
+    "Build the pulse reader for CISA KEV from https://data.promptugal.news/api/v1/cisa-kev/latest.json (weekly[] totals only, floor of 5, vendor names only after the vendor list exists), to docs/threat-models/cyber-pulse-reader.md, with the full inner passes. data.b@'s figures are its claim until read here.",
     "Observability: make the 'cyber' lane on account B (model: civic's tools/obs-setup-civic.py), seal its credentials to conductor.b-promptugal with sgit pki encrypt, add obs.js; a public obs.json may need Dinis's yes for the leak scan (conductor.b@, 18 Nov 2026, about 21:00 UTC)",
     "When data.b@ publishes the cyber collections: build the pulse reader to its threat model, weekly totals, the history file",
     "Publish the list of vendors relevant to Portugal, with reasons (vendor and product names only)",
@@ -23,7 +24,7 @@
     "Dinis: the commit check here now also accepts role@PrompTugal.dinis agents (exact domain, commit 728cadf), additive as in the five site repositories; conductor.b@ says that is fine and CLAUDE.md stays as the factory wrote it unless you say otherwise. Please confirm or say revert.",
     "Dinis: should cyber.promptugal.news be on the reading meter, or free like the IPMA pages? The chip says 'free here' until you decide.",
     "Dinis: totals by sector need our own mapping of products to sectors. Build it (published, with its reasons), or leave sector out?",
-    "data.b@: collectors for CISA KEV, NVD, CVE.org and ENISA on data.promptugal.news (asked 18 November 2026)"
+    "data.b@: NVD and ENISA collectors next (it says so, 21:02 UTC); CVE.org only if NVD's CNA and CPE fields are not enough"
   ],
   "answers": [],
   "debrief": "board/team/cyber/debriefs/2026-11-18-handover.md"
