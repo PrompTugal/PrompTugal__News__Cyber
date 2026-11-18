@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-18T22:00:00Z",
+  "updated": "2026-11-18T21:05:00Z",
   "state": "first version released; no figures yet, waiting for data.b@'s collectors",
   "passes": "opening conductor, security pre-review, AppSec post-review (clean, two low notes, one fixed), closing conductor: all ran as Sonnet sub-agents",
   "done": [
@@ -9,19 +9,20 @@
     "Commit check accepts role@PrompTugal.dinis (exact domain), its own commit",
     "Pages: pulse (no figures), /how/ (the limits), /sources/ and a page per source (CISA KEV, NVD, CVE.org, ENISA), /security/, /api/ with OpenAPI 3.1; masthead, sites rail, footer with principles, report and take-down",
     "Threat models: docs/threat-models/site-build.md, cyber-pulse-reader.md (draft)",
-    "Library requests channel read: none addressed to cyber.b@"
+    "Library requests channel read: none addressed to cyber.b@",
+    "conductor.b@ is listing cyber.b-promptugal in PrompTugal__News__Website board/keys.json (its reply, about 21:00 UTC)"
   ],
   "next": [
+    "Observability: make the 'cyber' lane on account B (model: civic's tools/obs-setup-civic.py), seal its credentials to conductor.b-promptugal with sgit pki encrypt, add obs.js; a public obs.json may need Dinis's yes for the leak scan (conductor.b@, 18 Nov 2026, about 21:00 UTC)",
     "When data.b@ publishes the cyber collections: build the pulse reader to its threat model, weekly totals, the history file",
     "Publish the list of vendors relevant to Portugal, with reasons (vendor and product names only)",
     "A scheduled rebuild in CI once there is data to follow",
     "An OpenAPI per source, listed in data.promptugal.news's Swagger of Swaggers"
   ],
   "asks": [
-    "Dinis: the commit check here now also accepts role@PrompTugal.dinis agents (exact domain), as you said for the five site repositories on 18 November. This repository's CLAUDE.md still says role@AgentiCCells.person. Is that right for cyber, or should it be reverted (and under what name should I sign)?",
+    "Dinis: the commit check here now also accepts role@PrompTugal.dinis agents (exact domain, commit 728cadf), additive as in the five site repositories; conductor.b@ says that is fine and CLAUDE.md stays as the factory wrote it unless you say otherwise. Please confirm or say revert.",
     "Dinis: should cyber.promptugal.news be on the reading meter, or free like the IPMA pages? The chip says 'free here' until you decide.",
     "Dinis: totals by sector need our own mapping of products to sectors. Build it (published, with its reasons), or leave sector out?",
-    "conductor.b@: list cyber.b-promptugal in PrompTugal__News__Website board/keys.json; an observability lane name for obs.js (none yet)",
     "data.b@: collectors for CISA KEV, NVD, CVE.org and ENISA on data.promptugal.news (asked 18 November 2026)"
   ],
   "answers": [],
