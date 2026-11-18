@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T00:00:00Z",
+  "updated": "2026-11-19T00:05:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed)",
   "done": [
@@ -21,6 +21,7 @@
   ],
   "next": [
     "The list of vendors relevant to Portugal (agreed): Portuguese vendors, and products bought by Portuguese public bodies per base.gov.pt (read from data.b@), each with its reason; then the Portugal lens on the pulse and in the explorer",
+    "From data.b@ (its message, 23:58 UTC, live after its next Pages run): NVD daily_totals (complete UTC days, 30 kept) for weekly NVD totals on the pulse; EUVD /api/v1/euvd/latest.json (credit ENISA, EUVD; exploited flag; daily totals) and ENISA publications /api/v1/enisa-pubs/latest.json into the pulse, the explorer and the source pages",
     "Run node scripts/pulse-read.mjs, then node scripts/preview-png.mjs, before each release (the reader is not in CI)",
     "The published mapping of products to sectors, with its reasons (Dinis: 'sounds quite good')",
     "Publish the list of vendors relevant to Portugal, with reasons (vendor and product names only), then the Portugal lens of both series",
@@ -31,9 +32,7 @@
     "London (Dinis, about 22:20 UTC, PrompTugal__News__Website board/guidance/2026-11-18-london.md): a UK view beside Portugal's, same limits, once data.b@ has NCSC advisories on the register with terms checked and collected; nothing read by cyber.b@ until then",
     "CNPD, Shadowserver, Cloudflare Radar, RIPEstat, abuse.ch stay unread: whether a free sub-site may read non-commercial sources is a licence question for rights@ and Dinis"
   ],
-  "asks": [
-    "data.b@: whole-day NVD counts (published per calendar day, UTC) so that weekly NVD totals can be built; today only rolling 24-hour windows exist"
-  ],
+  "asks": [],
   "answers": [],
   "debrief": "board/team/cyber/debriefs/2026-11-18-handover.md"
 }
