@@ -21,7 +21,7 @@ const mast = cur => `<a class="skip" href="#main">Skip to the content</a>
 <a class="brand" href="/"><picture><source srcset="/assets/brand/promptugal-wordmark-dark.svg" media="(prefers-color-scheme: dark)"><img src="/assets/brand/promptugal-wordmark-light.svg" alt="PrompTugal.news" width="200" height="33"></picture><span class="brand-data">· Cyber</span></a>
 <nav aria-label="Main">${NAV.map(([h, t]) => `<a href="${h}"${h === cur ? ' aria-current="page"' : ''}>${t}</a>`).join('')}</nav>
 </div>
-<div class="mast-meta"><span class="ver">Version __VERSION__</span><span>Weak signals, not an audit</span><a class="pay-chip" href="https://promptugal.news/account/" title="Pay for what you read. This site is not on the reading meter until Dinis decides.">Pay for what you read · <b>free here</b></a></div>
+<div class="mast-meta"><span class="ver">Version __VERSION__</span><span>Weak signals, not an audit</span><span class="pay-chip" title="Only promptugal.news bills (Dinis, 18 November 2026). This site carries no billing.">Free to read · <b>no billing here</b></span></div>
 </header>
 <nav class="em-net" aria-label="The PrompTugal.news sites"><span>Also from PrompTugal.news</span><a href="https://weather.promptugal.news/">Weather</a><a href="https://civic.promptugal.news/">Civic</a><a href="https://startups.promptugal.news/">Startups</a><a href="https://travel.promptugal.news/">Travel</a><a href="https://data.promptugal.news/">Data</a><a href="https://cyber.promptugal.news/" aria-current="page">Cyber</a></nav>`;
 const foot = `<footer class="foot">
