@@ -96,6 +96,67 @@ jobs:
           if ! git diff --quiet "$ANCHOR" "$AFTER" -- .gitattributes ':(glob)**/.gitattributes' scripts/commit-exemptions.json; then
             echo "this push changes .gitattributes or the commit exemptions: refusing; a person decides" >&2; exit 1
           fi
+          # control 10 (security@ ed70bd996, relayed by conductor.b@ 16:50 UTC): no symlinks. Refused: a mode-120000 entry added
+          # or changed in any commit of A..AFTER (per commit, merges against each parent), one in the pushed tree, one in the
+          # checkout. Exceptions come only from scripts/symlink-exceptions.json in A's tree, each with its path, its target and
+          # a reason; a new one counts from the next anchor, and security@ reviews each. Paths are compared as whole byte
+          # strings read NUL-separated, never line by line (events.b@'s review 44d5402). Commits at or before the first
+          # anchor that ran this check are not walked; the tree and checkout checks still catch a link that survives.
+          [[ $ANCHOR =~ ^[0-9a-f]{40}$ && $AFTER =~ ^[0-9a-f]{40}$ ]] || { echo "the anchor or the pushed commit is not a full commit id: refusing" >&2; exit 1; }
+          [ "$(git rev-parse HEAD)" = "$AFTER" ] || { echo "the checkout is not the pushed commit: refusing" >&2; exit 1; }
+          ex="$RUNNER_TEMP/symlink-exceptions.json"
+          emode=$(git ls-tree "$ANCHOR" scripts/symlink-exceptions.json | cut -d' ' -f1)
+          if [ -z "$emode" ]; then echo '{"exceptions":[]}' > "$ex"
+          elif [ "$emode" = "100644" ]; then git cat-file blob "$ANCHOR:scripts/symlink-exceptions.json" > "$ex"
+          else echo "scripts/symlink-exceptions.json at the anchor is not a plain file: refusing" >&2; exit 1; fi
+          if ! git diff --quiet "$ANCHOR" "$AFTER" -- scripts/symlink-exceptions.json; then echo "this push changes scripts/symlink-exceptions.json: the change counts only from the next anchor, after security@ reviews it"; fi
+          NODE=$(readlink -f "$(command -v node)")
+          "$NODE" -e '
+            const { execFileSync: x } = require("child_process"), fs = require("fs"), { createHash } = require("crypto");
+            const [A, B, F] = process.argv.slice(1);
+            const fail = m => { console.error(m); process.exit(1); };
+            let doc; try { doc = JSON.parse(fs.readFileSync(F, "utf8")); } catch { fail("the symlink exceptions at the anchor are not valid JSON: refusing"); }
+            if (!doc || !Array.isArray(doc.exceptions)) fail("the symlink exceptions at the anchor have no exceptions list: refusing");
+            // paths and targets are compared as raw bytes (latin1 keeps one character per byte), never line by line
+            const bytes = s => Buffer.from(s, "utf8").toString("latin1"), show = s => JSON.stringify(s);
+            const ok = new Map();
+            for (const e of doc.exceptions) {
+              if (!e || typeof e.path !== "string" || !e.path || typeof e.target !== "string" || !e.target || typeof e.reason !== "string" || !e.reason.trim()) fail("a symlink exception without a path, a target and a reason: refusing");
+              if (ok.has(bytes(e.path))) fail(`a symlink exception listed twice: ${show(e.path)}: refusing`);
+              const t = Buffer.from(e.target, "utf8");
+              ok.set(bytes(e.path), { target: t.toString("latin1"), blob: createHash("sha1").update(Buffer.concat([Buffer.from(`blob ${t.length}\0`), t])).digest("hex") });
+            }
+            const g = a => x("git", a, { maxBuffer: 1 << 30 }).toString("latin1");
+            const bad = [];
+            // an exception pins both the path and where the link points: a repointed link is refused
+            const hit = (where, path, blob, target) => { const e = ok.get(path); if (!e || (blob !== undefined && blob !== e.blob) || (target !== undefined && target !== e.target)) bad.push(`${where}: ${show(path)}`); };
+            for (const c of g(["rev-list", `${A}..${B}`]).split("\n").filter(Boolean)) {
+              const t = g(["diff-tree", "-r", "-z", "--raw", "--no-renames", "--no-commit-id", "-m", "--root", c]).split("\0");
+              for (let i = 0; i < t.length;) {
+                if (t[i] === "" && i === t.length - 1) break;
+                const m = /^:([0-7]{6}) ([0-7]{6}) [0-9a-f]{40} ([0-9a-f]{40}) ([A-Z])[0-9]*$/.exec(t[i]);
+                if (!m) fail(`cannot read the changes of ${c}: refusing`);
+                const n = /[RC]/.test(m[4]) ? 2 : 1, paths = t.slice(i + 1, i + 1 + n); i += 1 + n;
+                if (paths.length !== n || paths.some(q => q === "")) fail(`cannot read the changes of ${c}: refusing`);
+                if (m[2] === "120000") hit(`a symlink added or changed in ${c.slice(0, 12)}`, paths[n - 1], m[3]);
+              }
+            }
+            for (const r of g(["ls-tree", "-r", "-z", "--full-tree", B]).split("\0")) {
+              if (!r) continue; const m = /^([0-7]{6}) [a-z]+ ([0-9a-f]{40})\t([\s\S]+)$/.exec(r); if (!m) fail("cannot read the pushed tree: refusing");
+              if (m[1] === "120000") hit("a symlink in the pushed tree", m[3], m[2]);
+            }
+            const walk = rel => {
+              for (const d of fs.readdirSync(rel ? Buffer.from(rel, "latin1") : ".", { withFileTypes: true, encoding: "buffer" })) {
+                const name = d.name.toString("latin1"), p = rel ? `${rel}/${name}` : name;
+                if (!rel && name === ".git") continue;
+                const at = Buffer.from(p, "latin1"), st = fs.lstatSync(at);
+                if (st.isSymbolicLink()) hit("a symlink in the checked-out tree", p, undefined, fs.readlinkSync(at, { encoding: "buffer" }).toString("latin1")); else if (st.isDirectory()) walk(p);
+              }
+            };
+            walk("");
+            if (bad.length) fail(`symlinks are refused unless scripts/symlink-exceptions.json at the anchor lists each, with its target and a reason (control 10):\n${bad.join("\n")}`);
+            console.log(`no symlinks outside the exceptions at the anchor (${ok.size} listed)`);
+          ' "$ANCHOR" "$AFTER" "$ex"
           dir="$RUNNER_TEMP/trusted"; mkdir -p "$dir"
           for f in check-commits.mjs check-signatures.mjs leak-scan.mjs; do
             mode=$(git ls-tree "$ANCHOR" "scripts/$f" | cut -d' ' -f1)

@@ -2,7 +2,7 @@
 // orphans except the pinned base, and never run the checker from the pushed tree). Builds a throwaway repository with a
 // throwaway key in a temporary directory, sets gpg.ssh.program there (the machine's global signer would otherwise be
 // used), and asserts the reason each case fails. Prints OK or the failing cases and exits 1. Nothing here is a real key.
-import { mkdtempSync, writeFileSync, readFileSync, rmSync, mkdirSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, readFileSync, rmSync, mkdirSync, symlinkSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -147,6 +147,27 @@ try {
   c = ci(full, later); const tr = c.ok ? run(join(dir, 'ci', 'trusted', 'check-signatures.mjs'), full, later) : c;
   expect('CI: an unsigned commit from a dropped run (between A and the last push) fails', !tr.ok && /no valid signature/.test(tr.out) && tr.out.includes(dropped.slice(0, 7)), tr.out);
   expect('CI: a pushed tag on an unverified commit is not used as the anchor', readFileSync(join(dir, 'ci', 'env'), 'utf8').includes(`TRUSTED_FROM=${full}`), 'env');
+  // control 10 (security@ ed70bd996): no symlinks, unless the anchor's exceptions list the path and target with a reason
+  const link = (name, to) => { rmSync(join(repo, name), { force: true }); symlinkSync(to, join(repo, name)); };
+  const exFile = list => writeFileSync(join(repo, 'scripts/symlink-exceptions.json'), JSON.stringify({ exceptions: list }));
+  link('pushed-link', 'y.txt'); const pushedLink = commit('a pushed symlink');
+  c = ci(full, pushedLink); expect('control 10: a pushed symlink fails', !c.ok && /control 10/.test(c.out) && /"pushed-link"/.test(c.out), c.out);
+  git('checkout', '-q', next); exFile([{ path: 'docs-link', target: 'y.txt', reason: 'a test exception' }]); const exAnchor = commit('the exception, listed first');
+  link('docs-link', 'y.txt'); const listed = commit('the listed symlink');
+  c = ci(exAnchor, listed); expect('control 10: a symlink listed at the anchor passes', c.ok, c.out);
+  link('docs-link', '../../etc'); const repointed = commit('the listed symlink, repointed');
+  c = ci(exAnchor, repointed); expect('control 10: a listed symlink pointed somewhere else fails', !c.ok && /control 10/.test(c.out), c.out);
+  git('checkout', '-q', next); exFile([{ path: 'docs-link', target: 'y.txt', reason: 'listed in the same push' }]); link('docs-link', 'y.txt'); const sameP = commit('a symlink listed only in the pushed tree');
+  c = ci(next, sameP); expect('control 10: a symlink listed only in the pushed tree fails', !c.ok && /control 10/.test(c.out) && /this push changes scripts\/symlink-exceptions\.json/.test(c.out), c.out);
+  git('checkout', '-q', exAnchor); link('docs-link\nx', 'y.txt'); const nl = commit('a name with a newline after a listed name');
+  c = ci(exAnchor, nl); expect('control 10: a name with a newline does not match a listed name', !c.ok && /"docs-link\\nx"/.test(c.out), c.out);
+  git('checkout', '-q', next); link('gone-link', 'y.txt'); const added = commit('a symlink added'); rmSync(join(repo, 'gone-link')); const removed = commit('and removed again');
+  c = ci(next, removed); expect('control 10: a symlink added and removed inside the range still fails (each commit is checked)', !c.ok && /"gone-link"/.test(c.out) && c.out.includes(added.slice(0, 12)), c.out);
+  git('checkout', '-q', next); rmSync(join(repo, 'y.txt')); link('y.txt', 'x'); const typed = commit('a file turned into a symlink');
+  c = ci(next, typed); expect('control 10: a file turned into a symlink fails', !c.ok && /"y\.txt"/.test(c.out), c.out);
+  git('checkout', '-q', next); mkdirSync(join(repo, '.hidden'), { recursive: true }); link('.hidden/l', '../y.txt'); const hidden = commit('a symlink in a hidden folder');
+  c = ci(next, hidden); expect('control 10: a symlink in a hidden folder fails', !c.ok && /"\.hidden\/l"/.test(c.out), c.out);
+  expect('control 10: the exceptions are read from the anchor, not the pushed tree', /git cat-file blob "\$ANCHOR:scripts\/symlink-exceptions\.json"/.test(body) && /diff-tree", "-r", "-z"/.test(body) && !/grep -x/.test(body), 'pages.yml');
   git('checkout', '-q', 'main');
 } catch (e) { expect('the test repository could be built', false, String(e.stderr || e.message).slice(0, 300)); }
 finally { rmSync(dir, { recursive: true, force: true }); }
