@@ -1,5 +1,5 @@
 // The PrompTugal sites bar at build (conductor.b@, relaying Dinis's board/guidance/2026-11-18-the-sites-bar.md in
-// PrompTugal__News__Website; 1.1.1 cleared by security@ on 19 Nov 2026, review 2026-11-19-0130-bar-signing-live-data.md; 1.2.0 cleared by security@, Website 055e6c1430, wake 07:03 UTC 19 Nov 2026).
+// PrompTugal__News__Website; 1.1.1 cleared by security@ on 19 Nov 2026, review 2026-11-19-0130-bar-signing-live-data.md; 1.2.0 cleared by security@, Website 055e6c1430; 1.2.1 cleared by security@, Website 2d812d6da, 07:54 UTC 19 Nov 2026).
 // The full pins (SRI form, sha256-<base64> of the whole file) are taken from the registry's bar.integrity, never kept in
 // part. Every vendored file must match its pin exactly before the renderer is imported; any mismatch stops the build.
 // If the registry cannot be read, the renderer is not run and the last bar that passed these checks is kept.
@@ -7,7 +7,7 @@
 // The registry is read with a timeout, no redirects and a size limit; if the renderer refuses it, no bar is published.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-const VERSION = '1.2.0';
+const VERSION = '1.2.1';
 const REGISTRY = 'https://promptugal.news/api/v1/sites.json';
 const LAST = `scripts/vendor/sites-bar-${VERSION}/last-bar.html`;
 export const TEMPLATE = `scripts/vendor/sites-bar-${VERSION}/preview-template.svg.txt`;
