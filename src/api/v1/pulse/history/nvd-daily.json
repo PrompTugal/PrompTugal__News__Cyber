@@ -1,0 +1,31 @@
+{
+  "about": "New CVEs in NVD per complete UTC day, by CVSS base severity band, counted by data.b@ from NVD's values and kept by cyber.promptugal.news. Append-only: a complete day never changes. UTC-day totals, not the 24-hour snapshots.",
+  "notice": "This product uses the NVD API but is not endorsed or certified by the NVD.",
+  "points": [
+    {
+      "day": "2026-11-18",
+      "total": 722,
+      "by_band": {
+        "CRITICAL": {
+          "total": 96
+        },
+        "HIGH": {
+          "total": 285
+        },
+        "MEDIUM": {
+          "total": 257
+        },
+        "LOW": {
+          "total": 44
+        },
+        "NONE": {
+          "total": 0
+        },
+        "unscored": {
+          "total": 40
+        }
+      },
+      "counted_at": "2026-11-19T06:15:43Z"
+    }
+  ]
+}

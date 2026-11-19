@@ -51,6 +51,31 @@
           "total": 40
         }
       }
+    },
+    {
+      "read_at": "2026-11-19T06:15:43Z",
+      "window_hours": 24,
+      "total": 708,
+      "by_band": {
+        "CRITICAL": {
+          "total": 96
+        },
+        "HIGH": {
+          "total": 257
+        },
+        "MEDIUM": {
+          "total": 272
+        },
+        "LOW": {
+          "total": 43
+        },
+        "NONE": {
+          "total": 0
+        },
+        "unscored": {
+          "total": 40
+        }
+      }
     }
   ]
 }

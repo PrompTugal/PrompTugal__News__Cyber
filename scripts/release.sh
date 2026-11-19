@@ -10,6 +10,7 @@ git fetch -q origin dev
 node scripts/build.mjs
 node scripts/validate.mjs
 node scripts/test-leak-scan.mjs
+node scripts/test-pulse-daily.mjs
 node scripts/leak-scan.mjs
 node scripts/check-commits.mjs origin/dev HEAD
 node scripts/check-signatures.mjs origin/dev HEAD
@@ -20,6 +21,7 @@ for i in 1 2 3 4 5; do
   node scripts/build.mjs >/dev/null
   node scripts/validate.mjs >/dev/null
   node scripts/test-leak-scan.mjs >/dev/null
+  node scripts/test-pulse-daily.mjs >/dev/null
   node scripts/leak-scan.mjs >/dev/null
   node scripts/check-commits.mjs origin/dev HEAD >/dev/null
   node scripts/check-signatures.mjs origin/dev HEAD >/dev/null

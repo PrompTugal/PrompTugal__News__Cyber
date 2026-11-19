@@ -22,7 +22,11 @@ const isDate = s => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && !N
 const isTime = s => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(s) && !Number.isNaN(Date.parse(s));
 const inRange = s => { const t = Date.parse(s.length === 10 ? s + 'T00:00:00Z' : s); return t >= Date.parse('2020-01-01T00:00:00Z') && t <= Date.now() + 86_400_000; };
 const isCount = n => Number.isInteger(n) && n >= 0 && n < 10_000_000;
-const counted = n => ({ total: n }); // the real number, however small (Dinis, 18 Nov 2026, about 23:40 UTC)
+const counted = n => ({ total: n });
+// a calendar day that round-trips (2026-02-30 does not), from 2020 to today UTC
+const isDay = s => isDate(s) && new Date(s + 'T00:00:00Z').toISOString().slice(0, 10) === s && s >= '2020-01-01' && s <= new Date().toISOString().slice(0, 10);
+// a band map with exactly our six bands, each a whole count, adding up to the total (shared by the 24-hour and daily paths)
+const bandsOk = (b, total) => !!b && typeof b === 'object' && !Array.isArray(b) && Object.keys(b).length === BANDS.length && Object.keys(b).every(k => BANDS.includes(k)) && BANDS.every(k => isCount(b[k])) && BANDS.reduce((s, k) => s + b[k], 0) === total; // the real number, however small (Dinis, 18 Nov 2026, about 23:40 UTC)
 
 async function get(name) {
   const i = process.argv.indexOf('--from');
@@ -72,10 +76,7 @@ kevHist.points = kevPoints;
 if (!isTime(nvd.read_at) || !inRange(nvd.read_at)) fail('nvd: read_at is not a plausible ISO time');
 const l = nvd.last_24h;
 if (!l || !isCount(l.new) || typeof l.new_by_severity !== 'object') fail('nvd: last_24h missing');
-const keys = Object.keys(l.new_by_severity);
-if (keys.some(k => !BANDS.includes(k)) || BANDS.some(b => !isCount(l.new_by_severity[b]))) fail('nvd: unexpected severity bands');
-const bandSum = BANDS.reduce((s, b) => s + l.new_by_severity[b], 0);
-if (bandSum !== l.new) fail(`nvd: bands add up to ${bandSum}, not ${l.new}`);
+if (!bandsOk(l.new_by_severity, l.new)) fail('nvd: the severity bands are unexpected or do not add up to the total');
 const nvdHistFile = `${HIST}/nvd-24h.json`;
 const nvdHist = load(nvdHistFile, { about: 'New CVEs in NVD in the 24 hours before each read, by CVSS base severity band, as read by data.b@ every 6 hours. Snapshots overlap: never add them up. Append-only.', notice: NVD_NOTICE, points: [] });
 const prev = nvdHist.points.find(p => p.read_at === nvd.read_at);
@@ -85,6 +86,42 @@ const lastRead = nvdHist.points.at(-1);
 if (!prev && lastRead && nvd.read_at < lastRead.read_at) fail('nvd: this read is older than the last one kept');
 if (!prev) nvdHist.points.push(snap);
 nvdHist.points.sort((a, b) => a.read_at.localeCompare(b.read_at));
+
+// --- NVD: new CVEs per complete UTC day, from data.b@'s daily_totals (counted by data.b@ from NVD's values). ---
+// Only days with complete === true are kept. A kept day never changes; one missing from a read that still covers its date
+// stops the run (a person decides); one older than the read's window simply stays in our history (data.b@ keeps 30 days).
+// These are UTC-day totals: never mixed with the 24-hour snapshots above.
+const MAX_READ_DAYS = 60, MAX_HIST_DAYS = 3700, MAX_DAY = 20_000;
+const dt = nvd.daily_totals;
+if (dt !== undefined && (dt === null || typeof dt !== 'object' || Array.isArray(dt))) fail('nvd: daily_totals is not an object');
+const dayKeys = Object.keys(dt || {});
+if (dayKeys.length > MAX_READ_DAYS) fail(`nvd: daily_totals has more than ${MAX_READ_DAYS} days`);
+const dayFile = `${HIST}/nvd-daily.json`;
+const dayHist = load(dayFile, { about: 'New CVEs in NVD per complete UTC day, by CVSS base severity band, counted by data.b@ from NVD\'s values and kept by cyber.promptugal.news. Append-only: a complete day never changes. UTC-day totals, not the 24-hour snapshots.', notice: NVD_NOTICE, points: [] });
+// the kept history is re-checked too: a hand edit that breaks a point stops the run rather than the build (AppSec, 10:25 UTC)
+for (const p of dayHist.points) if (!p || !isDay(p.day) || !isCount(p.total) || !p.by_band || !bandsOk(Object.fromEntries(Object.entries(p.by_band).map(([k, v]) => [k, v && v.total])), p.total)) fail('nvd: a point in the kept daily history fails its checks');
+const keptDays = new Map(dayHist.points.map(p => [p.day, p]));
+const readDays = new Set();
+for (const day of dayKeys) {
+  if (!isDay(day)) fail(`nvd: daily_totals has a day that is not a real past or present UTC date`);
+  const v = Object.getOwnPropertyDescriptor(dt, day).value;
+  if (!v || typeof v !== 'object' || v.complete !== true) continue; // the open day, or anything not strictly complete, is not kept
+  const dayEnd = Date.parse(day + 'T00:00:00Z') + 86_400_000;
+  if (dayEnd > Date.now()) fail(`nvd: day ${day} is marked complete before it has ended`);
+  if (!isCount(v.new) || v.new > MAX_DAY) fail(`nvd: day ${day} has no valid total`);
+  if (!v.by_severity || !bandsOk(v.by_severity.new, v.new)) fail(`nvd: day ${day}: the bands are unexpected or do not add up`);
+  if (!isTime(v.counted_at) || Date.parse(v.counted_at) < dayEnd || Date.parse(v.counted_at) > Date.now() + 600_000) fail(`nvd: day ${day}: counted_at is not between the end of the day and now`);
+  readDays.add(day);
+  const pt = { day, ...counted(v.new), by_band: Object.fromEntries(BANDS.map(k => [k, counted(v.by_severity.new[k])])), counted_at: v.counted_at };
+  const old = keptDays.get(day);
+  if (old) { if (old.total !== pt.total || JSON.stringify(old.by_band) !== JSON.stringify(pt.by_band)) fail(`nvd: complete day ${day} changed; not overwriting (a person decides)`); continue; }
+  keptDays.set(day, pt);
+}
+// data.b@ keeps 30 days: any kept day from the last 25 must still be in the read as complete, even if the read is empty
+const recent = new Date(Date.now() - 25 * 86_400_000).toISOString().slice(0, 10);
+for (const d of keptDays.keys()) if (d >= recent && !readDays.has(d)) fail(`nvd: complete day ${d} is missing from a read that covers it; not dropping it (a person decides)`);
+if (keptDays.size > MAX_HIST_DAYS) fail('nvd: daily history is longer than expected');
+dayHist.points = [...keptDays.values()].sort((a, b) => a.day.localeCompare(b.day));
 
 // --- The pulse: totals only. ---
 const pulse = load(`${DIR}/index.json`, {});
@@ -100,6 +137,9 @@ pulse.series = [
   { id: 'nvd-new-24h', title: 'New CVEs in NVD in the 24 hours before each read, worldwide, by severity band', source: 'NVD CVE API 2.0, via https://data.promptugal.news/api/v1/nvd-cve/latest.json (CC BY 4.0, PrompTugal.news). The totals are ours, counted from NVD\'s values.',
     source_license: { name: 'NIST copyright notice', url: 'https://www.nist.gov/oism/copyrights' }, notice: NVD_NOTICE, license: LIC_OURS, read_at: nvd.read_at,
     points: nvdHist.points },
+  { id: 'nvd-new-daily', title: 'New CVEs in NVD per complete UTC day, worldwide, by severity band', source: 'NVD CVE API 2.0, counted per UTC day by data.b@, via https://data.promptugal.news/api/v1/nvd-cve/latest.json (CC BY 4.0, PrompTugal.news). The totals are counted from NVD\'s values.',
+    source_license: { name: 'NIST copyright notice', url: 'https://www.nist.gov/oism/copyrights' }, notice: NVD_NOTICE, license: LIC_OURS, read_at: nvd.read_at,
+    points: dayHist.points.map(p => ({ day: p.day, total: p.total, by_band: p.by_band })) },
 ];
 
 // The limits, checked in code before anything is written: every string must be one of ours or an ISO date/time.
@@ -119,10 +159,11 @@ const stripOurs = x => OUR_URLS.reduce((t, u) => t.split(u).join(' '), x);
   }
   if (Array.isArray(x)) return x.forEach((y, i) => walk(y, `${path}[${i}]`));
   if (x && typeof x === 'object') for (const [k, v] of Object.entries(x)) walk(v, `${path}.${k}`);
-})({ series: pulse.series, state_note: pulse.state_note, caveat: pulse.caveat, kevHist: kevHist.points, nvdHist: nvdHist.points }, 'pulse');
+})({ series: pulse.series, state_note: pulse.state_note, caveat: pulse.caveat, kevHist: kevHist.points, nvdHist: nvdHist.points, dayHist: dayHist.points }, 'pulse');
 
 save(kevHistFile, kevHist);
 save(nvdHistFile, nvdHist);
+save(dayFile, dayHist);
 save(`${DIR}/index.json`, pulse);
 const last = kevPoints.at(-1);
-console.log(`pulse: ${kevPoints.length} KEV weeks (this week ${last.week}, partial, ${last.total}), ${nvdHist.points.length} NVD snapshot(s); KEV read ${kev.read_at}, NVD read ${nvd.read_at}`);
+console.log(`pulse: ${kevPoints.length} KEV weeks (this week ${last.week}, partial, ${last.total}), ${nvdHist.points.length} NVD snapshot(s), ${dayHist.points.length} complete NVD day(s); KEV read ${kev.read_at}, NVD read ${nvd.read_at}`);

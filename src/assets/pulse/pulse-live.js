@@ -75,10 +75,45 @@
     return 'live';
   }
 
+  // Complete UTC days: our own kept history (this site) plus any newer complete day in the live NVD file, with the reader's
+  // checks: a real past day, complete === true, ended before now, six bands that add up, at most 60 days in the file.
+  const isDay = s => isDate(s) && new Date(s + 'T00:00:00Z').toISOString().slice(0, 10) === s && s >= '2020-01-01';
+  const bandsOk = (b, t) => !!b && typeof b === 'object' && Object.keys(b).length === BANDS.length && BANDS.every(k => isCount(b[k])) && BANDS.reduce((x, k) => x + b[k], 0) === t;
+  const DAYB = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'NONE', 'unscored'];
+  async function days(liveNvd) {
+    const svg = $('p-day-svg'); if (!svg) return 'none';
+    const hist = await get('/api/v1/pulse/history/nvd-daily.json');
+    const m = new Map();
+    for (const p of (hist && Array.isArray(hist.points) ? hist.points : [])) if (p && isDay(p.day) && isCount(p.total) && p.by_band) m.set(p.day, { day: p.day, total: p.total, b: Object.fromEntries(DAYB.map(k => [k, p.by_band[k] && p.by_band[k].total])) });
+    const dt = liveNvd && liveNvd.daily_totals;
+    if (dt && typeof dt === 'object' && !Array.isArray(dt) && Object.keys(dt).length <= 60) {
+      for (const k of Object.keys(dt)) {
+        const v = Object.getOwnPropertyDescriptor(dt, k).value;
+        if (!isDay(k) || !v || v.complete !== true || Date.parse(k + 'T00:00:00Z') + 86400000 > Date.now()) continue;
+        if (!isCount(v.new) || v.new > 20000 || !v.by_severity || !bandsOk(v.by_severity.new, v.new)) continue;
+        if (!isTime(v.counted_at) || Date.parse(v.counted_at) < Date.parse(k + 'T00:00:00Z') + 86400000) continue;
+        if (!m.has(k)) m.set(k, { day: k, total: v.new, b: v.by_severity.new });
+      }
+    }
+    const pts = [...m.values()].filter(p => DAYB.every(k => isCount(p.b[k]))).sort((a, b) => a.day.localeCompare(b.day)).slice(-30);
+    if (!pts.length || pts.at(-1).day <= (svg.dataset.last || '')) return 'kept';
+    const W = 720, H = 200, bw = Math.min(60, W / pts.length), max = Math.max(5, ...pts.map(p => p.total)); const kids = [];
+    pts.forEach((p, i) => {
+      const x = i * bw + 4, w = Math.max(2, bw - 8), bh = Math.max(2, Math.round((p.total / max) * (H - 50)));
+      kids.push(sv('rect', { class: 'b', x, y: H - 30 - bh, width: w, height: bh }), sv('text', { class: 'v', x: x + w / 2, y: H - 36 - bh, 'text-anchor': 'middle' }, p.total), sv('text', { class: 'w', x: x + w / 2, y: H - 12, 'text-anchor': 'middle' }, p.day.slice(5)));
+    });
+    svg.replaceChildren(...kids); svg.dataset.last = pts.at(-1).day;
+    svg.setAttribute('aria-label', 'New CVEs in NVD per complete UTC day: ' + pts.map(p => `${p.day} ${p.total}`).join('; '));
+    const t = $('p-day-table');
+    if (t) { const head = t.rows[0]; t.replaceChildren(head, ...pts.slice().reverse().map(p => { const tr = el('tr'); tr.append(el('td', p.day), el('td', p.total), ...DAYB.map(k => el('td', p.b[k]))); return tr; })); }
+    const c = $('p-day-count'); if (c) c.textContent = String(m.size);
+    return 'live';
+  }
+
   async function refresh() {
     const out = [];
     for (const [name, fn, u] of [['KEV', kev, SRC.kev], ['NVD', nvd, SRC.nvd]]) {
-      try { const r = fn(await get(u)); out.push(`${name}: ${r === 'live' ? 'the latest file' : 'the built copy is already the latest'}`); }
+      try { const data = await get(u); const r = fn(data); out.push(`${name}: ${r === 'live' ? 'the latest file' : 'the built copy is already the latest'}`); if (name === 'NVD') { try { await days(data); } catch { /* the built days stay */ } } }
       catch (e) { out.push(`${name}: the built copy (the latest file did not pass its checks or could not be read)`); const [id, src] = name === 'KEV' ? ['p-kev-state', $('p-kev-svg')] : ['p-nvd-state', $('p-nvd-read')]; if (src && src.dataset.read) mark(id, src.dataset.read); }
     }
     const s = $('p-live'); if (s) s.textContent = `Figures shown: ${out.join('; ')}. Checked ${new Date().toISOString().slice(11, 16)} UTC, from data.promptugal.news.`;

@@ -8,7 +8,7 @@
   "about": "The pulse: weekly totals from public vulnerability sources, for products and vendors relevant to Portugal, kept as a history. Weak signals, not an audit. Aggregates only.",
   "state": "live",
   "state_note": "Worldwide totals from CISA KEV and NVD, read from data.promptugal.news. The Portugal lens (vendors relevant to Portugal) is not built yet.",
-  "updated": "2026-11-18",
+  "updated": "2026-11-19",
   "by": "cyber.b@PrompTugal.dinis",
   "limits": [
     "aggregates and totals only",
@@ -33,1591 +33,1591 @@
         "url": "https://creativecommons.org/licenses/by/4.0/",
         "holder": "PrompTugal.news"
       },
-      "read_at": "2026-11-18T23:33:46Z",
+      "read_at": "2026-11-19T06:03:49Z",
       "points": [
         {
           "week": "2021-11-01",
           "partial": false,
           "total": 287,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2021-11-08",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2021-11-15",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2021-11-22",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2021-11-29",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2021-12-06",
           "partial": false,
           "total": 13,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2021-12-13",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2021-12-20",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2021-12-27",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-01-03",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-01-10",
           "partial": false,
           "total": 15,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-01-17",
           "partial": false,
           "total": 17,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-01-24",
           "partial": false,
           "total": 8,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-01-31",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-02-07",
           "partial": false,
           "total": 16,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-02-14",
           "partial": false,
           "total": 9,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-02-21",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-02-28",
           "partial": false,
           "total": 95,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-03-07",
           "partial": false,
           "total": 11,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-03-14",
           "partial": false,
           "total": 15,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-03-21",
           "partial": false,
           "total": 66,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-03-28",
           "partial": false,
           "total": 39,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-04-04",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-04-11",
           "partial": false,
           "total": 28,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-04-18",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-04-25",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-05-02",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-05-09",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-05-16",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-05-23",
           "partial": false,
           "total": 75,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-05-30",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-06-06",
           "partial": false,
           "total": 38,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-06-13",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-06-20",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-06-27",
           "partial": false,
           "total": 9,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-07-04",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-07-11",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-07-18",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-07-25",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-08-01",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-08-08",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-08-15",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-08-22",
           "partial": false,
           "total": 11,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-08-29",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-09-05",
           "partial": false,
           "total": 11,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-09-12",
           "partial": false,
           "total": 8,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-09-19",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-09-26",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-10-03",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-10-10",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-10-17",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-10-24",
           "partial": false,
           "total": 8,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-10-31",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-11-07",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-11-14",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-11-21",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-11-28",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-12-05",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-12-12",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-12-19",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2022-12-26",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-01-02",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-01-09",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-01-16",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-01-23",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-01-30",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-02-06",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-02-13",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-02-20",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-02-27",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-03-06",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-03-13",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-03-20",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-03-27",
           "partial": false,
           "total": 9,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-04-03",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-04-10",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-04-17",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-04-24",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-05-01",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-05-08",
           "partial": false,
           "total": 8,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-05-15",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-05-22",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-05-29",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-06-05",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-06-12",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-06-19",
           "partial": false,
           "total": 11,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-06-26",
           "partial": false,
           "total": 8,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-07-03",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-07-10",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-07-17",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-07-24",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-07-31",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-08-07",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-08-14",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-08-21",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-08-28",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-09-04",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-09-11",
           "partial": false,
           "total": 8,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-09-18",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-09-25",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-10-02",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-10-09",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-10-16",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-10-23",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-10-30",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-11-06",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-11-13",
           "partial": false,
           "total": 12,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-11-20",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-11-27",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-12-04",
           "partial": false,
           "total": 8,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-12-11",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-12-18",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2023-12-25",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-01-01",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-01-08",
           "partial": false,
           "total": 9,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-01-15",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-01-22",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-01-29",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-02-05",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-02-12",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-02-19",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-02-26",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-03-04",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-03-11",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-03-18",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-03-25",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-04-01",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-04-08",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-04-15",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-04-22",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-04-29",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-05-06",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-05-13",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-05-20",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-05-27",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-06-03",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-06-10",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-06-17",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-06-24",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-07-01",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-07-08",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-07-15",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-07-22",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-07-29",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-08-05",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-08-12",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-08-19",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-08-26",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-09-02",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-09-09",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-09-16",
           "partial": false,
           "total": 11,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-09-23",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-09-30",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-10-07",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-10-14",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-10-21",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-10-28",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-11-04",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-11-11",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-11-18",
           "partial": false,
           "total": 8,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-11-25",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-12-02",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-12-09",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-12-16",
           "partial": false,
           "total": 8,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-12-23",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2024-12-30",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-01-06",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-01-13",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-01-20",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-01-27",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-02-03",
           "partial": false,
           "total": 11,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-02-10",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-02-17",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-02-24",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-03-03",
           "partial": false,
           "total": 9,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-03-10",
           "partial": false,
           "total": 13,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-03-17",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-03-24",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-03-31",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-04-07",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-04-14",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-04-21",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-04-28",
           "partial": false,
           "total": 8,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-05-05",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-05-12",
           "partial": false,
           "total": 9,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-05-19",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-05-26",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-06-02",
           "partial": false,
           "total": 9,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-06-09",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-06-16",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-06-23",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-06-30",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-07-07",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-07-14",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-07-21",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-07-28",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-08-04",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-08-11",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-08-18",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-08-25",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-09-01",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-09-08",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-09-15",
           "partial": false,
           "total": 0,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-09-22",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-09-29",
           "partial": false,
           "total": 10,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-10-06",
           "partial": false,
           "total": 9,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-10-13",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-10-20",
           "partial": false,
           "total": 8,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-10-27",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-11-03",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-11-10",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-11-17",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-11-24",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-12-01",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-12-08",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-12-15",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-12-22",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2025-12-29",
           "partial": false,
           "total": 1,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-01-05",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-01-12",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-01-19",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-01-26",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-02-02",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-02-09",
           "partial": false,
           "total": 11,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-02-16",
           "partial": false,
           "total": 8,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-02-23",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-03-02",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-03-09",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-03-16",
           "partial": false,
           "total": 9,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-03-23",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-03-30",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-04-06",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-04-13",
           "partial": false,
           "total": 10,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-04-20",
           "partial": false,
           "total": 14,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-04-27",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-05-04",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-05-11",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-05-18",
           "partial": false,
           "total": 10,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-05-25",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-06-01",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-06-08",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-06-15",
           "partial": false,
           "total": 4,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-06-22",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-06-29",
           "partial": false,
           "total": 2,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-07-06",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-07-13",
           "partial": false,
           "total": 10,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-07-20",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-07-27",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-08-03",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-08-10",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-08-17",
           "partial": false,
           "total": 9,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-08-24",
           "partial": false,
           "total": 11,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-08-31",
           "partial": false,
           "total": 10,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-09-07",
           "partial": false,
           "total": 14,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-09-14",
           "partial": false,
           "total": 7,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-09-21",
           "partial": false,
           "total": 12,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-09-28",
           "partial": false,
           "total": 6,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-10-05",
           "partial": false,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-10-12",
           "partial": false,
           "total": 9,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-10-19",
           "partial": false,
           "total": 8,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-10-26",
           "partial": false,
           "total": 10,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-11-02",
           "partial": false,
           "total": 3,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-11-09",
           "partial": false,
           "total": 12,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         },
         {
           "week": "2026-11-16",
           "partial": true,
           "total": 5,
-          "read_at": "2026-11-18T23:33:46Z"
+          "read_at": "2026-11-19T06:03:49Z"
         }
       ]
     },
@@ -1635,7 +1635,7 @@
         "url": "https://creativecommons.org/licenses/by/4.0/",
         "holder": "PrompTugal.news"
       },
-      "read_at": "2026-11-18T23:40:50Z",
+      "read_at": "2026-11-19T06:15:43Z",
       "points": [
         {
           "read_at": "2026-11-18T22:14:51Z",
@@ -1665,6 +1665,73 @@
         {
           "read_at": "2026-11-18T23:40:50Z",
           "window_hours": 24,
+          "total": 722,
+          "by_band": {
+            "CRITICAL": {
+              "total": 96
+            },
+            "HIGH": {
+              "total": 285
+            },
+            "MEDIUM": {
+              "total": 257
+            },
+            "LOW": {
+              "total": 44
+            },
+            "NONE": {
+              "total": 0
+            },
+            "unscored": {
+              "total": 40
+            }
+          }
+        },
+        {
+          "read_at": "2026-11-19T06:15:43Z",
+          "window_hours": 24,
+          "total": 708,
+          "by_band": {
+            "CRITICAL": {
+              "total": 96
+            },
+            "HIGH": {
+              "total": 257
+            },
+            "MEDIUM": {
+              "total": 272
+            },
+            "LOW": {
+              "total": 43
+            },
+            "NONE": {
+              "total": 0
+            },
+            "unscored": {
+              "total": 40
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "nvd-new-daily",
+      "title": "New CVEs in NVD per complete UTC day, worldwide, by severity band",
+      "source": "NVD CVE API 2.0, counted per UTC day by data.b@, via https://data.promptugal.news/api/v1/nvd-cve/latest.json (CC BY 4.0, PrompTugal.news). The totals are counted from NVD's values.",
+      "source_license": {
+        "name": "NIST copyright notice",
+        "url": "https://www.nist.gov/oism/copyrights"
+      },
+      "notice": "This product uses the NVD API but is not endorsed or certified by the NVD.",
+      "license": {
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "holder": "PrompTugal.news"
+      },
+      "read_at": "2026-11-19T06:15:43Z",
+      "points": [
+        {
+          "day": "2026-11-18",
           "total": 722,
           "by_band": {
             "CRITICAL": {

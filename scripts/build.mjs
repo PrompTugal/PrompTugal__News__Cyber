@@ -113,6 +113,21 @@ function pulseHtml() {
 <p class="notice">${esc(nvd.notice)}</p>
 <p class="caveat">Source: ${esc(nvd.source)} Underlying data: <a href="${url(nvd.source_license.url)}">${esc(nvd.source_license.name)}</a>; our totals <a href="${url(nvd.license.url)}">${esc(nvd.license.name)}</a>. ${esc(pulse.caveat)}</p>`;
   }
+  const daily = pulse.series.find(x => x.id === 'nvd-new-daily');
+  if (daily) {
+    const pts = daily.points.slice(-30);
+    const W = 720, H = 200, n = Math.max(pts.length, 1), bw = Math.min(60, W / n), max = Math.max(5, ...pts.map(p => p.total || 0));
+    const bars = pts.map((p, i) => {
+      const x = i * bw + 4, w = Math.max(2, bw - 8), bh = Math.max(2, Math.round((p.total / max) * (H - 50)));
+      return `<rect class="b" x="${x}" y="${H - 30 - bh}" width="${w}" height="${bh}"/><text class="v" x="${x + w / 2}" y="${H - 36 - bh}" text-anchor="middle">${esc(p.total)}</text><text class="w" x="${x + w / 2}" y="${H - 12}" text-anchor="middle">${esc(p.day.slice(5))}</text>`;
+    }).join('');
+    h += `<h2>New CVEs, day by day</h2>
+<p>${esc(daily.title)}. Complete UTC days only; the day still under way is left out. These are whole-day totals, a different measure from the 24-hour snapshot above, and the two are never mixed. <span id="p-day-count">${esc(daily.points.length)}</span> day${daily.points.length === 1 ? '' : 's'} kept so far; one more joins after each UTC midnight.</p>
+${pts.length ? `<figure class="chart"><svg id="p-day-svg" data-last="${esc(pts.at(-1).day)}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(daily.title)}: ${esc(pts.map(p => `${p.day} ${p.total}`).join('; '))}">${bars}</svg>
+<figcaption>Source: ${esc(daily.source)} Our history: <a href="/api/v1/pulse/history/nvd-daily.json">/api/v1/pulse/history/nvd-daily.json</a>. ${esc(pulse.caveat)}</figcaption></figure>
+<div class="scroll"><table id="p-day-table"><tr><th>UTC day</th><th>New</th>${['critical', 'high', 'medium', 'low', 'none', 'not scored'].map(b => `<th>${b}</th>`).join('')}</tr>${pts.slice().reverse().map(p => `<tr><td>${esc(p.day)}</td><td>${esc(p.total)}</td>${['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'NONE', 'unscored'].map(b => `<td>${esc(p.by_band[b].total)}</td>`).join('')}</tr>`).join('')}</table></div>` : '<p>No complete day yet.</p>'}
+`;
+  }
   return h;
 }
 
