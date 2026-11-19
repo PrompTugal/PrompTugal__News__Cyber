@@ -55,6 +55,19 @@ try {
   r = run(fromRelease, release, push);
   expect('the pushed copy would wave it through (why it must not be used)', pushed.ok, pushed.out);
   expect("the last release's copy refuses the push", !r.ok && /no valid signature/.test(r.out), r.out);
+  // a shallow clone is refused before anything is checked
+  const shallow = join(dir, 'shallow'); execFileSync('git', ['clone', '-q', '--depth', '1', `file://${repo}`, shallow], { stdio: 'ignore' });
+  const rs = spawnSync('node', [checker, '', 'HEAD'], { cwd: shallow, encoding: 'utf8' });
+  expect('a shallow clone is refused', rs.status !== 0 && /shallow/.test(rs.stdout + rs.stderr), rs.stdout + rs.stderr);
+  // an orphan signed with its own key (not the published one) fails
+  sh('ssh-keygen', ['-q', '-t', 'ecdsa', '-b', '256', '-N', '', '-f', join(dir, 'k2')], { cwd: dir });
+  git('checkout', '-q', '--orphan', 'evil2'); git('rm', '-rq', '--cached', '.');
+  writeFileSync(join(repo, 'team/keys.json'), JSON.stringify({ keys: [{ agent: AGENT, session: SESSION, bundle: { sign: sh('ssh-keygen', ['-e', '-m', 'PKCS8', '-f', join(dir, 'k2.pub')], { cwd: dir }) } }] }));
+  git('add', '-A'); git('-c', 'commit.gpgsign=true', '-c', `user.signingkey=${join(dir, 'k2')}`, 'commit', '-q', '-m', msg('an orphan signed with its own key'));
+  const orphan2 = git('rev-parse', 'HEAD'); git('checkout', '-q', 'main');
+  r = run(checker, release, orphan2); expect('an orphan signed with its own key fails', !r.ok && /does not descend from the trusted base/.test(r.out), r.out);
+  const wfs = readFileSync(join(here, '../.github/workflows/pages.yml'), 'utf8');
+  expect('CI refuses a shallow checkout and fetches the whole history', /is-shallow-repository/.test(wfs) && /fetch-depth: 0/.test(wfs), 'pages.yml');
   const rel = readFileSync(join(here, 'release.sh'), 'utf8');
   const wf = readFileSync(join(here, '../.github/workflows/pages.yml'), 'utf8');
   expect('CI refuses when it cannot find the release a push builds on (no fallback to an old checker)', /refusing; a person decides" >&2; exit 1/.test(wf) && !/ref=c8fff24/.test(wf), 'pages.yml');

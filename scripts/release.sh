@@ -9,6 +9,7 @@ cd "$(dirname "$0")/.."
 git fetch -q origin dev
 # The signature check runs as it stood at the last release (origin/dev), never from the tree being pushed, so a push
 # cannot change its own checker (videos.b@'s finding via conductor.b@, 19 Nov 2026, 14:01 UTC).
+[ "$(git rev-parse --is-shallow-repository)" = "false" ] || { echo "a shallow clone: fetch the whole history first" >&2; exit 1; }
 SIGTMP=$(mktemp -d); trap 'rm -rf "$SIGTMP"' EXIT
 sigcheck() { git show "origin/dev:scripts/check-signatures.mjs" > "$SIGTMP/check-signatures.mjs"; node "$SIGTMP/check-signatures.mjs" "$@"; }
 node scripts/build.mjs

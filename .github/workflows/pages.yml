@@ -59,6 +59,7 @@ jobs:
         run: |
           last=$(git describe --tags --abbrev=0 --match "v${VERSION_BASE}.*" "$AFTER" 2>/dev/null || true)
           base=c8fff24023c597a36a76966af5d585b51944c966
+          [ "$(git rev-parse --is-shallow-repository)" = "false" ] || { echo "a shallow checkout: refusing (fetch-depth must be 0)" >&2; exit 1; }
           # a run started by a person by hand has no "before": it starts from the last release tag
           if [ "$EVENT" = "workflow_dispatch" ]; then BEFORE="$last"; fi
           # BEFORE must be the dev this push builds on (on the base's line, an ancestor of AFTER); otherwise refuse

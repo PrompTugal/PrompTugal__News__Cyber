@@ -22,6 +22,8 @@ const after = afterArg || 'HEAD';
 // The one trusted base, pinned (videos.b@'s finding via conductor.b@, 19 Nov 2026, 14:01 UTC): the commit that added this
 // check. Found by its full id, never by searching history, which a crafted orphan with an old date could answer.
 const TRUSTED_BASE = 'c8fff24023c597a36a76966af5d585b51944c966';
+// a shallow clone hides history (and so orphans and unrelated merges): refuse it (security@'s control 6, 19 Nov 2026)
+if (tryGit('rev-parse', '--is-shallow-repository') !== 'false') { console.error('check-signatures: refusing a shallow (or unreadable) clone: fetch the whole history first'); process.exit(1); }
 const first = TRUSTED_BASE;
 if (tryGit('cat-file', '-e', `${first}^{commit}`) === null) { console.error('check-signatures: the trusted base is not in this clone'); process.exit(1); }
 const isAncestor = (a, b) => spawnSync('git', ['merge-base', '--is-ancestor', a, b]).status === 0;
