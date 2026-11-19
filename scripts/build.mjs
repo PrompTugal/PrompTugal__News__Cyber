@@ -84,7 +84,8 @@ function pulseHtml() {
   if (pulse.state !== 'live') return '';
   const kev = pulse.series.find(x => x.id === 'kev-added-weekly');
   const nvd = pulse.series.find(x => x.id === 'nvd-new-24h');
-  let h = `<p class="caveat">${esc(pulse.caveat)} The Portugal lens (vendors relevant to Portugal) is not built yet.</p>`;
+  let h = `<p class="caveat">${esc(pulse.caveat)} The Portugal lens (vendors relevant to Portugal) is not built yet.</p>
+<p id="p-live" class="x-status" role="status">Figures as built into this page. Your browser reads the latest files from data.promptugal.news when the page opens.</p>`;
   if (kev) {
     const pts = kev.points.slice(-12);
     const max = Math.max(5, ...pts.map(p => p.total || 0));
@@ -98,16 +99,16 @@ function pulseHtml() {
     }).join('');
     h += `<h2>Known exploited, week by week</h2>
 <p>${esc(kev.title)}. The last 12 weeks, by the Monday each week starts; the current week is still open and drawn lighter.</p>
-<figure class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(kev.title)}: ${esc(pts.map(p => `${p.week} ${shown(p)}`).join('; '))}">${bars}</svg>
-<figcaption>Source: ${esc(kev.source)}. Underlying data <a href="${url(kev.source_license.url)}">${esc(kev.source_license.name)}</a>; our totals <a href="${url(kev.license.url)}">${esc(kev.license.name)}</a>. Read ${fmtTime(kev.read_at)}. ${esc(pulse.caveat)}</figcaption></figure>
-<div class="scroll"><table><tr><th>Week starting</th><th>Added</th></tr>${pts.slice().reverse().map(p => `<tr><td>${esc(p.week)}${p.partial ? ' (so far)' : ''}</td><td>${esc(shown(p))}</td></tr>`).join('')}</table></div>
+<figure class="chart"><svg id="p-kev-svg" data-read="${esc(kev.read_at)}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(kev.title)}: ${esc(pts.map(p => `${p.week} ${shown(p)}`).join('; '))}">${bars}</svg>
+<figcaption>Source: ${esc(kev.source)}. Underlying data <a href="${url(kev.source_license.url)}">${esc(kev.source_license.name)}</a>; our totals <a href="${url(kev.license.url)}">${esc(kev.license.name)}</a>. Read <span id="p-kev-read">${fmtTime(kev.read_at)}</span> <span id="p-kev-state"></span>. ${esc(pulse.caveat)}</figcaption></figure>
+<div class="scroll"><table id="p-kev-table"><tr><th>Week starting</th><th>Added</th></tr>${pts.slice().reverse().map(p => `<tr><td>${esc(p.week)}${p.partial ? ' (so far)' : ''}</td><td>${esc(shown(p))}</td></tr>`).join('')}</table></div>
 <p>Every week since the list began (${esc(kev.points.length)} weeks): <a href="/api/v1/pulse/index.json">/api/v1/pulse/index.json</a>.</p>`;
   }
   if (nvd && nvd.points.length) {
     const p = nvd.points.at(-1);
     h += `<h2>New CVEs, the last 24 hours</h2>
-<p>${esc(nvd.title)}. As read at ${fmtTime(p.read_at)}: <b>${esc(shown(p))}</b> new CVEs. Reads overlap (every 6 hours, each covering 24 hours), so they are never added up; each is kept.</p>
-<div class="scroll"><table><tr><th>Severity band (CVSS base)</th><th>New</th></tr>${Object.entries(p.by_band).map(([b, v]) => `<tr><td>${esc(b === 'unscored' ? 'not scored yet' : b.toLowerCase())}</td><td>${esc(shown(v))}</td></tr>`).join('')}</table></div>
+<p>${esc(nvd.title)}. As read at <span id="p-nvd-read" data-read="${esc(p.read_at)}">${fmtTime(p.read_at)}</span> <span id="p-nvd-state"></span>: <b id="p-nvd-total">${esc(shown(p))}</b> new CVEs. Reads overlap (every 6 hours, each covering 24 hours), so they are never added up; each is kept.</p>
+<div class="scroll"><table id="p-nvd-table"><tr><th>Severity band (CVSS base)</th><th>New</th></tr>${Object.entries(p.by_band).map(([b, v]) => `<tr><td>${esc(b === 'unscored' ? 'not scored yet' : b.toLowerCase())}</td><td>${esc(shown(v))}</td></tr>`).join('')}</table></div>
 <p class="notice">${esc(nvd.notice)}</p>
 <p class="caveat">Source: ${esc(nvd.source)} Underlying data: <a href="${url(nvd.source_license.url)}">${esc(nvd.source_license.name)}</a>; our totals <a href="${url(nvd.license.url)}">${esc(nvd.license.name)}</a>. ${esc(pulse.caveat)}</p>`;
   }
