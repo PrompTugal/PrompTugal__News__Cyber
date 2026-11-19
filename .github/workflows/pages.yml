@@ -60,8 +60,8 @@ jobs:
               const r = await fetch(`${api}/actions/workflows/pages.yml/runs?branch=dev&event=push&status=success&per_page=50`, { headers: h });
               if (!r.ok) throw new Error(`workflow runs: HTTP ${r.status}`);
               // a run counts only if its own security jobs, by name, passed: a pushed workflow that drops them can "succeed"
-              // without them (live.b@'s finding, 16:15 UTC); a workflow that keeps the names but weakens them is closed only
-              // by Dinis's branch protection
+              // without them (the finding of live.b@, 16:15 UTC); a workflow that keeps the names but weakens them is closed only
+              // by the branch protection Dinis is to set
               for (const x of (await r.json()).workflow_runs || []) {
                 if (!(x.path === path && x.head_branch === "dev" && x.event === "push" && x.conclusion === "success" && /^[0-9a-f]{40}$/.test(x.head_sha))) continue;
                 const j = await fetch(`${api}/actions/runs/${x.id}/jobs?per_page=50`, { headers: h }); if (!j.ok) throw new Error(`run jobs: HTTP ${j.status}`);

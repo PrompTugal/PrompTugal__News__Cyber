@@ -88,6 +88,16 @@ try {
   expect('control 9: symlinks on the checker paths are refused', /git ls-tree "\$ANCHOR" "scripts\/\$f"/.test(jobs.verify || '') && /not a plain file/.test(jobs.verify || ''), 'verify');
   const rel = readFileSync(join(here, 'release.sh'), 'utf8');
   const wf = readFileSync(join(here, '../.github/workflows/pages.yml'), 'utf8');
+  // the anchor lookup is Node code inside a single-quoted shell string: run that step's shell up to node -e with a stub
+  // node that only syntax-checks the code it is given, so an apostrophe or a typo fails here and not in CI
+  {
+    const st = wf.match(/name: Find the anchor[\s\S]*?run: \|\n([\s\S]*?)\n      - /);
+    const code = st && st[1].split('\n').map(l => l.replace(/^ {10}/, '')).join('\n');
+    const bin = join(dir, 'stubbin'); mkdirSync(bin, { recursive: true });
+    writeFileSync(join(bin, 'node'), `#!/bin/sh\n[ "$1" = "-e" ] || exit 2\nprintf '%s' "$2" > "${join(dir, 'anchor.mjs')}"\nexec ${process.execPath} --check "${join(dir, 'anchor.mjs')}"\n`, { mode: 0o755 });
+    const o = code ? spawnSync('bash', ['-c', code], { cwd: repo, encoding: 'utf8', env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, GITHUB_ENV: join(dir, 'anchor-env') } }) : null;
+    expect('the anchor lookup step is valid shell and valid JavaScript', !!o && o.status === 0, o ? (o.stdout + o.stderr).slice(0, 300) : 'no anchor step');
+  }
   expect('CI refuses when there is no anchor (no fallback to an old checker)', /no anchor: no successful run of this workflow recorded/.test(wf) && !/ref=c8fff24/.test(wf), 'pages.yml');
   expect('CI finds the anchor from the latest successful push run of this workflow on dev, not a deployment or a tag', /actions\/workflows\/pages\.yml\/runs\?branch=dev&event=push&status=success/.test(wf) && /x\.path === path && x\.head_branch === "dev" && x\.event === "push" && x\.conclusion === "success"/.test(wf) && !/\/deployments/.test(wf), 'pages.yml');
   expect('CI takes every security check from the last release, never the pushed tree', /git show "\$ANCHOR:scripts\/\$f"/.test(wf) && /check-commits\.mjs check-signatures\.mjs leak-scan\.mjs/.test(wf) && !/node scripts\/(check-|leak-scan)/.test(wf), 'pages.yml');
