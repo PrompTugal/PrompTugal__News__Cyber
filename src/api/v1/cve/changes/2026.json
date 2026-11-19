@@ -1,0 +1,30 @@
+{
+ "year": "2026",
+ "about": "Every change seen in the CVE store this year, oldest first. Append-only.",
+ "changes": [
+  {
+   "id": "CVE-2024-10441",
+   "at": "2026-11-19T06:15:43Z",
+   "source": "nvd",
+   "what": "last_modified"
+  },
+  {
+   "id": "CVE-2026-40217",
+   "at": "2026-11-19T06:15:43Z",
+   "source": "nvd",
+   "what": "last_modified"
+  },
+  {
+   "id": "CVE-2026-90436",
+   "at": "2026-11-19T06:15:43Z",
+   "source": "nvd",
+   "what": "last_modified"
+  },
+  {
+   "id": "CVE-2026-90817",
+   "at": "2026-11-19T06:15:43Z",
+   "source": "nvd",
+   "what": "last_modified"
+  }
+ ]
+}

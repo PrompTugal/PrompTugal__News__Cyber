@@ -12,10 +12,12 @@
  },
  "reads": {
   "kev": [
-   "2026-11-18T23:42:26Z"
+   "2026-11-18T23:42:26Z",
+   "2026-11-19T06:03:49Z"
   ],
   "nvd": [
-   "2026-11-18T23:48:50Z"
+   "2026-11-18T23:48:50Z",
+   "2026-11-19T06:15:43Z"
   ],
   "nvd_kev": [
    "2026-11-19T02:17:02Z"
@@ -23,9 +25,34 @@
  },
  "gaps": [],
  "tracked": 1786,
- "changes": [],
+ "changes": [
+  {
+   "id": "CVE-2024-10441",
+   "at": "2026-11-19T06:15:43Z",
+   "source": "nvd",
+   "what": "last_modified"
+  },
+  {
+   "id": "CVE-2026-40217",
+   "at": "2026-11-19T06:15:43Z",
+   "source": "nvd",
+   "what": "last_modified"
+  },
+  {
+   "id": "CVE-2026-90436",
+   "at": "2026-11-19T06:15:43Z",
+   "source": "nvd",
+   "what": "last_modified"
+  },
+  {
+   "id": "CVE-2026-90817",
+   "at": "2026-11-19T06:15:43Z",
+   "source": "nvd",
+   "what": "last_modified"
+  }
+ ],
  "on_kev_now": 1786,
  "without_nvd_record": 0,
- "updated": "2026-11-19T02:21:30Z",
+ "updated": "2026-11-19T10:22:49Z",
  "changes_by_year": "/api/v1/cve/changes/<year>.json"
 }
