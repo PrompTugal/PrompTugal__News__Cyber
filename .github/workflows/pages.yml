@@ -8,6 +8,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  deployments: read
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -41,35 +42,45 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Find the trusted copy (the last release) and take every security check from it
-        # Every security check (trailers, signatures, leak scan) and its config comes from the last release, never from
-        # the pushed tree, and a missing copy fails (security@'s controls 7 widened and 8, 19 Nov 2026). The range starts
-        # at the last release tag, not github.event.before: GitHub drops a pending run when a newer one queues, and the
-        # surviving run's "before" is the dropped push's head (specialist.code@ finding 3b). The workflow file itself
-        # still comes from the pushed tree; only branch protection with a required check (Dinis's) closes that.
+      - name: Find the anchor (the newest commit a passing run deployed)
+        # security@'s fourth ruling (948820a7e, relayed by conductor.b@ 14:17 UTC): the anchor A is the sha of the last
+        # successful github-pages deployment, a record only a passing run writes, read with this run's own read token.
+        # Tags are not consulted. Dropped runs are covered because the range is A..AFTER.
         env:
-          BEFORE: ${{ github.event.before }}
-          AFTER: ${{ github.sha }}
-          EVENT: ${{ github.event_name }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
         run: |
-          last=$(git describe --tags --abbrev=0 --match "v${VERSION_BASE}.*" "$AFTER" 2>/dev/null || true)
+          anchor=$(node -e '
+            const h = { authorization: `Bearer ${process.env.GH_TOKEN}`, accept: "application/vnd.github+json", "user-agent": "cyber-promptugal-ci" };
+            const api = `https://api.github.com/repos/${process.env.REPO}`;
+            (async () => {
+              const r = await fetch(`${api}/deployments?environment=github-pages&per_page=50`, { headers: h }); if (!r.ok) throw new Error(`deployments: HTTP ${r.status}`);
+              for (const d of await r.json()) {
+                const s = await fetch(`${api}/deployments/${d.id}/statuses?per_page=20`, { headers: h }); if (!s.ok) throw new Error(`statuses: HTTP ${s.status}`);
+                if ((await s.json()).some(x => x.state === "success") && /^[0-9a-f]{40}$/.test(d.sha)) { console.log(d.sha); return; }
+              }
+            })().catch(e => { console.error(String(e.message || e)); process.exit(1); });
+          ')
+          echo "ANCHOR=$anchor" >> "$GITHUB_ENV"
+      - name: Take every security check from the anchor's tree
+        # Every security check (trailers, signatures, leak scan) and its config comes from A's tree, never the pushed tree
+        # or a tag, and the range checked is A..AFTER; a missing A, an A that is not an ancestor of AFTER, or a missing
+        # copy fails (security@'s controls 7 and 8). The workflow file itself still comes from the pushed tree; only
+        # branch protection with a required check (Dinis's) closes that.
+        env:
+          AFTER: ${{ github.sha }}
+        run: |
           base=c8fff24023c597a36a76966af5d585b51944c966
           [ "$(git rev-parse --is-shallow-repository)" = "false" ] || { echo "a shallow checkout: refusing (fetch-depth must be 0)" >&2; exit 1; }
-          # a run started by a person by hand has no "before": it starts from the last release tag
-          if [ "$EVENT" = "workflow_dispatch" ]; then BEFORE="$last"; fi
-          # BEFORE must be the dev this push builds on (on the base's line, an ancestor of AFTER); otherwise refuse
-          if [ -z "$BEFORE" ] || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null || ! git merge-base --is-ancestor "$base" "$BEFORE" || ! git merge-base --is-ancestor "$BEFORE" "$AFTER"; then
-            echo "cannot find the release this push builds on (force push or new history): refusing; a person decides" >&2; exit 1
+          if [ -z "${ANCHOR:-}" ] || ! git cat-file -e "$ANCHOR^{commit}" 2>/dev/null; then echo "no anchor: no successful deployment recorded, or not in this clone: refusing; a person decides" >&2; exit 1; fi
+          if ! git merge-base --is-ancestor "$base" "$ANCHOR" || ! git merge-base --is-ancestor "$ANCHOR" "$AFTER"; then
+            echo "the anchor is not an ancestor of this push (force push or new history): refusing; a person decides" >&2; exit 1
           fi
-          # the checks come from BEFORE, the dev this push builds on, already checked (security@'s third ruling, 3724c9ca2);
-          # never from a tag, the base or the pushed tree. A release tag may only widen the range, and only if it points
-          # to an ancestor of BEFORE (a pushed tag alone is not trusted)
-          if [ -n "$last" ] && git merge-base --is-ancestor "$last" "$BEFORE"; then from="$last"; else from="$BEFORE"; fi
           dir="$RUNNER_TEMP/trusted"; mkdir -p "$dir"
           for f in check-commits.mjs check-signatures.mjs leak-scan.mjs; do
-            git show "$BEFORE:scripts/$f" > "$dir/$f" || { echo "the trusted copy of $f is missing at $BEFORE: refusing" >&2; exit 1; }
+            git show "$ANCHOR:scripts/$f" > "$dir/$f" || { echo "the trusted copy of $f is missing at the anchor $ANCHOR: refusing" >&2; exit 1; }
           done
-          echo "TRUSTED_FROM=$from" >> "$GITHUB_ENV"; echo "TRUSTED_DIR=$dir" >> "$GITHUB_ENV"
+          echo "TRUSTED_FROM=$ANCHOR" >> "$GITHUB_ENV"; echo "TRUSTED_DIR=$dir" >> "$GITHUB_ENV"
       - name: Every commit since the last release carries an Agent trailer (trusted copy)
         env:
           AFTER: ${{ github.sha }}

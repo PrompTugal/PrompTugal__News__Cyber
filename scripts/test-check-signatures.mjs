@@ -70,9 +70,10 @@ try {
   expect('CI refuses a shallow checkout and fetches the whole history', /is-shallow-repository/.test(wfs) && /fetch-depth: 0/.test(wfs), 'pages.yml');
   const rel = readFileSync(join(here, 'release.sh'), 'utf8');
   const wf = readFileSync(join(here, '../.github/workflows/pages.yml'), 'utf8');
-  expect('CI refuses when it cannot find the release a push builds on (no fallback to an old checker)', /refusing; a person decides" >&2; exit 1/.test(wf) && !/ref=c8fff24/.test(wf), 'pages.yml');
-  expect('CI takes every security check from the last release, never the pushed tree', /git show "\$BEFORE:scripts\/\$f"/.test(wf) && /check-commits\.mjs check-signatures\.mjs leak-scan\.mjs/.test(wf) && !/node scripts\/(check-|leak-scan)/.test(wf), 'pages.yml');
-  expect('CI fails when a trusted copy is missing', /trusted copy of \$f is missing at \$BEFORE.*exit 1/.test(wf), 'pages.yml');
+  expect('CI refuses when there is no anchor (no fallback to an old checker)', /no anchor: no successful deployment recorded/.test(wf) && !/ref=c8fff24/.test(wf), 'pages.yml');
+  expect('CI finds the anchor from the last successful github-pages deployment, not from a tag', /deployments\?environment=github-pages/.test(wf) && /x\.state === "success"/.test(wf), 'pages.yml');
+  expect('CI takes every security check from the last release, never the pushed tree', /git show "\$ANCHOR:scripts\/\$f"/.test(wf) && /check-commits\.mjs check-signatures\.mjs leak-scan\.mjs/.test(wf) && !/node scripts\/(check-|leak-scan)/.test(wf), 'pages.yml');
+  expect('CI fails when a trusted copy is missing', /trusted copy of \$f is missing at the anchor \$ANCHOR.*exit 1/.test(wf), 'pages.yml');
   expect('release.sh runs every security check from origin/dev, not the tree', /git show "origin\/dev:scripts\/\$f"/.test(rel) && !/node scripts\/(check-|leak-scan)/.test(rel) && /trusted check-commits\.mjs/.test(rel) && /trusted leak-scan\.mjs/.test(rel), 'release.sh');
   // control 8: a commit that deletes the checker and adds an unsigned change is still refused by the trusted copy
   git('checkout', '-q', release); git('rm', '-q', 'scripts/check-signatures.mjs'); writeFileSync(join(repo, 'x.txt'), 'unsigned\n');
@@ -89,18 +90,27 @@ try {
   r = run(checker, release, git('rev-parse', 'HEAD')); expect('a backdated orphan is refused', !r.ok && /does not descend from the trusted base/.test(r.out) && r.out.includes(old.slice(0, 7)), r.out);
   git('reset', '-q', '--hard', release);
   // the CI step itself, run as written in pages.yml, on this throwaway repository (base swapped for this repo's base)
-  const step = wf.match(/- name: Find the trusted copy[\s\S]*?run: \|\n([\s\S]*?)\n      - name:/);
+  const step = wf.match(/- name: Take every security check from the anchor's tree[\s\S]*?run: \|\n([\s\S]*?)\n      - name:/);
   if (!step) throw new Error('cannot find the CI trusted-copy step in pages.yml');
   const body = step[1].split('\n').map(l => l.replace(/^ {10}/, '')).join('\n').replace(/base=[0-9a-f]{40}/, `base=${base}`);
-  const ci = (before, after) => { const t = join(dir, 'ci'); rmSync(t, { recursive: true, force: true }); mkdirSync(t); const o = spawnSync('bash', ['-euo', 'pipefail', '-c', body], { cwd: repo, encoding: 'utf8', env: { ...process.env, BEFORE: before, AFTER: after, EVENT: 'push', VERSION_BASE: '0.1', RUNNER_TEMP: t, GITHUB_ENV: join(t, 'env') } }); return { ok: o.status === 0, out: (o.stdout + o.stderr).trim() }; };
+  const ci = (before, after) => { const t = join(dir, 'ci'); rmSync(t, { recursive: true, force: true }); mkdirSync(t); const o = spawnSync('bash', ['-euo', 'pipefail', '-c', body], { cwd: repo, encoding: 'utf8', env: { ...process.env, ANCHOR: before, AFTER: after, RUNNER_TEMP: t, GITHUB_ENV: join(t, 'env') } }); return { ok: o.status === 0, out: (o.stdout + o.stderr).trim() }; };
   git('checkout', '-q', release);
   for (const f of ['check-commits.mjs', 'leak-scan.mjs']) writeFileSync(join(repo, 'scripts', f), readFileSync(join(here, f), 'utf8'));
   const full = commit('a release that carries all three checks');
   writeFileSync(join(repo, 'y.txt'), 'y\n'); const next = commit('a normal next push');
   let c = ci(full, next); expect('CI: a normal push from a release that has the checks finds them', !c.ok ? false : true, c.out);
-  c = ci(good, next); expect('CI: a missing release copy of the checks fails', !c.ok && /trusted copy of check-commits\.mjs is missing/.test(c.out), c.out);
-  c = ci(next, full); expect('CI: BEFORE not an ancestor of AFTER (a force push) fails', !c.ok && /force push or new history/.test(c.out), c.out);
-  c = ci('0000000000000000000000000000000000000000', next); expect('CI: a zero BEFORE (a new branch) fails', !c.ok && /force push or new history/.test(c.out), c.out);
+  c = ci(good, next); expect('CI: a missing copy of the checks at the anchor fails', !c.ok && /trusted copy of check-commits\.mjs is missing/.test(c.out), c.out);
+  c = ci(next, full); expect('CI: an anchor that is not an ancestor of AFTER (a force push) fails', !c.ok && /not an ancestor of this push/.test(c.out), c.out);
+  c = ci('', next); expect('CI: a missing anchor fails', !c.ok && /no anchor/.test(c.out), c.out);
+  c = ci('0000000000000000000000000000000000000000', next); expect('CI: an anchor not in the clone fails', !c.ok && /no anchor/.test(c.out), c.out);
+  expect('CI: the trusted-copy step never consults tags', !/describe|refs\/tags|\btag\b/.test(body), 'pages.yml');
+  // a dropped run: an unsigned commit pushed between the anchor and the last push is still in A..AFTER and fails
+  git('checkout', '-q', next); writeFileSync(join(repo, 'z.txt'), 'dropped\n'); const dropped = commit('an unsigned commit whose run was dropped', false);
+  writeFileSync(join(repo, 'z2.txt'), 'later\n'); const later = commit('a later signed push');
+  git('tag', 'v0.1.999', dropped); // a pushed tag on the unverified commit: not used
+  c = ci(full, later); const tr = c.ok ? run(join(dir, 'ci', 'trusted', 'check-signatures.mjs'), full, later) : c;
+  expect('CI: an unsigned commit from a dropped run (between A and the last push) fails', !tr.ok && /no valid signature/.test(tr.out) && tr.out.includes(dropped.slice(0, 7)), tr.out);
+  expect('CI: a pushed tag on an unverified commit is not used as the anchor', readFileSync(join(dir, 'ci', 'env'), 'utf8').includes(`TRUSTED_FROM=${full}`), 'env');
   git('checkout', '-q', 'main');
 } catch (e) { expect('the test repository could be built', false, String(e.stderr || e.message).slice(0, 300)); }
 finally { rmSync(dir, { recursive: true, force: true }); }
