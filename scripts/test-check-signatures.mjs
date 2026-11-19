@@ -71,8 +71,14 @@ try {
   const rel = readFileSync(join(here, 'release.sh'), 'utf8');
   const wf = readFileSync(join(here, '../.github/workflows/pages.yml'), 'utf8');
   expect('CI refuses when it cannot find the release a push builds on (no fallback to an old checker)', /refusing; a person decides" >&2; exit 1/.test(wf) && !/ref=c8fff24/.test(wf), 'pages.yml');
-  expect('CI runs the checker from the last release, not the pushed tree', /git show "\$from:scripts\/check-signatures\.mjs"/.test(wf) && !/^\s*node scripts\/check-signatures\.mjs/m.test(wf), 'pages.yml');
-  expect('release.sh runs the checker from origin/dev, not the tree', /git show "origin\/dev:scripts\/check-signatures\.mjs"/.test(rel) && !/^\s*node scripts\/check-signatures\.mjs/m.test(rel), 'release.sh');
+  expect('CI takes every security check from the last release, never the pushed tree', /git show "\$from:scripts\/\$f"/.test(wf) && /check-commits\.mjs check-signatures\.mjs leak-scan\.mjs/.test(wf) && !/node scripts\/(check-|leak-scan)/.test(wf), 'pages.yml');
+  expect('CI fails when a trusted copy is missing', /trusted copy of \$f is missing .*exit 1/.test(wf), 'pages.yml');
+  expect('release.sh runs every security check from origin/dev, not the tree', /git show "origin\/dev:scripts\/\$f"/.test(rel) && !/node scripts\/(check-|leak-scan)/.test(rel) && /trusted check-commits\.mjs/.test(rel) && /trusted leak-scan\.mjs/.test(rel), 'release.sh');
+  // control 8: a commit that deletes the checker and adds an unsigned change is still refused by the trusted copy
+  git('checkout', '-q', release); git('rm', '-q', 'scripts/check-signatures.mjs'); writeFileSync(join(repo, 'x.txt'), 'unsigned\n');
+  const gone = commit('delete the checker and slip in an unsigned change', false);
+  r = run(fromRelease, release, gone); expect('a commit that removes the checker and adds an unsigned change fails', !r.ok && /no valid signature/.test(r.out), r.out);
+  git('checkout', '-q', 'main');
 } catch (e) { expect('the test repository could be built', false, String(e.stderr || e.message).slice(0, 300)); }
 finally { rmSync(dir, { recursive: true, force: true }); }
 const bad = cases.filter(c => !c.ok);

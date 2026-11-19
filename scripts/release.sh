@@ -11,14 +11,17 @@ git fetch -q origin dev
 # cannot change its own checker (videos.b@'s finding via conductor.b@, 19 Nov 2026, 14:01 UTC).
 [ "$(git rev-parse --is-shallow-repository)" = "false" ] || { echo "a shallow clone: fetch the whole history first" >&2; exit 1; }
 SIGTMP=$(mktemp -d); trap 'rm -rf "$SIGTMP"' EXIT
-sigcheck() { git show "origin/dev:scripts/check-signatures.mjs" > "$SIGTMP/check-signatures.mjs"; node "$SIGTMP/check-signatures.mjs" "$@"; }
+# Every security check (signatures, trailers, leak scan) runs as it stood at the last release, never from the pushed tree
+# (security@'s control 7 widened, 19 Nov 2026). A missing trusted copy stops the release: git show fails under set -e.
+trusted() { local f="$1"; shift; git show "origin/dev:scripts/$f" > "$SIGTMP/$f"; node "$SIGTMP/$f" "$@"; }
+sigcheck() { trusted check-signatures.mjs "$@"; }
 node scripts/build.mjs
 node scripts/validate.mjs
 node scripts/test-leak-scan.mjs
 node scripts/test-pulse-daily.mjs
 node scripts/test-check-signatures.mjs
-node scripts/leak-scan.mjs
-node scripts/check-commits.mjs origin/dev HEAD
+trusted leak-scan.mjs
+trusted check-commits.mjs origin/dev HEAD
 sigcheck origin/dev HEAD
 for i in 1 2 3 4 5; do
   git fetch -q origin dev
@@ -29,8 +32,8 @@ for i in 1 2 3 4 5; do
   node scripts/test-leak-scan.mjs >/dev/null
   node scripts/test-pulse-daily.mjs >/dev/null
   node scripts/test-check-signatures.mjs >/dev/null
-  node scripts/leak-scan.mjs >/dev/null
-  node scripts/check-commits.mjs origin/dev HEAD >/dev/null
+  trusted leak-scan.mjs >/dev/null
+  trusted check-commits.mjs origin/dev HEAD >/dev/null
   sigcheck origin/dev HEAD >/dev/null
   if git -c push.negotiate=true push -q origin HEAD:dev; then echo "released $(git rev-parse --short HEAD) to dev"; exit 0; fi
   sleep $((i * 3))

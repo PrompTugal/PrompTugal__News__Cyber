@@ -38,9 +38,12 @@ const agentShapeSite = /^[a-z0-9]+(?:[.-][a-z0-9]+)*@promptugal\.dinis$/i;
 // "date": "YYYY-MM-DD" }]. Each entry names exactly one commit; malformed entries fail the check.
 const exempt = new Map();
 const EX = 'scripts/commit-exemptions.json';
-if (existsSync(EX)) {
+// The exemptions come from the trusted point (the range's start: the last release), never from the pushed tree, so a push
+// cannot exempt its own commits (security@'s control 7 widened, 19 Nov 2026).
+const exText = (() => { const ref = process.argv[2]; if (!ref || /^0+$/.test(ref)) return null; try { return execFileSync('git', ['show', `${ref}:${EX}`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }); } catch { return null; } })();
+if (exText !== null) {
   let list;
-  try { list = JSON.parse(readFileSync(EX, 'utf8')); } catch (e) { console.error(`${EX}: not JSON (${e.message})`); process.exit(1); }
+  try { list = JSON.parse(exText); } catch (e) { console.error(`${EX}: not JSON (${e.message})`); process.exit(1); }
   if (!Array.isArray(list)) { console.error(`${EX}: must be a list`); process.exit(1); }
   for (const x of list) {
     if (!x || !/^[0-9a-f]{40}$/.test(x.commit || '') || !(x.reason || '').trim() || !(x.approved_by || '').trim() || !/^\d{4}-\d{2}-\d{2}$/.test(x.date || '')) {

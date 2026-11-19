@@ -41,17 +41,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Every commit since the last release carries an Agent trailer
-        # From the last release tag, not github.event.before: GitHub drops a pending run when a
-        # newer one queues, and the surviving run's "before" is the dropped push's head, so the
-        # dropped push's commits were never checked (specialist.code@ finding 3b).
-        env:
-          BEFORE: ${{ github.event.before }}
-          AFTER: ${{ github.sha }}
-        run: |
-          last=$(git describe --tags --abbrev=0 --match "v${VERSION_BASE}.*" "$AFTER" 2>/dev/null || true)
-          node scripts/check-commits.mjs "${last:-$BEFORE}" "$AFTER"
-      - name: Every new commit is signed by its agent's published key and names its session
+      - name: Find the trusted copy (the last release) and take every security check from it
+        # Every security check (trailers, signatures, leak scan) and its config comes from the last release, never from
+        # the pushed tree, and a missing copy fails (security@'s controls 7 widened and 8, 19 Nov 2026). The range starts
+        # at the last release tag, not github.event.before: GitHub drops a pending run when a newer one queues, and the
+        # surviving run's "before" is the dropped push's head (specialist.code@ finding 3b). The workflow file itself
+        # still comes from the pushed tree; only branch protection with a required check (Dinis's) closes that.
         env:
           BEFORE: ${{ github.event.before }}
           AFTER: ${{ github.sha }}
@@ -68,9 +63,19 @@ jobs:
           fi
           # a release tag counts only if its commit was already on dev before this push (a pushed tag alone is not trusted)
           if [ -n "$last" ] && git merge-base --is-ancestor "$last" "$BEFORE"; then from="$last"; else from="$BEFORE"; fi
-          # the checker as it stood at that point, never the pushed copy (branch and tag protection close the rest)
-          git show "$from:scripts/check-signatures.mjs" > "$RUNNER_TEMP/check-signatures.mjs"
-          node "$RUNNER_TEMP/check-signatures.mjs" "$from" "$AFTER"
+          dir="$RUNNER_TEMP/trusted"; mkdir -p "$dir"
+          for f in check-commits.mjs check-signatures.mjs leak-scan.mjs; do
+            git show "$from:scripts/$f" > "$dir/$f" || { echo "the trusted copy of $f is missing at $from: refusing" >&2; exit 1; }
+          done
+          echo "TRUSTED_FROM=$from" >> "$GITHUB_ENV"; echo "TRUSTED_DIR=$dir" >> "$GITHUB_ENV"
+      - name: Every commit since the last release carries an Agent trailer (trusted copy)
+        env:
+          AFTER: ${{ github.sha }}
+        run: node "$TRUSTED_DIR/check-commits.mjs" "$TRUSTED_FROM" "$AFTER"
+      - name: Every new commit is signed by its agent's published key and names its session (trusted copy)
+        env:
+          AFTER: ${{ github.sha }}
+        run: node "$TRUSTED_DIR/check-signatures.mjs" "$TRUSTED_FROM" "$AFTER"
       - run: node scripts/build.mjs
         env:
           SITE_VERSION: ${{ steps.version.outputs.version }}
@@ -81,8 +86,8 @@ jobs:
         run: node scripts/test-pulse-daily.mjs
       - name: Signature check tests (pinned base, orphans, checker from the last release)
         run: node scripts/test-check-signatures.mjs
-      - name: Leak scan (tracked files and the built site)
-        run: node scripts/leak-scan.mjs
+      - name: Leak scan (tracked files and the built site; trusted copy)
+        run: node "$TRUSTED_DIR/leak-scan.mjs"
       - if: steps.mode.outputs.deploy == 'true'
         uses: actions/configure-pages@v5
       - if: steps.mode.outputs.deploy == 'true'

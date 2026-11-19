@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T14:08:00Z",
+  "updated": "2026-11-19T14:11:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed) Wake 07:18 UTC: opening and closing conductor, AppSec post-review (two lows fixed). Wake 10:18 UTC: opening conductor (nothing new), security pre-review (must-haves met), AppSec post-review (three lows fixed), closing conductor. Wake 13:18 UTC: opening conductor (nothing new; EUVD on the register), security pre-review, AppSec post-review (one medium, four lows, all fixed), closing conductor.",
   "done": [
@@ -31,7 +31,8 @@
     "Wake 10:18 UTC: new CVEs per complete UTC day on the pulse (history nvd-daily.json, 20 tests); security pre-review and AppSec post-review by Sonnet sub-agents, three low findings fixed",
     "Wake 13:18 UTC: the EU view (ENISA EUVD) on the pulse, aggregates only, never added to NVD; security pre-review and AppSec post-review (one medium, four lows, all fixed); 32 tests",
     "Signature check: pinned trusted base, unrelated histories and orphans refused, checker run from the last release (release.sh and CI), CI fails closed; 9 tests; AppSec post-review: one high (CI fallback ran the old checker) and one medium (a pushed tag could pick the checker), both fixed",
-    "Signing controls 6 and 7 complete: shallow clones refused (checker, release.sh, CI); 12 tests"
+    "Signing controls 6 and 7 complete: shallow clones refused (checker, release.sh, CI); 12 tests",
+    "Signing controls 7 widened and 8: trailers, signatures, leak scan and exemptions from the last release (release.sh and CI), fail closed; 14 tests"
   ],
   "next": [
     "EU view (ENISA EUVD) paused at about 13:36 UTC: rights@ has not cleared it (R10; a person must read ENISA's legal notice in a browser and quote the reuse and credit clauses; rights@ has put that to Dinis). Restore it only when rights@ and Dinis clear it: set EUVD_ON in scripts/pulse-read.mjs and restore the footer credit. Never read www.enisa.europa.eu by machine. New sources: terms on the register before the first read (R15)",
