@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T00:05:00Z",
+  "updated": "2026-11-19T01:15:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed)",
   "done": [
@@ -17,7 +17,8 @@
     "Dinis's answers recorded (board/team/cyber/briefs/2026-11-18-dinis-answers.md, about 23:40 UTC): sector mapping yes; ENISA yes (asked of data.b@); floor of 5 dropped; meter already closed",
     "Commits signed with cyber.b-promptugal's published key and naming the session; gate scripts/check-signatures.mjs in release.sh and CI (Dinis, about 23:55 UTC; c8fff24)",
     "The data explorer /explore/: charts, browse every KEV and NVD record, graph, SQL in the browser (f53972c)",
-    "Dinis agreed the name cyber.b@PrompTugal.dinis and the vendor list basis: Portuguese vendors plus products bought by Portuguese public bodies per base.gov.pt (about 23:55 UTC)"
+    "Dinis agreed the name cyber.b@PrompTugal.dinis and the vendor list basis: Portuguese vendors plus products bought by Portuguese public bodies per base.gov.pt (about 23:55 UTC)",
+    "sites bar 1.1.0 installed (cleared by conductor.b@ 00:55 UTC): vendored, hash-checked, rendered at build, old rail removed; /preview.svg 320x180 from designer@'s template"
   ],
   "next": [
     "The list of vendors relevant to Portugal (agreed): Portuguese vendors, and products bought by Portuguese public bodies per base.gov.pt (read from data.b@), each with its reason; then the Portugal lens on the pulse and in the explorer",
@@ -32,7 +33,9 @@
     "London (Dinis, about 22:20 UTC, PrompTugal__News__Website board/guidance/2026-11-18-london.md): a UK view beside Portugal's, same limits, once data.b@ has NCSC advisories on the register with terms checked and collected; nothing read by cyber.b@ until then",
     "CNPD, Shadowserver, Cloudflare Radar, RIPEstat, abuse.ch stay unread: whether a free sub-site may read non-commercial sources is a licence question for rights@ and Dinis"
   ],
-  "asks": [],
+  "asks": [
+    "conductor.b@ / dev@: GitHub Pages cannot send X-Content-Type-Options: nosniff for /preview.svg from this repository; it is served as image/svg+xml by default. Say if the bar's spec needs more than that"
+  ],
   "answers": [],
   "debrief": "board/team/cyber/debriefs/2026-11-18-handover.md"
 }

@@ -5,6 +5,7 @@
 // passes through esc(); a URL must be https:// or it is dropped (AppSec: no javascript: or data: links).
 import { cpSync, rmSync, readdirSync, readFileSync, writeFileSync, statSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { sitesBar } from './sites-bar.mjs';
 const version = process.env.SITE_VERSION || 'dev';
 rmSync('_site', { recursive: true, force: true });
 cpSync('src', '_site', { recursive: true });
@@ -15,15 +16,17 @@ const url = u => (/^https:\/\/[^\s"'<>]+$/.test(String(u || '')) ? esc(u) : '');
 const REPO = 'https://github.com/PrompTugal/PrompTugal__News__Cyber';
 
 const NAV = [['/', 'Pulse'], ['/explore/', 'Explore'], ['/sources/', 'Sources'], ['/api/', 'API'], ['/how/', 'How'], ['/security/', 'Security']];
+const bar = await sitesBar('cyber.promptugal.news');
+console.log(`sites bar 1.1.0: from ${bar.from}`);
 const mast = cur => `<a class="skip" href="#main">Skip to the content</a>
+${bar.html}
 <header class="mast">
 <div class="mast-in">
 <a class="brand" href="/"><picture><source srcset="/assets/brand/promptugal-wordmark-dark.svg" media="(prefers-color-scheme: dark)"><img src="/assets/brand/promptugal-wordmark-light.svg" alt="PrompTugal.news" width="200" height="33"></picture><span class="brand-data">· Cyber</span></a>
 <nav aria-label="Main">${NAV.map(([h, t]) => `<a href="${h}"${h === cur ? ' aria-current="page"' : ''}>${t}</a>`).join('')}</nav>
 </div>
 <div class="mast-meta"><span class="ver">Version __VERSION__</span><span>Weak signals, not an audit</span><span class="pay-chip" title="Only promptugal.news bills (Dinis, 18 November 2026). This site carries no billing.">Free to read · <b>no billing here</b></span></div>
-</header>
-<nav class="em-net" aria-label="The PrompTugal.news sites"><span>Also from PrompTugal.news</span><a href="https://weather.promptugal.news/">Weather</a><a href="https://civic.promptugal.news/">Civic</a><a href="https://startups.promptugal.news/">Startups</a><a href="https://travel.promptugal.news/">Travel</a><a href="https://data.promptugal.news/">Data</a><a href="https://cyber.promptugal.news/" aria-current="page">Cyber</a></nav>`;
+</header>`;
 const foot = `<footer class="foot">
 <p>Weak signals from public sources, not an audit and not a warning service. Aggregates and totals only: no list of IPs, hosts, devices or exposed services, no victim data, no link to a leak site. To report an incident, go to <a href="https://www.cncs.gov.pt/">CNCS and CERT.PT</a>.</p>
 <p>If you publish data shown here and think we should not show it, <a href="${REPO}/issues/new?title=Take-down%20request">open an issue</a> and we take it down while we talk (Dinis Cruz, 18 November 2026).</p>
@@ -132,12 +135,18 @@ ${tiles.map(([n, l], i) => `<g transform="translate(${64 + i * 370} 240)"><rect 
 <text x="64" y="580" font-family="monospace" font-size="20" fill="#5c5e56">${esc(`From cyber.promptugal.news/api/v1/, ${pulse.updated} · ${version} · CC BY 4.0`)}</text>
 </svg>
 `;
-writeFileSync('_site/preview.svg', svg);
+writeFileSync('_site/preview-card.svg', svg); // 1200x630, the source of /preview.png (social cards)
+// /preview.svg for the sites bar: 320x180, from designer@'s template (design/sites-bar/preview-template.svg.txt, vendored)
+const tpl = readFileSync('scripts/vendor/sites-bar-1.1.0/preview-template.svg.txt', 'utf8');
+const fill = { site: 'PrompTugal.news Cyber', SITE: 'CYBER', line: pulse.state === 'live' ? 'Worldwide totals from CISA KEV and NVD. Weak signals, not an audit.' : 'No figures yet.', accent: '#c52830',
+  n1: tiles[0][0], label1: tiles[0][1], n2: tiles[1][0], label2: tiles[1][1], n3: tiles[2][0], label3: tiles[2][1],
+  read_at: `${String(pulse.updated)}`, licence: 'CC BY 4.0' };
+writeFileSync('_site/preview.svg', tpl.replace(/\{\{(\w+)\}\}/g, (_, k) => esc(fill[k] ?? '')));
 
 for (const f of walk('_site')) {
   if (!/\.(html|js|css|json|md|txt)$/.test(f)) continue;
   let s = readFileSync(f, 'utf8'); const o = s;
-  if (f.endsWith('.html')) s = s.replace('<!--@pulse-->', () => pulseHtml()).replace(/<!--@mast:([^>]*)-->/g, (_, cur) => mast(cur)).replaceAll('<!--@foot-->', foot);
+  if (f.endsWith('.html')) s = s.replace('</head>', '<link rel="stylesheet" href="/assets/sites-bar/1.1.0/sites-bar.css">\n<script src="/assets/sites-bar/1.1.0/sites-bar.js" defer></script>\n</head>').replace('<!--@pulse-->', () => pulseHtml()).replace(/<!--@mast:([^>]*)-->/g, (_, cur) => mast(cur)).replaceAll('<!--@foot-->', foot);
   if (s.includes('__VERSION__')) s = s.replaceAll('__VERSION__', version);
   if (s !== o) writeFileSync(f, s);
 }
