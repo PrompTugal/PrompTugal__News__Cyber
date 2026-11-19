@@ -16,12 +16,15 @@
   ],
   "nvd": [
    "2026-11-18T23:48:50Z"
+  ],
+  "nvd_kev": [
+   "2026-11-19T02:17:02Z"
   ]
  },
  "gaps": [],
  "tracked": 1786,
  "changes": [],
  "on_kev_now": 1786,
- "without_nvd_record": 1778,
- "updated": "2026-11-19T02:15:05Z"
+ "without_nvd_record": 0,
+ "updated": "2026-11-19T02:20:10Z"
 }

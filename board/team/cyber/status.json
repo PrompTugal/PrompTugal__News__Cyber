@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T02:15:00Z",
+  "updated": "2026-11-19T02:20:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed)",
   "done": [
@@ -23,17 +23,17 @@
     "Sites bar 1.1.1 installed (cleared by security@): full SRI pins from the registry, renderer imported only after all three match; 1.1.0 removed",
     "security@'s five signed-commit controls checked: no name exemption; parent keys; every commit incl. merges; one failure refuses the range before deploy; Agent: and full Claude-Session: must match the key",
     "Nearly everything clickable (Dinis, about 02:00 UTC): filter links in the address on every bar, value and node in /explore/, a page per CVE, home-page weeks and bands link into the explorer",
-    "The CVE store (Dinis, between 02:00 and 02:10 UTC): a JSON file per KEV CVE with every version of its KEV entry and NVD record, pages at /cve/, two requests per run whatever the number tracked, gaps recorded"
+    "The CVE store (Dinis, between 02:00 and 02:10 UTC): a JSON file per KEV CVE with every version of its KEV entry and NVD record, pages at /cve/, two requests per run whatever the number tracked, gaps recorded",
+    "CVE store reads data.b@'s daily nvd-kev baseline: all 1,786 KEV CVEs have their NVD record; gaps close at the next daily read"
   ],
   "next": [
-    "CVE store: ask data.b@ for (1) one NVD read of every KEV CVE (NVD API hasKev, a page or two) as the baseline, (2) a date-range read of NVD changes to fill any gap the store records; then run cve-store.mjs in the scheduled rebuild once security@ has reviewed it",
+    "CVE store: run node scripts/cve-store.mjs in each wake before a release and commit what it writes (no timers: conductor.b@, 02:17 UTC); ask data.b@ for a date-range read only for a gap that touches a CVE no longer on KEV",
     "The list of vendors relevant to Portugal (agreed): Portuguese vendors, and products bought by Portuguese public bodies per base.gov.pt (read from data.b@), each with its reason; then the Portugal lens on the pulse and in the explorer",
     "From data.b@ (its message, 23:58 UTC, live after its next Pages run): NVD daily_totals (complete UTC days, 30 kept) for weekly NVD totals on the pulse; EUVD /api/v1/euvd/latest.json (credit ENISA, EUVD; exploited flag; daily totals) and ENISA publications /api/v1/enisa-pubs/latest.json into the pulse, the explorer and the source pages",
     "Predictions (show-the-past guidance): ask data.b@ to register and collect EPSS; then keep its scores as shown and check them against CISA KEV additions after 30 days",
     "Run node scripts/pulse-read.mjs, node scripts/cve-store.mjs, then node scripts/preview-png.mjs, before each release (the readers are not in CI)",
     "The published mapping of products to sectors, with its reasons (Dinis: 'sounds quite good')",
     "Publish the list of vendors relevant to Portugal, with reasons (vendor and product names only), then the Portugal lens of both series",
-    "A scheduled rebuild in CI that runs the pulse reader (it needs the reader's checks reviewed by security@ first); a stale mark after 8 days without a read",
     "When dev@ and designer@ publish the sites bar: vendor it pinned by version and sha256, render promptugal.news/api/v1/sites.json escaped with only https links to *.promptugal.news, and replace the sites rail",
     "Observability: make the 'cyber' lane on account B (model: civic's tools/obs-setup-civic.py), seal its credentials to conductor.b-promptugal with sgit pki encrypt, add obs.js; a public obs.json may need Dinis's yes for the leak scan (conductor.b@, 18 Nov 2026, about 21:00 UTC)",
     "An OpenAPI per source, listed in data.promptugal.news's Swagger of Swaggers",
