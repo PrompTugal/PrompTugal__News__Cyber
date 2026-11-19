@@ -80,8 +80,8 @@ try {
   expect('control 9: symlinks on the checker paths are refused', /git ls-tree "\$ANCHOR" "scripts\/\$f"/.test(jobs.verify || '') && /not a plain file/.test(jobs.verify || ''), 'verify');
   const rel = readFileSync(join(here, 'release.sh'), 'utf8');
   const wf = readFileSync(join(here, '../.github/workflows/pages.yml'), 'utf8');
-  expect('CI refuses when there is no anchor (no fallback to an old checker)', /no anchor: no successful deployment recorded/.test(wf) && !/ref=c8fff24/.test(wf), 'pages.yml');
-  expect('CI finds the anchor from the last successful github-pages deployment, not from a tag', /deployments\?environment=github-pages/.test(wf) && /x\.state === "success"/.test(wf), 'pages.yml');
+  expect('CI refuses when there is no anchor (no fallback to an old checker)', /no anchor: no successful run of this workflow recorded/.test(wf) && !/ref=c8fff24/.test(wf), 'pages.yml');
+  expect('CI finds the anchor from the latest successful push run of this workflow on dev, not a deployment or a tag', /actions\/workflows\/pages\.yml\/runs\?branch=dev&event=push&status=success/.test(wf) && /x\.path === path && x\.head_branch === "dev" && x\.event === "push" && x\.conclusion === "success"/.test(wf) && !/\/deployments/.test(wf), 'pages.yml');
   expect('CI takes every security check from the last release, never the pushed tree', /git show "\$ANCHOR:scripts\/\$f"/.test(wf) && /check-commits\.mjs check-signatures\.mjs leak-scan\.mjs/.test(wf) && !/node scripts\/(check-|leak-scan)/.test(wf), 'pages.yml');
   expect('CI fails when a trusted copy is missing', /trusted copy of \$f is missing at the anchor \$ANCHOR.*exit 1/.test(wf), 'pages.yml');
   expect('release.sh runs every security check from origin/dev, not the tree', /git show "origin\/dev:scripts\/\$f"/.test(rel) && !/node scripts\/(check-|leak-scan)/.test(rel) && /trusted check-commits\.mjs/.test(rel) && /trusted leak-scan\.mjs/.test(rel), 'release.sh');

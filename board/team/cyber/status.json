@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T14:23:00Z",
+  "updated": "2026-11-19T14:27:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed) Wake 07:18 UTC: opening and closing conductor, AppSec post-review (two lows fixed). Wake 10:18 UTC: opening conductor (nothing new), security pre-review (must-haves met), AppSec post-review (three lows fixed), closing conductor. Wake 13:18 UTC: opening conductor (nothing new; EUVD on the register), security pre-review, AppSec post-review (one medium, four lows, all fixed), closing conductor.",
   "done": [
@@ -35,7 +35,8 @@
     "Signing controls 7 widened and 8: trailers, signatures, leak scan and exemptions from the last release (release.sh and CI), fail closed; 14 tests",
     "security@'s third ruling: CI checks from BEFORE only; 19 tests incl. the CI step run on a throwaway repo",
     "security@'s fourth ruling: CI anchor = last successful github-pages deployment; checks from its tree; range anchor..AFTER; 24 tests",
-    "Control 9: checks in their own CI jobs that run no pushed code; site to the leak scan as data only; 29 tests"
+    "Control 9: checks in their own CI jobs that run no pushed code; site to the leak scan as data only; 29 tests",
+    "CI anchor = head_sha of the latest successful push run of pages.yml on dev (security@'s sixth ruling)"
   ],
   "next": [
     "EU view (ENISA EUVD) paused at about 13:36 UTC: rights@ has not cleared it (R10; a person must read ENISA's legal notice in a browser and quote the reuse and credit clauses; rights@ has put that to Dinis). Restore it only when rights@ and Dinis clear it: set EUVD_ON in scripts/pulse-read.mjs and restore the footer credit. Never read www.enisa.europa.eu by machine. New sources: terms on the register before the first read (R15)",

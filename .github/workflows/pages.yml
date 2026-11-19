@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
-  deployments: read
+  actions: read
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -18,8 +18,8 @@ env:
   VERSION_BASE: '0.1'
 jobs:
   # Control 9 (security@'s fifth ruling, 16402a95c, from civic): the signature, trailer and leak checks run in jobs that
-  # have run no pushed code. They check out, take each check from the anchor A (the last successful github-pages
-  # deployment, read from GitHub's API) into RUNNER_TEMP, refuse symlinks there, clear NODE_OPTIONS, set
+  # have run no pushed code. They check out, take each check from the anchor A (the head commit of the latest successful
+  # push run of this workflow on dev, read from GitHub's API) into RUNNER_TEMP, refuse symlinks there, clear NODE_OPTIONS, set
   # GIT_NO_REPLACE_OBJECTS=1 and call node by an absolute path. The built site reaches the leak scan only as data.
   # The workflow file itself still comes from the pushed tree: only Dinis's branch protection closes that.
   verify:
@@ -39,23 +39,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Find the anchor (the newest commit a passing run deployed)
-        # security@'s fourth ruling (948820a7e, relayed by conductor.b@ 14:17 UTC): the anchor A is the sha of the last
-        # successful github-pages deployment, a record only a passing run writes, read with this run's own read token.
-        # Tags are not consulted. Dropped runs are covered because the range is A..AFTER.
+      - name: Find the anchor (the newest commit a passing run of this workflow checked)
+        # security@'s sixth ruling (0ba439611, relayed by conductor.b@ 14:26 UTC): A is the head_sha of the latest run of
+        # this workflow file, on dev, from a push, that concluded success. Only GitHub Actions creates runs; anyone with
+        # write access could create a "successful deployment", so deployments are no longer read. Tags are not consulted.
+        # Dropped runs are covered because the range is A..AFTER.
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
+          WORKFLOW_PATH: .github/workflows/pages.yml
         run: |
           anchor=$(node -e '
             const h = { authorization: `Bearer ${process.env.GH_TOKEN}`, accept: "application/vnd.github+json", "user-agent": "cyber-promptugal-ci" };
-            const api = `https://api.github.com/repos/${process.env.REPO}`;
+            const api = `https://api.github.com/repos/${process.env.REPO}`, path = process.env.WORKFLOW_PATH;
             (async () => {
-              const r = await fetch(`${api}/deployments?environment=github-pages&per_page=50`, { headers: h }); if (!r.ok) throw new Error(`deployments: HTTP ${r.status}`);
-              for (const d of await r.json()) {
-                const s = await fetch(`${api}/deployments/${d.id}/statuses?per_page=20`, { headers: h }); if (!s.ok) throw new Error(`statuses: HTTP ${s.status}`);
-                if ((await s.json()).some(x => x.state === "success") && /^[0-9a-f]{40}$/.test(d.sha)) { console.log(d.sha); return; }
-              }
+              const r = await fetch(`${api}/actions/workflows/pages.yml/runs?branch=dev&event=push&status=success&per_page=50`, { headers: h });
+              if (!r.ok) throw new Error(`workflow runs: HTTP ${r.status}`);
+              const run = ((await r.json()).workflow_runs || []).find(x => x.path === path && x.head_branch === "dev" && x.event === "push" && x.conclusion === "success" && /^[0-9a-f]{40}$/.test(x.head_sha));
+              if (run) console.log(run.head_sha);
             })().catch(e => { console.error(String(e.message || e)); process.exit(1); });
           ')
           echo "ANCHOR=$anchor" >> "$GITHUB_ENV"
@@ -69,7 +70,7 @@ jobs:
         run: |
           base=c8fff24023c597a36a76966af5d585b51944c966
           [ "$(git rev-parse --is-shallow-repository)" = "false" ] || { echo "a shallow checkout: refusing (fetch-depth must be 0)" >&2; exit 1; }
-          if [ -z "${ANCHOR:-}" ] || ! git cat-file -e "$ANCHOR^{commit}" 2>/dev/null; then echo "no anchor: no successful deployment recorded, or not in this clone: refusing; a person decides" >&2; exit 1; fi
+          if [ -z "${ANCHOR:-}" ] || ! git cat-file -e "$ANCHOR^{commit}" 2>/dev/null; then echo "no anchor: no successful run of this workflow recorded, or not in this clone: refusing; a person decides" >&2; exit 1; fi
           if ! git merge-base --is-ancestor "$base" "$ANCHOR" || ! git merge-base --is-ancestor "$ANCHOR" "$AFTER"; then
             echo "the anchor is not an ancestor of this push (force push or new history): refusing; a person decides" >&2; exit 1
           fi
