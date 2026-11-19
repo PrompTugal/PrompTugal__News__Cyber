@@ -14,13 +14,16 @@ const entry = (total, b, extra = {}) => ({ new: total, modified: 0, by_severity:
 const kev = { read_at: now, vulnerabilities: [{ cveID: 'CVE-2024-0001', dateAdded: day(3) }] };
 const nvd = dt => ({ read_at: now, last_24h: { new: 6, new_by_severity: bands(1, 1, 1, 1, 1, 1) }, daily_totals: dt });
 
-function run(dt, hist) {
+const euvdOk = (over = {}) => ({ source: 'euvd', schema: { version: 'v1' }, read_at: now, last_24h: { new: 6, new_by_severity: bands(1, 1, 1, 1, 1, 1), exploited: 2 }, counts: { in_last_24h: 10, exploited_in_last_24h: 2, exploited_total_euvd: 100 }, daily_totals: {}, ...over });
+function run(dt, hist, euvd, euvdHist) {
   const dir = mkdtempSync(join(tmpdir(), 'pulse-test-'));
   try {
     mkdirSync(join(dir, 'scripts')); cpSync(join(root, 'scripts/pulse-read.mjs'), join(dir, 'scripts/pulse-read.mjs'));
     mkdirSync(join(dir, 'src/api/v1/pulse/history'), { recursive: true });
     if (hist) writeFileSync(join(dir, 'src/api/v1/pulse/history/nvd-daily.json'), JSON.stringify({ points: hist }));
     mkdirSync(join(dir, 'in'));
+    if (euvd) writeFileSync(join(dir, 'in/euvd.json'), JSON.stringify(euvd));
+    if (euvdHist) writeFileSync(join(dir, 'src/api/v1/pulse/history/euvd-24h.json'), JSON.stringify({ points: euvdHist }));
     writeFileSync(join(dir, 'in/cisa-kev.json'), JSON.stringify(kev)); writeFileSync(join(dir, 'in/nvd-cve.json'), JSON.stringify(dt === undefined ? nvd(undefined) : nvd(dt)));
     const r = spawnSync('node', ['scripts/pulse-read.mjs', '--from', 'in'], { cwd: dir, encoding: 'utf8' });
     const out = r.status === 0 ? JSON.parse(readFileSync(join(dir, 'src/api/v1/pulse/history/nvd-daily.json'), 'utf8')) : null;
@@ -50,7 +53,23 @@ const cases = [
   ['a broken kept point stops', { [day(1)]: entry(6, bands(6, 0, 0, 0, 0, 0)) }, [{ day: day(40), total: 1 }], r => !r.ok && /kept daily history fails/.test(r.err)],
   ['a day older than the window stays', { [day(1)]: entry(6, bands(6, 0, 0, 0, 0, 0)) }, [kept(day(40), 9)], r => r.ok && r.out.points.length === 2 && r.out.points[0].total === 9],
 ];
+const g = { [day(1)]: entry(6, bands(6, 0, 0, 0, 0, 0)) };
+const eSnap = (t, at) => ({ read_at: at, window_hours: 24, total: 6, by_band: Object.fromEntries(Object.entries(bands(6, 0, 0, 0, 0, 0)).map(([k, v]) => [k, { total: v }])), exploited_24h: 2, exploited_total: t });
+cases.push(
+  ['EUVD: a good file is kept as one snapshot', g, null, r => r.ok, euvdOk()],
+  ['EUVD: not the euvd v1 file stops', g, null, r => !r.ok && /euvd: not the euvd v1 file/.test(r.err), euvdOk({ source: 'nvd' })],
+  ['EUVD: bands not adding up stop', g, null, r => !r.ok && /euvd: last_24h/.test(r.err), euvdOk({ last_24h: { new: 7, new_by_severity: bands(1, 1, 1, 1, 1, 1), exploited: 2 } })],
+  ['EUVD: exploited counts that disagree stop', g, null, r => !r.ok && /exploited count is not consistent/.test(r.err), euvdOk({ counts: { in_last_24h: 10, exploited_in_last_24h: 3, exploited_total_euvd: 100 } })],
+  ['EUVD: an exploited total below the 24-hour count stops', g, null, r => !r.ok && /exploited total is out of bounds/.test(r.err), euvdOk({ counts: { in_last_24h: 10, exploited_in_last_24h: 2, exploited_total_euvd: 1 } })],
+  ['EUVD: a fall of more than 2% in the exploited total stops', g, null, r => !r.ok && /more than 2% below the highest kept/.test(r.err), euvdOk(), [eSnap(200, '2026-01-01T00:00:00Z')]],
+  ['EUVD: a slow ratchet down is caught against the highest kept', g, null, r => !r.ok && /more than 2% below the highest kept/.test(r.err), euvdOk({ counts: { in_last_24h: 10, exploited_in_last_24h: 2, exploited_total_euvd: 100 } }), [eSnap(110, '2026-01-01T00:00:00Z'), eSnap(103, '2026-01-02T00:00:00Z')]],
+  ['EUVD: a jump of more than half stops', g, null, r => !r.ok && /rose by more than half/.test(r.err), euvdOk({ counts: { in_last_24h: 10, exploited_in_last_24h: 2, exploited_total_euvd: 1000 } }), [eSnap(100, '2026-01-01T00:00:00Z')]],
+  ['EUVD: the same instant in another spelling is not a new point', g, null, r => !r.ok && /already recorded with other values/.test(r.err), euvdOk({ read_at: now.replace('Z', '.000Z') }), [eSnap(99, now)]],
+  ['EUVD: an older read stops', g, null, r => !r.ok && /euvd: this read is older/.test(r.err), euvdOk(), [eSnap(100, '2099-01-01T00:00:00Z')]],
+  ['EUVD: a changed kept snapshot stops', g, null, r => !r.ok && /already recorded with other values/.test(r.err), euvdOk(), [eSnap(99, now)]],
+  ['EUVD: a bad complete day stops, naming the source', g, null, r => !r.ok && /euvd: day .* bands/.test(r.err), euvdOk({ daily_totals: { [day(1)]: entry(7, bands(1, 1, 1, 1, 1, 1)) } })],
+);
 const bad = [];
-for (const [name, dt, hist, ok] of cases) { const r = run(dt, hist); if (!ok(r)) bad.push(`FAIL ${name}: ${r.ok ? 'passed' : r.err.slice(0, 160)}`); }
+for (const [name, dt, hist, ok, euvd, eh] of cases) { const r = run(dt, hist, euvd, eh); if (!ok(r)) bad.push(`FAIL ${name}: ${r.ok ? 'passed' : r.err.slice(0, 160)}`); }
 if (bad.length) { console.error(bad.join('\n')); console.error(`FAILED (${bad.length} of ${cases.length})`); process.exit(1); }
 console.log(`OK (${cases.length} daily-totals cases)`);

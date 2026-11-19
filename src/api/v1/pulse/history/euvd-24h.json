@@ -1,0 +1,33 @@
+{
+  "about": "EUVD (ENISA): vulnerabilities new in the 24 hours before each read, by severity band, and the count EUVD lists as exploited, as read by data.b@ every 6 hours. Snapshots overlap: never add them up. Never added to NVD figures. Append-only.",
+  "credit": "Source: ENISA, EU Vulnerability Database (euvd.enisa.europa.eu)",
+  "points": [
+    {
+      "read_at": "2026-11-19T12:18:22Z",
+      "window_hours": 24,
+      "total": 602,
+      "by_band": {
+        "CRITICAL": {
+          "total": 88
+        },
+        "HIGH": {
+          "total": 219
+        },
+        "MEDIUM": {
+          "total": 259
+        },
+        "LOW": {
+          "total": 30
+        },
+        "NONE": {
+          "total": 0
+        },
+        "unscored": {
+          "total": 6
+        }
+      },
+      "exploited_24h": 8,
+      "exploited_total": 1803
+    }
+  ]
+}

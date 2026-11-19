@@ -6,7 +6,7 @@
 // written with textContent or as SVG attributes computed from numbers. Nothing is stored or sent.
 'use strict';
 (() => {
-  const SRC = { kev: 'https://data.promptugal.news/api/v1/cisa-kev/latest.json', nvd: 'https://data.promptugal.news/api/v1/nvd-cve/latest.json' };
+  const SRC = { kev: 'https://data.promptugal.news/api/v1/cisa-kev/latest.json', nvd: 'https://data.promptugal.news/api/v1/nvd-cve/latest.json', euvd: 'https://data.promptugal.news/api/v1/euvd/latest.json' };
   const STALE_MS = 12 * 3600 * 1000; // both files are read every 6 hours: older than 12 hours is stale
   const BANDS = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'NONE', 'unscored'];
   const SVGNS = 'http://www.w3.org/2000/svg';
@@ -110,11 +110,25 @@
     return 'live';
   }
 
+  // The EU view (ENISA EUVD): the same checks as the reader. Only counts are drawn, never a record; never added to NVD.
+  function eu(d) {
+    const r = $('p-eu-read'); if (!r) return 'none';
+    const e = d && d.last_24h, c = d && d.counts;
+    if (!d || d.source !== 'euvd' || !d.schema || d.schema.version !== 'v1' || !isTime(d.read_at)) throw new Error('EUVD file: unexpected shape');
+    if (!e || !isCount(e.new) || e.new > 100000 || !bandsOk(e.new_by_severity, e.new) || !c || !isCount(c.in_last_24h) || !isCount(e.exploited) || e.exploited !== c.exploited_in_last_24h || e.exploited > c.in_last_24h || !isCount(c.exploited_total_euvd) || c.exploited_total_euvd < e.exploited || c.exploited_total_euvd > 100000) throw new Error('EUVD file: counts out of bounds');
+    if (Date.parse(d.read_at) <= Date.parse(r.dataset.read || '1970-01-01T00:00:00Z')) { mark('p-eu-state', r.dataset.read); return 'kept'; }
+    $('p-eu-total').textContent = String(e.new); $('p-eu-exp24').textContent = String(e.exploited); $('p-eu-exptotal').textContent = String(c.exploited_total_euvd);
+    const t = $('p-eu-table');
+    if (t) { const head = t.rows[0]; t.replaceChildren(head, ...BANDS.map(b => { const tr = el('tr'); tr.append(el('td', b === 'unscored' ? 'not scored yet' : b.toLowerCase()), el('td', e.new_by_severity[b])); return tr; })); }
+    r.textContent = fmt(d.read_at); r.dataset.read = d.read_at; mark('p-eu-state', d.read_at);
+    return 'live';
+  }
+
   async function refresh() {
     const out = [];
-    for (const [name, fn, u] of [['KEV', kev, SRC.kev], ['NVD', nvd, SRC.nvd]]) {
+    for (const [name, fn, u] of [['KEV', kev, SRC.kev], ['NVD', nvd, SRC.nvd], ['EUVD', eu, SRC.euvd]]) {
       try { const data = await get(u); const r = fn(data); out.push(`${name}: ${r === 'live' ? 'the latest file' : 'the built copy is already the latest'}`); if (name === 'NVD') { try { await days(data); } catch { /* the built days stay */ } } }
-      catch (e) { out.push(`${name}: the built copy (the latest file did not pass its checks or could not be read)`); const [id, src] = name === 'KEV' ? ['p-kev-state', $('p-kev-svg')] : ['p-nvd-state', $('p-nvd-read')]; if (src && src.dataset.read) mark(id, src.dataset.read); }
+      catch (e) { out.push(`${name}: the built copy (the latest file did not pass its checks or could not be read)`); const [id, src] = name === 'KEV' ? ['p-kev-state', $('p-kev-svg')] : name === 'NVD' ? ['p-nvd-state', $('p-nvd-read')] : ['p-eu-state', $('p-eu-read')]; if (src && src.dataset.read) mark(id, src.dataset.read); }
     }
     const s = $('p-live'); if (s) s.textContent = `Figures shown: ${out.join('; ')}. Checked ${new Date().toISOString().slice(11, 16)} UTC, from data.promptugal.news.`;
   }

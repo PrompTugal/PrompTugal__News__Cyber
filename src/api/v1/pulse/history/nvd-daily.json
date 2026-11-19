@@ -1,5 +1,5 @@
 {
-  "about": "New CVEs in NVD per complete UTC day, by CVSS base severity band, counted by data.b@ from NVD's values and kept by cyber.promptugal.news. Append-only: a complete day never changes. UTC-day totals, not the 24-hour snapshots.",
+  "about": "New CVEs in NVD per complete UTC day, by CVSS base severity band, counted by data.b@ from NVD's values and kept by PrompTugal.news Cyber. Append-only: a complete day never changes. UTC-day totals, not the 24-hour snapshots.",
   "notice": "This product uses the NVD API but is not endorsed or certified by the NVD.",
   "points": [
     {

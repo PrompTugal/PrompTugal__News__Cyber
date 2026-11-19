@@ -1,9 +1,9 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T10:23:00Z",
+  "updated": "2026-11-19T13:24:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
-  "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed) Wake 07:18 UTC: opening and closing conductor, AppSec post-review (two lows fixed). Wake 10:18 UTC: opening conductor (nothing new), security pre-review (must-haves met), AppSec post-review (three lows fixed), closing conductor.",
+  "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed) Wake 07:18 UTC: opening and closing conductor, AppSec post-review (two lows fixed). Wake 10:18 UTC: opening conductor (nothing new), security pre-review (must-haves met), AppSec post-review (three lows fixed), closing conductor. Wake 13:18 UTC: opening conductor (nothing new; EUVD on the register), security pre-review, AppSec post-review (one medium, four lows, all fixed), closing conductor.",
   "done": [
     "Key made with sgit pki keygen; public bundle in team/keys.json (id cyber.b-promptugal)",
     "Commit check accepts role@PrompTugal.dinis (exact domain), its own commit",
@@ -28,12 +28,13 @@
     "Sites bar 1.2.0 installed (cleared by security@, 055e6c1430): vendored files match the registry's full pins; 1.1.1 removed; masthead nav CSS scoped so the bar scrolls sideways on phones",
     "Wake 07:18 UTC: the bar's pin check reads both registry shapes (flat today, .integrity after dev@'s reshape); a malformed entry stops the build; 375 px checked on eight pages",
     "Sites bar 1.2.1 installed (security@, 2d812d6da): pins match versions[\"1.2.1\"].integrity; 375 px checked on eight pages",
-    "Wake 10:18 UTC: new CVEs per complete UTC day on the pulse (history nvd-daily.json, 20 tests); security pre-review and AppSec post-review by Sonnet sub-agents, three low findings fixed"
+    "Wake 10:18 UTC: new CVEs per complete UTC day on the pulse (history nvd-daily.json, 20 tests); security pre-review and AppSec post-review by Sonnet sub-agents, three low findings fixed",
+    "Wake 13:18 UTC: the EU view (ENISA EUVD) on the pulse, aggregates only, never added to NVD; security pre-review and AppSec post-review (one medium, four lows, all fixed); 32 tests"
   ],
   "next": [
     "CVE store: run node scripts/cve-store.mjs in each wake before a release and commit what it writes (no timers: conductor.b@, 02:17 UTC); ask data.b@ for a date-range read only for a gap that touches a CVE no longer on KEV",
     "Each wake: if the build log or /version.json \"off\" says \"sites bar <version> off: the registry names <newer>\", copy that line into status.json and upgrade the bar once security@ has cleared the new version",
-    "From data.b@: EUVD /api/v1/euvd/latest.json (credit ENISA, EUVD; exploited flag; daily totals) and ENISA publications /api/v1/enisa-pubs/latest.json into the pulse, the explorer and the source pages; weekly NVD totals once the first whole week (Mon to Sun) of complete days is kept",
+    "From data.b@: ENISA publications /api/v1/enisa-pubs/latest.json into the pulse, the explorer and the source pages; weekly NVD totals once the first whole week (Mon to Sun) of complete days is kept",
     "The list of vendors relevant to Portugal (agreed): Portuguese vendors, and products bought by Portuguese public bodies per base.gov.pt (read from data.b@), each with its reason; then the Portugal lens on the pulse and in the explorer",
     "Predictions (show-the-past guidance): ask data.b@ to register and collect EPSS; then keep its scores as shown and check them against CISA KEV additions after 30 days Keep them in data/predictions/predictions.jsonl (append-only JSON Lines, prediction and outcome lines, in the library's form: library.promptugal.news/api/v1/predictions/form.json); when the first line exists, tell library.b@ (session_01Kw9UwFNC1sX4AKoWo4XhEP) the repo name so it imports it as one PRED series. None yet: EPSS waits on Dinis's decision on FIRST's terms.",
     "Run node scripts/pulse-read.mjs, node scripts/cve-store.mjs, then node scripts/preview-png.mjs, before each release (the readers are not in CI)",
@@ -45,7 +46,8 @@
     "CNPD, Shadowserver, Cloudflare Radar, RIPEstat, abuse.ch stay unread: whether a free sub-site may read non-commercial sources is a licence question for rights@ and Dinis"
   ],
   "asks": [
-    "Dinis: EPSS (FIRST's exploit prediction scores) would be this site's first kept-and-checked prediction. Its scores carry no named licence and ask for attribution; FIRST's general terms allow copying for 'preventative cybersecurity uses' and need written permission otherwise, and do not name EPSS. data.b@ has asked you too (its status.json): may we read it, or should we ask FIRST in writing first?"
+    "Dinis: EPSS (FIRST's exploit prediction scores) would be this site's first kept-and-checked prediction. Its scores carry no named licence and ask for attribution; FIRST's general terms allow copying for 'preventative cybersecurity uses' and need written permission otherwise, and do not name EPSS. data.b@ has asked you too (its status.json): may we read it, or should we ask FIRST in writing first?",
+    "Dinis: the EU view shows ENISA EUVD totals on the strength of ENISA's legal notice 1.2 (reproduction authorised with the source acknowledged), which no person has reviewed. Shall rights@ read it, or is the credit enough?"
   ],
   "answers": [
     "Track CVEs beyond KEV? Dinis, about 03:15 UTC 19 Nov 2026, in conductor.b@'s session (relayed 03:20 UTC): \"For now, that's okay on cyber\". The store tracks CISA KEV only."

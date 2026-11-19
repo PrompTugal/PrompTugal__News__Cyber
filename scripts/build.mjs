@@ -31,7 +31,7 @@ ${bar.html}
 const foot = `<footer class="foot">
 <p>Weak signals from public sources, not an audit and not a warning service. Aggregates and totals only: no list of IPs, hosts, devices or exposed services, no victim data, no link to a leak site. To report an incident, go to <a href="https://www.cncs.gov.pt/">CNCS and CERT.PT</a>.</p>
 <p>If you publish data shown here and think we should not show it, <a href="${REPO}/issues/new?title=Take-down%20request">open an issue</a> and we take it down while we talk (Dinis Cruz, 18 November 2026).</p>
-<p>Licences: what PrompTugal.news makes (these pages, our records, the totals) is <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; every value from a source stays under that source's licence or terms, linked on its source page and in every JSON file (<code>license</code>).</p>
+<p>Licences: what PrompTugal.news makes (these pages, our records, the totals) is <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; every value from a source stays under that source's licence or terms, linked on its source page and in every JSON file (<code>license</code>). EU figures: Source: ENISA, EU Vulnerability Database (<a href="https://euvd.enisa.europa.eu/">euvd.enisa.europa.eu</a>), under <a href="https://www.enisa.europa.eu/about-enisa/legal-notice">ENISA's legal notice</a>.</p>
 <p class="foot-obs">Code Apache-2.0. Text CC BY 4.0. <a href="https://promptugal.news/principles/">Principles</a> · <a href="https://promptugal.news/report/">Report a problem</a> · <a href="/security/">Security</a> · <a href="${REPO}">Repository</a> · <a href="https://promptugal.news/">PrompTugal.news</a></p>
 </footer>`;
 
@@ -126,6 +126,16 @@ function pulseHtml() {
 ${pts.length ? `<figure class="chart"><svg id="p-day-svg" data-last="${esc(pts.at(-1).day)}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(daily.title)}: ${esc(pts.map(p => `${p.day} ${p.total}`).join('; '))}">${bars}</svg>
 <figcaption>Source: ${esc(daily.source)} Our history: <a href="/api/v1/pulse/history/nvd-daily.json">/api/v1/pulse/history/nvd-daily.json</a>. ${esc(pulse.caveat)}</figcaption></figure>
 <div class="scroll"><table id="p-day-table"><tr><th>UTC day</th><th>New</th>${['critical', 'high', 'medium', 'low', 'none', 'not scored'].map(b => `<th>${b}</th>`).join('')}</tr>${pts.slice().reverse().map(p => `<tr><td>${esc(p.day)}</td><td>${esc(p.total)}</td>${['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'NONE', 'unscored'].map(b => `<td>${esc(p.by_band[b].total)}</td>`).join('')}</tr>`).join('')}</table></div>` : '<p>No complete day yet.</p>'}
+`;
+  }
+  const eu = pulse.series.find(x => x.id === 'euvd-24h'), euDays = pulse.series.find(x => x.id === 'euvd-new-daily');
+  if (eu && eu.points.length) {
+    const p = eu.points.at(-1), B = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'NONE', 'unscored'];
+    h += `<h2 id="eu">EU view (ENISA EUVD)</h2>
+<p>The European Union's own vulnerability database, run by ENISA. Its CVEs overlap NVD's, so these figures are shown beside NVD's and never added to them. As read at <span id="p-eu-read" data-read="${esc(p.read_at)}">${fmtTime(p.read_at)}</span> <span id="p-eu-state"></span>: <b id="p-eu-total">${esc(p.total)}</b> new in the 24 hours before the read; <b id="p-eu-exp24">${esc(p.exploited_24h)}</b> of those read in that window are listed by EUVD as exploited; <b id="p-eu-exptotal">${esc(p.exploited_total)}</b> listed as exploited in all.</p>
+<div class="scroll"><table id="p-eu-table"><tr><th>Severity band (CVSS base)</th><th>New</th></tr>${B.map(b => `<tr><td>${esc(b === 'unscored' ? 'not scored yet' : b.toLowerCase())}</td><td>${esc(p.by_band[b].total)}</td></tr>`).join('')}</table></div>
+<p>Complete UTC days from EUVD: ${euDays && euDays.points.length ? euDays.points.slice(-14).map(d => `${esc(d.day)}: ${esc(d.total)}`).join('; ') : 'none yet; the first joins once a whole UTC day has been read.'}</p>
+<p class="caveat">${esc(eu.credit)}, under <a href="${url(eu.source_license.url)}">${esc(eu.source_license.name)}</a>. Via ${esc(eu.source)} History: <a href="/api/v1/pulse/history/euvd-24h.json">euvd-24h.json</a>, <a href="/api/v1/pulse/history/euvd-daily.json">euvd-daily.json</a>. ${esc(pulse.caveat)}</p>
 `;
   }
   return h;
