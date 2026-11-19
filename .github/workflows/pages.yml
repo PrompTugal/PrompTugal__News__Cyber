@@ -55,9 +55,21 @@ jobs:
         env:
           BEFORE: ${{ github.event.before }}
           AFTER: ${{ github.sha }}
+          EVENT: ${{ github.event_name }}
         run: |
           last=$(git describe --tags --abbrev=0 --match "v${VERSION_BASE}.*" "$AFTER" 2>/dev/null || true)
-          node scripts/check-signatures.mjs "${last:-$BEFORE}" "$AFTER"
+          base=c8fff24023c597a36a76966af5d585b51944c966
+          # a run started by a person by hand has no "before": it starts from the last release tag
+          if [ "$EVENT" = "workflow_dispatch" ]; then BEFORE="$last"; fi
+          # BEFORE must be the dev this push builds on (on the base's line, an ancestor of AFTER); otherwise refuse
+          if [ -z "$BEFORE" ] || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null || ! git merge-base --is-ancestor "$base" "$BEFORE" || ! git merge-base --is-ancestor "$BEFORE" "$AFTER"; then
+            echo "cannot find the release this push builds on (force push or new history): refusing; a person decides" >&2; exit 1
+          fi
+          # a release tag counts only if its commit was already on dev before this push (a pushed tag alone is not trusted)
+          if [ -n "$last" ] && git merge-base --is-ancestor "$last" "$BEFORE"; then from="$last"; else from="$BEFORE"; fi
+          # the checker as it stood at that point, never the pushed copy (branch and tag protection close the rest)
+          git show "$from:scripts/check-signatures.mjs" > "$RUNNER_TEMP/check-signatures.mjs"
+          node "$RUNNER_TEMP/check-signatures.mjs" "$from" "$AFTER"
       - run: node scripts/build.mjs
         env:
           SITE_VERSION: ${{ steps.version.outputs.version }}
@@ -66,6 +78,8 @@ jobs:
         run: node scripts/test-leak-scan.mjs
       - name: Pulse reader tests (daily NVD totals)
         run: node scripts/test-pulse-daily.mjs
+      - name: Signature check tests (pinned base, orphans, checker from the last release)
+        run: node scripts/test-check-signatures.mjs
       - name: Leak scan (tracked files and the built site)
         run: node scripts/leak-scan.mjs
       - if: steps.mode.outputs.deploy == 'true'

@@ -2,7 +2,7 @@
 // in cyber.b@PrompTugal.dinis's session: "every single agent ... should have published its public key on the repo that it
 // maintains ... every then commit is signed by that key ... you should also include the session ID").
 // Usage: node scripts/check-signatures.mjs <before> <after>   (the pushed range; as check-commits.mjs)
-// For each non-merge commit in the range that descends from the commit that added this file:
+// For each commit in the range (merges included) that descends from the pinned trusted base (TRUSTED_BASE):
 //   1. it carries an SSH signature (git's, namespace "git") that verifies against a key in team/keys.json;
 //   2. the key's agent is the commit's Agent: trailer;
 //   3. its Claude-Session: trailer names the session recorded with that key.
@@ -19,8 +19,13 @@ const lines = s => (s ? s.split('\n').filter(Boolean) : []);
 const [beforeArg, afterArg] = process.argv.slice(2);
 const after = afterArg || 'HEAD';
 
-const first = lines(git('log', '--format=%H', '--diff-filter=A', '--reverse', after, '--', 'scripts/check-signatures.mjs'))[0];
-if (!first) { console.error('check-signatures: cannot find the commit that added scripts/check-signatures.mjs'); process.exit(1); }
+// The one trusted base, pinned (videos.b@'s finding via conductor.b@, 19 Nov 2026, 14:01 UTC): the commit that added this
+// check. Found by its full id, never by searching history, which a crafted orphan with an old date could answer.
+const TRUSTED_BASE = 'c8fff24023c597a36a76966af5d585b51944c966';
+const first = TRUSTED_BASE;
+if (tryGit('cat-file', '-e', `${first}^{commit}`) === null) { console.error('check-signatures: the trusted base is not in this clone'); process.exit(1); }
+const isAncestor = (a, b) => spawnSync('git', ['merge-base', '--is-ancestor', a, b]).status === 0;
+if (!isAncestor(first, after)) { console.error('check-signatures: the pushed history does not descend from the trusted base'); process.exit(1); }
 const before = beforeArg && !/^0+$/.test(beforeArg) && tryGit('rev-parse', '--verify', '--quiet', `${beforeArg}^{commit}`);
 const added = lines(git('rev-list', ...(before ? [`${before}..${after}`] : [after]))); // merges included: a merge is a commit too
 const inScope = new Set([first, ...lines(git('rev-list', '--ancestry-path', `${first}..${after}`))]);
@@ -51,8 +56,14 @@ function signersAt(rev) {
 }
 
 const errors = []; let checked = 0;
+let older = 0;
 for (const c of added) {
-  if (!inScope.has(c)) continue;
+  if (!inScope.has(c)) {
+    // older than the base: fine. Anything else (a merged unrelated history, an orphan) is refused, never skipped.
+    if (isAncestor(c, first)) { older++; continue; }
+    errors.push(`${c.slice(0, 7)} ${git('log', '-1', '--format=%s', c)}: does not descend from the trusted base`); continue;
+  }
+  if (c !== first && !lines(git('log', '-1', '--format=%P', c)).join(' ').trim()) { errors.push(`${c.slice(0, 7)} ${git('log', '-1', '--format=%s', c)}: an orphan commit (no parent) can only be the trusted base`); continue; }
   checked++;
   const subject = git('log', '-1', '--format=%s', c);
   const agents = lines(git('log', '-1', '--format=%(trailers:key=Agent,valueonly)', c)).map(s => s.trim());
@@ -69,4 +80,4 @@ for (const c of added) {
 }
 rmSync(dir, { recursive: true, force: true });
 if (errors.length) { console.error(errors.join('\n')); console.error(`FAILED (${errors.length} of ${checked} commits checked)`); process.exit(1); }
-console.log(`OK (${checked} signed commits checked, ${added.length - checked} older than the check skipped)`);
+console.log(`OK (${checked} signed commits checked, ${older} older than the check skipped)`);
