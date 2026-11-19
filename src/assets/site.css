@@ -79,3 +79,8 @@ main.x-main { max-width: 80rem; }
 #x-sql { width: 100%; font: .9rem var(--font-meta, monospace); padding: 8px; background: var(--panel); color: var(--ink); border: 1px solid var(--rule); border-radius: 6px; }
 .x-err { color: var(--red); } .x-sort { cursor: pointer; white-space: nowrap; }
 .x-glab-v { font-weight: 700; font-size: 13px; }
+.x-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; } .x-chip { background: var(--panel); border: 1px solid var(--rule); border-radius: 999px; padding: 2px 10px; text-decoration: none; font-size: .85rem; } .x-chip-clear { border-style: dashed; }
+.x-hit { fill: transparent; } a.x-click:hover .x-bar, a.x-click:focus .x-bar { opacity: .7; } a.x-click:hover .x-edge { stroke: var(--red); }
+.x-dl { display: grid; grid-template-columns: minmax(8rem, 16rem) 1fr; gap: 6px 16px; } .x-dl dt { font-weight: 600; color: var(--muted); } .x-dl dd { margin: 0; }
+td a + a, dd a + a { margin-left: 2px; }
+a.x-click:hover .b, a.x-click:focus .b, a.x-click:hover .b-part { opacity: .7; } a.x-click { cursor: pointer; }

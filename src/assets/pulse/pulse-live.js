@@ -17,6 +17,10 @@
   const fmt = t => t.replace('T', ' ').replace(/:\d\d(\.\d+)?Z$/, ' UTC');
   const ago = t => Date.now() - Date.parse(t);
   const el = (tag, text) => { const e = document.createElement(tag); if (text !== undefined) e.textContent = String(text); return e; };
+  // a link into the explorer; the query is built from our own fixed keys and checked dates or bands only
+  const go = (tab, k, v) => `/explore/#${new URLSearchParams({ tab, [k]: v }).toString()}`;
+  const a = (href, text) => { const e = el('a', text); e.setAttribute('href', href); return e; };
+  const td = node => { const e = el('td'); e.append(node); return e; };
   const sv = (tag, attrs, text) => { const e = document.createElementNS(SVGNS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, String(v)); if (text !== undefined) e.textContent = String(text); return e; };
   const monday = d => { const t = new Date(d + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10); };
   const addDays = (d, k) => { const t = new Date(d + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + k); return t.toISOString().slice(0, 10); };
@@ -41,15 +45,18 @@
     const kids = [];
     pts.forEach((p, i) => {
       const x = i * bw + 6, w = bw - 12, bh = Math.max(2, Math.round((p.total / max) * (H - 50)));
-      kids.push(sv('rect', { class: p.partial ? 'b-part' : 'b', x, y: H - 30 - bh, width: w, height: bh }));
-      kids.push(sv('text', { class: 'v', x: x + w / 2, y: H - 36 - bh, 'text-anchor': 'middle' }, p.total));
-      kids.push(sv('text', { class: 'w', x: x + w / 2, y: H - 12, 'text-anchor': 'middle' }, p.week.slice(5)));
+      const g = sv('a', { class: 'x-click', href: go('kev', 'week', p.week) });
+      g.append(sv('title', {}, `Week of ${p.week}: ${p.total} CVEs. Click to see them.`), sv('rect', { class: 'x-hit', x: i * bw, y: 0, width: bw, height: H }));
+      g.append(sv('rect', { class: p.partial ? 'b-part' : 'b', x, y: H - 30 - bh, width: w, height: bh }));
+      g.append(sv('text', { class: 'v', x: x + w / 2, y: H - 36 - bh, 'text-anchor': 'middle' }, p.total));
+      g.append(sv('text', { class: 'w', x: x + w / 2, y: H - 12, 'text-anchor': 'middle' }, p.week.slice(5)));
+      kids.push(g);
     });
     svg.replaceChildren(...kids);
     svg.setAttribute('aria-label', 'CVEs added to CISA\'s known-exploited list, per week, worldwide: ' + pts.map(p => `${p.week} ${p.total}`).join('; '));
     svg.dataset.read = d.read_at;
     const t = $('p-kev-table');
-    if (t) { const head = t.rows[0]; const rows = pts.slice().reverse().map(p => { const tr = el('tr'); tr.append(el('td', p.week + (p.partial ? ' (so far)' : '')), el('td', p.total)); return tr; }); t.replaceChildren(head, ...rows); }
+    if (t) { const head = t.rows[0]; const rows = pts.slice().reverse().map(p => { const tr = el('tr'); const c = td(a(go('kev', 'week', p.week), p.week)); if (p.partial) c.append(' (so far)'); tr.append(c, td(a(go('kev', 'week', p.week), p.total))); return tr; }); t.replaceChildren(head, ...rows); }
     $('p-kev-read').textContent = fmt(d.read_at); mark('p-kev-state', d.read_at);
     return 'live';
   }
@@ -63,7 +70,7 @@
     if (Date.parse(d.read_at) <= Date.parse(r.dataset.read || '1970-01-01T00:00:00Z')) { mark('p-nvd-state', r.dataset.read); return 'kept'; }
     $('p-nvd-total').textContent = String(l.new);
     const t = $('p-nvd-table');
-    if (t) { const head = t.rows[0]; const rows = BANDS.map(b => { const tr = el('tr'); tr.append(el('td', b === 'unscored' ? 'not scored yet' : b.toLowerCase()), el('td', l.new_by_severity[b])); return tr; }); t.replaceChildren(head, ...rows); }
+    if (t) { const head = t.rows[0]; const rows = BANDS.map(b => { const tr = el('tr'); tr.append(td(a(go('nvd', 'sev', b), b === 'unscored' ? 'not scored yet' : b.toLowerCase())), el('td', l.new_by_severity[b])); return tr; }); t.replaceChildren(head, ...rows); }
     r.textContent = fmt(d.read_at); r.dataset.read = d.read_at; mark('p-nvd-state', d.read_at);
     return 'live';
   }
