@@ -29,13 +29,17 @@ export async function sitesBar(here) {
   if (!reg) return { html: existsSync(LAST) ? readFileSync(LAST, 'utf8') : '', assets: existsSync(LAST), from: 'the last verified copy (registry not read; renderer not run)' };
   const bar = reg.bar || {};
   // A newer (or other) version in the registry is not a reason to stop the site (conductor.b@, 19 Nov 2026, 05:10 UTC,
-  // from data.b@'s finding): publish with no bar, and upgrade at the next wake. Same version with other bytes still stops.
-  if (bar.version !== VERSION) {
-    console.warn(`sites bar: WARNING the registry names ${String(bar.version).slice(0, 20)}; this site vendors ${VERSION}. Published without a bar; upgrade at the next wake.`);
-    return { html: '', assets: false, from: `nowhere: the registry names ${String(bar.version).slice(0, 20)}, this site vendors ${VERSION} (upgrade due)` };
+  // from data.b@'s finding; confirmed by security@, Website 1acd10498). If the registry still keeps this version's pins
+  // (bar.versions[VERSION].integrity, dev@'s append-only proposal), they are checked as usual. Otherwise the bar is left
+  // out, never shipped unchecked, and the log says so in security@'s words. The same version with other bytes still stops.
+  const pins = bar.version === VERSION ? bar.integrity : (bar.versions && bar.versions[VERSION] && bar.versions[VERSION].integrity);
+  if (!pins) {
+    const off = `sites bar ${VERSION} off: the registry names ${String(bar.version).slice(0, 20)}`;
+    console.warn(off);
+    return { html: '', assets: false, off, from: `nowhere (${off})` };
   }
   for (const [k, f] of Object.entries(FILES)) {
-    const pin = bar.integrity && bar.integrity[k];
+    const pin = pins[k];
     if (!/^sha256-[A-Za-z0-9+/]{43}=$/.test(pin || '')) throw new Error(`sites bar: the registry has no full pin for ${k}`);
     if (sri(f) !== pin) throw new Error(`sites bar: ${f} does not match the registry's full pin for ${k}`);
   }

@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T03:25:00Z",
+  "updated": "2026-11-19T05:16:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed)",
   "done": [
@@ -28,6 +28,7 @@
   ],
   "next": [
     "CVE store: run node scripts/cve-store.mjs in each wake before a release and commit what it writes (no timers: conductor.b@, 02:17 UTC); ask data.b@ for a date-range read only for a gap that touches a CVE no longer on KEV",
+    "Each wake: if the build log or /version.json \"off\" says \"sites bar <version> off: the registry names <newer>\", copy that line into status.json and upgrade the bar once security@ has cleared the new version",
     "The list of vendors relevant to Portugal (agreed): Portuguese vendors, and products bought by Portuguese public bodies per base.gov.pt (read from data.b@), each with its reason; then the Portugal lens on the pulse and in the explorer",
     "From data.b@ (its message, 23:58 UTC, live after its next Pages run): NVD daily_totals (complete UTC days, 30 kept) for weekly NVD totals on the pulse; EUVD /api/v1/euvd/latest.json (credit ENISA, EUVD; exploited flag; daily totals) and ENISA publications /api/v1/enisa-pubs/latest.json into the pulse, the explorer and the source pages",
     "Predictions (show-the-past guidance): ask data.b@ to register and collect EPSS; then keep its scores as shown and check them against CISA KEV additions after 30 days Keep them in data/predictions/predictions.jsonl (append-only JSON Lines, prediction and outcome lines, in the library's form: library.promptugal.news/api/v1/predictions/form.json); when the first line exists, tell library.b@ (session_01Kw9UwFNC1sX4AKoWo4XhEP) the repo name so it imports it as one PRED series. None yet: EPSS waits on Dinis's decision on FIRST's terms.",

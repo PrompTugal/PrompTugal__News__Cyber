@@ -154,6 +154,6 @@ for (const f of walk('_site')) {
   if (s.includes('__VERSION__')) s = s.replaceAll('__VERSION__', version);
   if (s !== o) writeFileSync(f, s);
 }
-writeFileSync('_site/version.json', JSON.stringify({ version, commit: process.env.GITHUB_SHA || 'local', built: new Date().toISOString() }, null, 2) + '\n');
+writeFileSync('_site/version.json', JSON.stringify({ version, commit: process.env.GITHUB_SHA || 'local', built: new Date().toISOString(), off: bar.off ? [bar.off] : [] }, null, 2) + '\n');
 writeFileSync('_site/.nojekyll', '');
 console.log(`built _site/ (${version}, ${reg.sources.length} source pages)`);
