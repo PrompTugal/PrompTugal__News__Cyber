@@ -37,7 +37,7 @@ export async function sitesBar(here) {
   // every pin must still be a full sha256 SRI value and match the vendored file exactly.
   const listed = bar.versions && typeof bar.versions === 'object' ? bar.versions[VERSION] : null;
   const fromList = listed && typeof listed === 'object' ? (listed.integrity && typeof listed.integrity === 'object' ? listed.integrity : listed) : null;
-  // A malformed entry stops the build instead of quietly removing the bar (AppSec post-review, 19 Nov 2026, 07:25 UTC).
+  // A malformed entry stops the build instead of quietly removing the bar (AppSec post-review, 19 Nov 2026, about 07:20 UTC).
   if (listed != null && (typeof listed !== 'object' || Array.isArray(listed))) throw new Error(`sites bar: the registry's entry for ${VERSION} is not a pin map`);
   if (bar.version === VERSION && (!bar.integrity || typeof bar.integrity !== 'object' || Array.isArray(bar.integrity))) throw new Error(`sites bar: the registry names ${VERSION} but gives no pin map for it`);
   const pins = bar.version === VERSION ? bar.integrity : fromList;
