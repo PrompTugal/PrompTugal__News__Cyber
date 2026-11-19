@@ -30,11 +30,16 @@
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   }
-  function mark(id, readAt) { const s = $(id); if (s) s.textContent = ago(readAt) > STALE_MS ? '(stale: older than 13 hours)' : ''; }
+  // each file states when it goes stale (data.b@'s 8f6a905: expected_cadence.stale_after_seconds, twice-daily collection);
+  // that value is used when it is a whole number of seconds between 1 hour and 7 days, else 13 hours
+  const stale = {};
+  const staleOf = (id, d) => { const v = d && d.expected_cadence && d.expected_cadence.stale_after_seconds; stale[id] = Number.isInteger(v) && v >= 3600 && v <= 604800 ? v * 1000 : STALE_MS; };
+  function mark(id, readAt) { const s = $(id); const lim = stale[id] || STALE_MS; if (s) s.textContent = ago(readAt) > lim ? `(stale: no new read in ${Math.round(lim / 3600000)} hours; twice-daily collection)` : ''; }
 
   function kev(d) {
     const svg = $('p-kev-svg'); if (!svg) return;
     if (!d || !isTime(d.read_at) || !Array.isArray(d.vulnerabilities) || d.vulnerabilities.length < 100) throw new Error('KEV file: unexpected shape');
+    staleOf('p-kev-state', d);
     if (Date.parse(d.read_at) <= Date.parse(svg.dataset.read || '1970-01-01T00:00:00Z')) { mark('p-kev-state', svg.dataset.read); return 'kept'; }
     const per = new Map();
     for (const v of d.vulnerabilities) { if (!v || !isDate(v.dateAdded)) throw new Error('KEV file: a bad date'); const w = monday(v.dateAdded); per.set(w, (per.get(w) || 0) + 1); }
@@ -65,6 +70,7 @@
     const r = $('p-nvd-read'); if (!r) return;
     const l = d && d.last_24h;
     if (!d || !isTime(d.read_at) || !l || !isCount(l.new) || typeof l.new_by_severity !== 'object') throw new Error('NVD file: unexpected shape');
+    staleOf('p-nvd-state', d);
     if (Object.keys(l.new_by_severity).some(k => !BANDS.includes(k)) || BANDS.some(b => !isCount(l.new_by_severity[b]))) throw new Error('NVD file: unexpected bands');
     if (BANDS.reduce((s, b) => s + l.new_by_severity[b], 0) !== l.new) throw new Error('NVD file: bands do not add up');
     if (Date.parse(d.read_at) <= Date.parse(r.dataset.read || '1970-01-01T00:00:00Z')) { mark('p-nvd-state', r.dataset.read); return 'kept'; }

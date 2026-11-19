@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T16:38:00Z",
+  "updated": "2026-11-19T16:43:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed) Wake 07:18 UTC: opening and closing conductor, AppSec post-review (two lows fixed). Wake 10:18 UTC: opening conductor (nothing new), security pre-review (must-haves met), AppSec post-review (three lows fixed), closing conductor. Wake 13:18 UTC: opening conductor (nothing new; EUVD on the register), security pre-review, AppSec post-review (one medium, four lows, all fixed), closing conductor. Wake 16:18 UTC: AppSec post-review of the CI hardening (nothing blocking), the fix tested before release.",
   "done": [
