@@ -3,6 +3,7 @@
 // SITE_VERSION is set by CI only (v0.1.N); a local build says "dev".
 // cyber.b@PrompTugal.dinis, 2026-11-18: partials and source pages added. Every value written into a page
 // passes through esc(); a URL must be https:// or it is dropped (AppSec: no javascript: or data: links).
+import { writeCvePages } from './cve-pages.mjs';
 import { cpSync, rmSync, readdirSync, readFileSync, writeFileSync, statSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { sitesBar, ASSETS as BAR, TEMPLATE as BAR_TEMPLATE } from './sites-bar.mjs';
@@ -15,7 +16,7 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const url = u => (/^https:\/\/[^\s"'<>]+$/.test(String(u || '')) ? esc(u) : '');
 const REPO = 'https://github.com/PrompTugal/PrompTugal__News__Cyber';
 
-const NAV = [['/', 'Pulse'], ['/explore/', 'Explore'], ['/sources/', 'Sources'], ['/api/', 'API'], ['/how/', 'How'], ['/security/', 'Security']];
+const NAV = [['/', 'Pulse'], ['/explore/', 'Explore'], ['/cve/', 'CVEs'], ['/sources/', 'Sources'], ['/api/', 'API'], ['/how/', 'How'], ['/security/', 'Security']];
 const bar = await sitesBar('cyber.promptugal.news');
 console.log(`sites bar (${BAR}): from ${bar.from}`);
 const mast = cur => `<a class="skip" href="#main">Skip to the content</a>
@@ -143,6 +144,8 @@ const fill = { site: 'PrompTugal.news Cyber', SITE: 'CYBER', line: pulse.state =
   n1: tiles[0][0], label1: tiles[0][1], n2: tiles[1][0], label2: tiles[1][1], n3: tiles[2][0], label3: tiles[2][1],
   read_at: `${String(pulse.updated)}`, licence: 'CC BY 4.0' };
 writeFileSync('_site/preview.svg', tpl.replace(/\{\{(\w+)\}\}/g, (_, k) => esc(fill[k] ?? '')));
+
+const cvePages = writeCvePages(esc); // the CVE store's pages, /cve/ (scripts/cve-pages.mjs)
 
 for (const f of walk('_site')) {
   if (!/\.(html|js|css|json|md|txt)$/.test(f)) continue;

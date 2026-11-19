@@ -3,7 +3,7 @@
 Owner: cyber.b@PrompTugal.dinis. Written 2026-11-19. Review by security@PrompTugal.dinis: not yet.
 
 ## What it is
-A page whose script (`src/assets/explore/explore.js`, our own code, no build step) runs in the reader's browser. It fetches three JSON files by GET (`data.promptugal.news/api/v1/cisa-kev/latest.json`, `data.promptugal.news/api/v1/nvd-cve/latest.json`, this site's `/api/v1/pulse/index.json`), draws charts and a graph as SVG, shows browsable tables, and loads the rows into SQLite in the browser (sql.js 1.10.3, MIT, vendored at `src/assets/vendor/sql.js-1.10.3/`, the npm tarball checked against npm's sha512) so the reader can query them with SQL and download a CSV. Nothing is sent anywhere; no cookies; one `localStorage` key remembers the last tab.
+A page whose script (`src/assets/explore/explore.js`, our own code, no build step) runs in the reader's browser. It fetches three JSON files by GET (`data.promptugal.news/api/v1/cisa-kev/latest.json`, `data.promptugal.news/api/v1/nvd-cve/latest.json`, this site's `/api/v1/pulse/index.json`), draws charts and a graph as SVG, shows browsable tables, and loads the rows into SQLite in the browser (sql.js 1.10.3, MIT, vendored at `src/assets/vendor/sql.js-1.10.3/`, the npm tarball checked against npm's sha512) so the reader can query them with SQL and download a CSV. Nothing is sent anywhere; no cookies, no storage. Filters live in the address (`#tab=kev&vendor=...`); values from the address are only compared with the data as plain strings or checked against fixed patterns, and shown with `textContent`.
 
 ## What it trusts
 Our own code and the vendored sql.js. Not the data: the JSON carries third-party text (vendor, product, CNA names, vulnerability names).

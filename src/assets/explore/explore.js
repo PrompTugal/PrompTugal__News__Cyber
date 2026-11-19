@@ -206,6 +206,7 @@
     const ext = el('p', { class: 'x-ext' }, 'At the source: ');
     ext.append(el('a', { href: `https://nvd.nist.gov/vuln/detail/${id}`, rel: 'noopener noreferrer' }, 'NVD'), ' · ', el('a', { href: `https://www.cve.org/CVERecord?id=${id}`, rel: 'noopener noreferrer' }, 'CVE.org'));
     if (k) ext.append(' · ', el('a', { href: 'https://www.cisa.gov/known-exploited-vulnerabilities-catalog', rel: 'noopener noreferrer' }, 'CISA KEV catalogue'));
+    if (k) { const v = el('p', {}, ''); v.append(el('a', { href: `/cve/${id}/` }, 'Every version we have kept of this CVE'), ': what changed, and when.'); box.push(v); }
     box.push(ext);
     if (k) { const more = el('p', {}, 'More: '); more.append(link(`every KEV entry for ${k.vendor}`, { tab: 'kev', vendor: k.vendor, product: '', kq: '' }), ' · ', link(`every KEV entry added the week of ${monday(k.date_added)}`, { tab: 'kev', week: monday(k.date_added), vendor: '', product: '' })); box.push(more); }
     out.replaceChildren(...box);

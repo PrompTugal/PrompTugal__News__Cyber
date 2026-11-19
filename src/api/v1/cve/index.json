@@ -1,0 +1,27 @@
+{
+ "about": "Every CVE on CISA KEV, one file each, with every distinct version we have seen of its KEV entry and its NVD record. Kept by cyber.promptugal.news from data.promptugal.news; no request is made per CVE. Weak signals, not an audit.",
+ "notice": "This product uses the NVD API but is not endorsed or certified by the NVD.",
+ "license": {
+  "name": "CC BY 4.0",
+  "url": "https://creativecommons.org/licenses/by/4.0/",
+  "holder": "PrompTugal.news"
+ },
+ "source_licenses": {
+  "kev": "CC0 1.0 (CISA)",
+  "nvd": "NVD terms of use (NIST); values kept as served"
+ },
+ "reads": {
+  "kev": [
+   "2026-11-18T23:42:26Z"
+  ],
+  "nvd": [
+   "2026-11-18T23:48:50Z"
+  ]
+ },
+ "gaps": [],
+ "tracked": 1786,
+ "changes": [],
+ "on_kev_now": 1786,
+ "without_nvd_record": 1778,
+ "updated": "2026-11-19T02:15:05Z"
+}
