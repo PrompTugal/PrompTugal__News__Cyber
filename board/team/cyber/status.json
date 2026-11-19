@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T03:20:00Z",
+  "updated": "2026-11-19T03:21:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed)",
   "done": [
@@ -30,12 +30,12 @@
     "CVE store: run node scripts/cve-store.mjs in each wake before a release and commit what it writes (no timers: conductor.b@, 02:17 UTC); ask data.b@ for a date-range read only for a gap that touches a CVE no longer on KEV",
     "The list of vendors relevant to Portugal (agreed): Portuguese vendors, and products bought by Portuguese public bodies per base.gov.pt (read from data.b@), each with its reason; then the Portugal lens on the pulse and in the explorer",
     "From data.b@ (its message, 23:58 UTC, live after its next Pages run): NVD daily_totals (complete UTC days, 30 kept) for weekly NVD totals on the pulse; EUVD /api/v1/euvd/latest.json (credit ENISA, EUVD; exploited flag; daily totals) and ENISA publications /api/v1/enisa-pubs/latest.json into the pulse, the explorer and the source pages",
-    "Predictions (show-the-past guidance): ask data.b@ to register and collect EPSS; then keep its scores as shown and check them against CISA KEV additions after 30 days",
+    "Predictions (show-the-past guidance): ask data.b@ to register and collect EPSS; then keep its scores as shown and check them against CISA KEV additions after 30 days Send each prediction file to library.b@ in its form (predictions are one collection in the library); keep and check our own copy too.",
     "Run node scripts/pulse-read.mjs, node scripts/cve-store.mjs, then node scripts/preview-png.mjs, before each release (the readers are not in CI)",
     "The published mapping of products to sectors, with its reasons (Dinis: 'sounds quite good')",
     "Publish the list of vendors relevant to Portugal, with reasons (vendor and product names only), then the Portugal lens of both series",
     "When dev@ and designer@ publish the sites bar: vendor it pinned by version and sha256, render promptugal.news/api/v1/sites.json escaped with only https links to *.promptugal.news, and replace the sites rail",
-    "Observability: make the 'cyber' lane on account B (model: civic's tools/obs-setup-civic.py), seal its credentials to conductor.b-promptugal with sgit pki encrypt, add obs.js; a public obs.json may need Dinis's yes for the leak scan (conductor.b@, 18 Nov 2026, about 21:00 UTC)",
+    "Observability: make the 'cyber' lane on account B (model: civic's tools/obs-setup-civic.py), seal its credentials to conductor.b-promptugal with sgit pki encrypt, add obs.js; a public obs.json may need Dinis's yes for the leak scan (conductor.b@, 18 Nov 2026, about 21:00 UTC) No IP-based location, ever: country only, from the browser's time zone through a fixed table, no network call (Dinis, about 03:15 UTC 19 Nov, via conductor.b@; Website board/guidance/2026-11-19-no-ip-lookup-predictions-and-small-decisions.md).",
     "An OpenAPI per source, listed in data.promptugal.news's Swagger of Swaggers",
     "London (Dinis, about 22:20 UTC, PrompTugal__News__Website board/guidance/2026-11-18-london.md): a UK view beside Portugal's, same limits, once data.b@ has NCSC advisories on the register with terms checked and collected; nothing read by cyber.b@ until then",
     "CNPD, Shadowserver, Cloudflare Radar, RIPEstat, abuse.ch stay unread: whether a free sub-site may read non-commercial sources is a licence question for rights@ and Dinis"
