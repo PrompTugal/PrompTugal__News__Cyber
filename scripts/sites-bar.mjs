@@ -3,6 +3,7 @@
 // The full pins (SRI form, sha256-<base64> of the whole file) are taken from the registry's bar.integrity, never kept in
 // part. Every vendored file must match its pin exactly before the renderer is imported; any mismatch stops the build.
 // If the registry cannot be read, the renderer is not run and the last bar that passed these checks is kept.
+// If the registry names another version, the site is published without a bar (and without its CSS and JS) until upgraded.
 // The registry is read with a timeout, no redirects and a size limit; if the renderer refuses it, no bar is published.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -25,9 +26,14 @@ export async function sitesBar(here) {
     const t = r.ok && len < 512 * 1024 ? await r.text() : '';
     if (t.length > 0 && t.length < 512 * 1024) reg = JSON.parse(t);
   } catch { reg = null; }
-  if (!reg) return { html: existsSync(LAST) ? readFileSync(LAST, 'utf8') : '', from: 'the last verified copy (registry not read; renderer not run)' };
+  if (!reg) return { html: existsSync(LAST) ? readFileSync(LAST, 'utf8') : '', assets: existsSync(LAST), from: 'the last verified copy (registry not read; renderer not run)' };
   const bar = reg.bar || {};
-  if (bar.version !== VERSION) throw new Error(`sites bar: the registry pins ${bar.version}; this site vendors ${VERSION} (upgrade once it is cleared)`);
+  // A newer (or other) version in the registry is not a reason to stop the site (conductor.b@, 19 Nov 2026, 05:10 UTC,
+  // from data.b@'s finding): publish with no bar, and upgrade at the next wake. Same version with other bytes still stops.
+  if (bar.version !== VERSION) {
+    console.warn(`sites bar: WARNING the registry names ${String(bar.version).slice(0, 20)}; this site vendors ${VERSION}. Published without a bar; upgrade at the next wake.`);
+    return { html: '', assets: false, from: `nowhere: the registry names ${String(bar.version).slice(0, 20)}, this site vendors ${VERSION} (upgrade due)` };
+  }
   for (const [k, f] of Object.entries(FILES)) {
     const pin = bar.integrity && bar.integrity[k];
     if (!/^sha256-[A-Za-z0-9+/]{43}=$/.test(pin || '')) throw new Error(`sites bar: the registry has no full pin for ${k}`);
@@ -36,5 +42,5 @@ export async function sitesBar(here) {
   const { render } = await import(`./vendor/sites-bar-${VERSION}/sites-bar-render.mjs`);
   const html = render(reg, { here });
   if (html) writeFileSync(LAST, html + '\n');
-  return { html, from: html ? 'the registry (all three files match its full pins)' : 'nowhere: the renderer refused the registry, published without a bar' };
+  return { html, assets: !!html, from: html ? 'the registry (all three files match its full pins)' : 'nowhere: the renderer refused the registry, published without a bar' };
 }

@@ -150,7 +150,7 @@ const cvePages = writeCvePages(esc); // the CVE store's pages, /cve/ (scripts/cv
 for (const f of walk('_site')) {
   if (!/\.(html|js|css|json|md|txt)$/.test(f)) continue;
   let s = readFileSync(f, 'utf8'); const o = s;
-  if (f.endsWith('.html')) s = s.replace('</head>', `<link rel="stylesheet" href="${BAR}/sites-bar.css">\n<script src="${BAR}/sites-bar.js" defer></script>\n</head>`).replace('<!--@pulse-->', () => pulseHtml()).replace(/<!--@mast:([^>]*)-->/g, (_, cur) => mast(cur)).replaceAll('<!--@foot-->', foot);
+  if (f.endsWith('.html')) s = (bar.assets ? s.replace('</head>', `<link rel="stylesheet" href="${BAR}/sites-bar.css">\n<script src="${BAR}/sites-bar.js" defer></script>\n</head>`) : s).replace('<!--@pulse-->', () => pulseHtml()).replace(/<!--@mast:([^>]*)-->/g, (_, cur) => mast(cur)).replaceAll('<!--@foot-->', foot);
   if (s.includes('__VERSION__')) s = s.replaceAll('__VERSION__', version);
   if (s !== o) writeFileSync(f, s);
 }
