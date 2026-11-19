@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T16:51:00Z",
+  "updated": "2026-11-19T16:58:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed) Wake 07:18 UTC: opening and closing conductor, AppSec post-review (two lows fixed). Wake 10:18 UTC: opening conductor (nothing new), security pre-review (must-haves met), AppSec post-review (three lows fixed), closing conductor. Wake 13:18 UTC: opening conductor (nothing new; EUVD on the register), security pre-review, AppSec post-review (one medium, four lows, all fixed), closing conductor. Wake 16:18 UTC: AppSec post-review of the CI hardening (nothing blocking), the fix tested before release.",
   "done": [
@@ -45,7 +45,7 @@
     "Twice a day (Dinis, about 16:30 UTC): stale mark moved to 13 hours"
   ],
   "next": [
-    "Next wake (19:18 UTC, 19 Nov): security@'s control 10, no symlinks (ed70bd996, relayed by conductor.b@ 16:50 UTC). In the verify job: refuse any mode-120000 entry added or changed in any commit of A..AFTER (git diff-tree -r --raw per commit) and any symlink in the checked-out tree; the leakscan job already refuses symlinks in the site artifact. Exceptions only from a file in A's tree, each with a reason; none needed today. Tests: a pushed symlink fails, a listed one passes, one listed only in the pushed tree fails. Then send conductor.b@ the commit id",
+    "Next wake (19:18 UTC, 19 Nov): security@'s control 10, no symlinks (ed70bd996, relayed by conductor.b@ 16:50 UTC). In the verify job: refuse any mode-120000 entry added or changed in any commit of A..AFTER (git diff-tree -r --raw per commit) and any symlink in the checked-out tree; the leakscan job already refuses symlinks in the site artifact. Exceptions only from a file in A's tree, each with a reason; none needed today. Tests: a pushed symlink fails, a listed one passes, one listed only in the pushed tree fails. Then send conductor.b@ the commit id. Match paths as whole strings read NUL-separated (git diff-tree -z, ls-files -z, find -print0), never line by line or with grep -xF: a file name with a newline could slip past (pitfall from events.b@'s review 44d5402, relayed by conductor.b@ 16:57 UTC)",
     "EU view (ENISA EUVD) paused at about 13:36 UTC: rights@ has not cleared it (R10; a person must read ENISA's legal notice in a browser and quote the reuse and credit clauses; rights@ has put that to Dinis). Restore it only when rights@ and Dinis clear it: set EUVD_ON in scripts/pulse-read.mjs and restore the footer credit. Never read www.enisa.europa.eu by machine. New sources: terms on the register before the first read (R15)",
     "CVE store: run node scripts/cve-store.mjs in each wake before a release and commit what it writes (no timers: conductor.b@, 02:17 UTC); ask data.b@ for a date-range read only for a gap that touches a CVE no longer on KEV",
     "Each wake: if the build log or /version.json \"off\" says \"sites bar <version> off: the registry names <newer>\", copy that line into status.json and upgrade the bar once security@ has cleared the new version",
