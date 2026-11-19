@@ -139,7 +139,7 @@
     const wrap = el('div', { class: 'scroll' }); wrap.append(t);
     target.replaceChildren(nav, wrap);
   }
-  const cveLink = id => (CVE.test(id) ? link(id, { tab: 'cve', cve: id }, { title: 'Everything on this CVE' }) : document.createTextNode(String(id || '')));
+  const cveLink = id => (CVE.test(id) ? link(id, { tab: 'cve', cve: id }, { title: 'Everything on this CVE', class: 'x-id' }) : document.createTextNode(String(id || '')));
   const frag = (...nodes) => { const f = document.createDocumentFragment(); nodes.forEach((n, i) => { if (i) f.append(' '); f.append(n); }); return f; };
   function kevCell(k, v, r) {
     if (v === null || v === undefined || v === '') return null;
@@ -147,8 +147,8 @@
     if (k === 'vendor') return link(v, { tab: 'kev', vendor: v }, { title: 'Only this vendor' });
     if (k === 'product') return link(v, { tab: 'kev', vendor: r.vendor, product: v }, { title: 'Only this product' });
     if (k === 'ransomware') return link(v, { tab: 'kev', ransom: v }, { title: 'Only this' });
-    if (k === 'date_added') return frag(link(v, { tab: 'kev', week: monday(v), month: '' }, { title: 'Only the week this was added' }));
-    if (k === 'cwes') return frag(...String(v).split(' ').filter(Boolean).map(c => link(c, { tab: 'kev', cwe: c }, { title: 'Only this weakness' })));
+    if (k === 'date_added') return frag(link(v, { tab: 'kev', week: monday(v), month: '' }, { title: 'Only the week this was added', class: 'x-id' }));
+    if (k === 'cwes') return frag(...String(v).split(' ').filter(Boolean).map(c => link(c, { tab: 'kev', cwe: c }, { title: 'Only this weakness', class: 'x-id' })));
     return document.createTextNode(String(v));
   }
   function browseKev() {

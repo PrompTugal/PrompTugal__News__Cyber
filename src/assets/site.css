@@ -29,7 +29,7 @@ blockquote { margin: 1rem 0; padding: .2rem 1rem; border-left: 4px solid var(--r
 blockquote footer { font-size: .85rem; color: var(--muted); margin-bottom: .6rem; }
 .scroll { overflow-x: auto; margin: 1rem 0; }
 table { border-collapse: collapse; width: 100%; font-size: .9rem; }
-th, td { text-align: left; vertical-align: top; padding: 6px 10px; border-bottom: 1px solid var(--rule); overflow-wrap: anywhere; }
+th, td { text-align: left; vertical-align: top; padding: 6px 10px; border-bottom: 1px solid var(--rule); overflow-wrap: break-word; }
 th { font: 600 .8rem var(--font-meta, monospace); text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
 table.kv th:first-child, table.kv td:first-child { width: 11rem; font-weight: 600; }
 .foot { padding: 16px; border-top: 1px solid var(--rule); font-size: .85rem; color: var(--muted); }
@@ -38,7 +38,7 @@ table.kv th:first-child, table.kv td:first-child { width: 11rem; font-weight: 60
 .pay-chip { display: inline-flex; gap: 4px; align-items: center; border: 1px solid var(--green); border-radius: 999px; padding: 1px 10px; text-decoration: none; color: var(--green); white-space: nowrap; }
 .pay-chip b { font-weight: 700; }
 .pay-chip:hover { background: var(--panel); }
-@media (max-width: 1180px) { .nr-graph { width: 100%; height: auto; background: var(--paper); border: 1px solid var(--rule); border-radius: 10px; }
+.nr-graph { width: 100%; height: auto; background: var(--paper); border: 1px solid var(--rule); border-radius: 10px; }
 .nr-graph .g-link { stroke: var(--rule); stroke-width: 1; } .nr-graph .g-read { stroke: var(--red); stroke-width: 1.2; stroke-dasharray: 3 3; opacity: .6; }
 .nr-graph .g-concept { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; } .nr-graph .g-label { font: 600 12px var(--font-interface, Arial, sans-serif); fill: var(--ink); }
 .nr-graph .g-data { fill: #1a4fa0; } .nr-graph .g-site { fill: var(--muted); }
@@ -84,3 +84,4 @@ main.x-main { max-width: 80rem; }
 .x-dl { display: grid; grid-template-columns: minmax(8rem, 16rem) 1fr; gap: 6px 16px; } .x-dl dt { font-weight: 600; color: var(--muted); } .x-dl dd { margin: 0; }
 td a + a, dd a + a { margin-left: 2px; }
 a.x-click:hover .b, a.x-click:focus .b, a.x-click:hover .b-part { opacity: .7; } a.x-click { cursor: pointer; }
+.x-id { white-space: nowrap; }
