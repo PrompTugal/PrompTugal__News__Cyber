@@ -80,6 +80,11 @@ try {
   expect('control 9: deploy and tag need verify, build and the leak scan', /needs: \[verify, build, leakscan\]/.test(jobs.deploy || '') && /needs\.verify\.result == 'success'/.test(jobs.tag || '') && /needs\.leakscan\.result == 'success'/.test(jobs.tag || ''), (jobs.deploy || '') + (jobs.tag || ''));
   expect('the deployed bytes are the scanned bytes: Pages is uploaded only by the leak-scan job, after the scan', /upload-pages-artifact/.test(jobs.leakscan || '') && !/upload-pages-artifact/.test(jobs.build || '') && (jobs.leakscan || '').indexOf('leak-scan.mjs"') < (jobs.leakscan || '').indexOf('upload-pages-artifact'), jobs.leakscan || '');
   expect('a pushed change to .gitattributes or the exemptions stops the run', /git diff --quiet "\$ANCHOR" "\$AFTER" -- \.gitattributes/.test(jobs.verify || '') && /commit-exemptions\.json/.test(jobs.verify || ''), 'verify');
+  // live.b@'s findings (relayed 16:15 UTC)
+  expect('the site is downloaded into the runner temp folder, vetted there, then moved; a pushed _site path is refused', /path: \$\{\{ runner\.temp \}\}\/site-in/.test(jobs.leakscan || '') && !/path: _site\n[\s\S]*download/.test(jobs.leakscan || '') && /the pushed tree holds a _site path: refusing/.test(jobs.leakscan || '') && /mv "\$in" _site/.test(jobs.leakscan || ''), jobs.leakscan || '');
+  expect('pushed .gitattributes are removed in both check jobs before anything runs', ['verify', 'leakscan'].every(j => /-name \.gitattributes -type f -print -exec rm -f/.test(jobs[j] || '')), 'verify, leakscan');
+  expect('the anchor counts only a run whose verify and leakscan jobs passed by name', /\/actions\/runs\/\$\{x\.id\}\/jobs/.test(jobs.verify || '') && /\["verify", "leakscan"\]\.every\(n => jobs\.some\(k => k\.name === n && k\.conclusion === "success"\)\)/.test(jobs.verify || ''), 'verify');
+  expect('the check, deploy and tag jobs run only on refs/heads/dev', ['verify', 'leakscan', 'deploy', 'tag'].every(j => /github\.ref == 'refs\/heads\/dev'/.test(jobs[j] || '')), 'jobs');
   expect('control 9: symlinks on the checker paths are refused', /git ls-tree "\$ANCHOR" "scripts\/\$f"/.test(jobs.verify || '') && /not a plain file/.test(jobs.verify || ''), 'verify');
   const rel = readFileSync(join(here, 'release.sh'), 'utf8');
   const wf = readFileSync(join(here, '../.github/workflows/pages.yml'), 'utf8');
