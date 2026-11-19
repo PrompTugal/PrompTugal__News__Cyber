@@ -32,7 +32,15 @@ export async function sitesBar(here) {
   // from data.b@'s finding; confirmed by security@, Website 1acd10498). If the registry still keeps this version's pins
   // (bar.versions[VERSION].integrity, dev@'s append-only proposal), they are checked as usual. Otherwise the bar is left
   // out, never shipped unchecked, and the log says so in security@'s words. The same version with other bytes still stops.
-  const pins = bar.version === VERSION ? bar.integrity : (bar.versions && bar.versions[VERSION] && bar.versions[VERSION].integrity);
+  // Both shapes of the version list are read until dev@ reshapes it (conductor.b@, 07:19 UTC, from civic.b@): today
+  // bar.versions[v] is the pin map itself; later it will be bar.versions[v].integrity. Neither is trusted more than the other:
+  // every pin must still be a full sha256 SRI value and match the vendored file exactly.
+  const listed = bar.versions && typeof bar.versions === 'object' ? bar.versions[VERSION] : null;
+  const fromList = listed && typeof listed === 'object' ? (listed.integrity && typeof listed.integrity === 'object' ? listed.integrity : listed) : null;
+  // A malformed entry stops the build instead of quietly removing the bar (AppSec post-review, 19 Nov 2026, 07:25 UTC).
+  if (listed != null && (typeof listed !== 'object' || Array.isArray(listed))) throw new Error(`sites bar: the registry's entry for ${VERSION} is not a pin map`);
+  if (bar.version === VERSION && (!bar.integrity || typeof bar.integrity !== 'object' || Array.isArray(bar.integrity))) throw new Error(`sites bar: the registry names ${VERSION} but gives no pin map for it`);
+  const pins = bar.version === VERSION ? bar.integrity : fromList;
   if (!pins) {
     const off = `sites bar ${VERSION} off: the registry names ${String(bar.version).slice(0, 20)}`;
     console.warn(off);
