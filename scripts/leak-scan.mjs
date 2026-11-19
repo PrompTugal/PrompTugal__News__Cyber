@@ -30,6 +30,11 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DASHES = '-'.repeat(5);
 const PRIVATE_BLOCK = new RegExp(`${DASHES}BEGIN [A-Z0-9 ]*PRIVATE KEY( BLOCK)?${DASHES}`);
 const PUBLIC_BLOCK = new RegExp(`${DASHES}BEGIN (?:RSA |EC )?PUBLIC KEY${DASHES}[\\s\\S]*?${DASHES}END (?:RSA |EC )?PUBLIC KEY${DASHES}`, 'g');
+// An OpenSSH public key line (security@'s ruling, 19 Nov 2026, Website 1acd10498: the entropy rule alone missed about 1 in
+// 75). Allowed only as the value of a "public_key" field in team/keys.json or team/keys/*.json (ssh_signing.public_key);
+// the signature check's allowed-signers file is written to a temporary directory and never committed.
+const SSH_PUBLIC = new RegExp(`\\b(?:ssh-(?:ed25519|rsa|dss)|ecdsa-sha2-nistp(?:256|384|521)|sk-(?:ssh-ed25519|ecdsa-sha2-nistp256)@openssh\\.com)\\s+AAAA[A-Za-z0-9+/]{20,}`);
+const PUBLISHED_SSH_FIELD = /"public_key"\s*:\s*"(?:ssh-|ecdsa-|sk-)/;
 const PUBLIC_BEGIN = new RegExp(`${DASHES}BEGIN (?:RSA |EC |PGP )?PUBLIC KEY( BLOCK)?${DASHES}`);
 
 // Exact shapes: [kind, regex]. Order matters only for the report.
@@ -107,6 +112,7 @@ export function scanText(path, text) {
     const n = i + 1;
     for (const [kind, re] of SHAPES) if (re.test(line)) add(n, kind);
     if (PUBLIC_BEGIN.test(line)) add(n, 'public key outside team/keys');
+    if (SSH_PUBLIC.test(line) && !(PUBLIC_KEY_FILES(path) && PUBLISHED_SSH_FIELD.test(line))) add(n, 'OpenSSH public key outside its published field');
     if (vaultPair(line)) add(n, 'sgit vault key shape (passphrase:vault_id)');
     for (const m of line.matchAll(ASSIGN)) {
       const v = m[1];

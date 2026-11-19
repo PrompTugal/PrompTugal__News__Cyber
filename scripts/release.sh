@@ -9,6 +9,7 @@ cd "$(dirname "$0")/.."
 git fetch -q origin dev
 node scripts/build.mjs
 node scripts/validate.mjs
+node scripts/test-leak-scan.mjs
 node scripts/leak-scan.mjs
 node scripts/check-commits.mjs origin/dev HEAD
 node scripts/check-signatures.mjs origin/dev HEAD
@@ -18,6 +19,7 @@ for i in 1 2 3 4 5; do
   # One gate per line: under set -e a failure inside an && chain does not stop the script (specialist.code@ finding 1).
   node scripts/build.mjs >/dev/null
   node scripts/validate.mjs >/dev/null
+  node scripts/test-leak-scan.mjs >/dev/null
   node scripts/leak-scan.mjs >/dev/null
   node scripts/check-commits.mjs origin/dev HEAD >/dev/null
   node scripts/check-signatures.mjs origin/dev HEAD >/dev/null
