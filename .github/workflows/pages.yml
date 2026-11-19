@@ -29,6 +29,9 @@ jobs:
     env:
       GIT_NO_REPLACE_OBJECTS: '1'
       NODE_OPTIONS: ''
+      # pushed git attributes are never read, from the working tree or the index (events.b@'s finding, 16:25 UTC):
+      # the attribute source is the empty tree (git 2.42 or later, checked below)
+      GIT_ATTR_SOURCE: 4b825dc642cb6eb9a060e54bf8d69288fbee4904
     outputs:
       anchor: ${{ steps.trusted.outputs.anchor }}
     steps:
@@ -40,6 +43,8 @@ jobs:
         run: |
           if [ -e board/HOLD.md ]; then echo "board/HOLD.md exists" >&2; exit 1; fi
           find . -path ./.git -prune -o -name .gitattributes -type f -print -exec rm -f {} +
+          v=$(git version | sed -E 's/^git version ([0-9]+)\.([0-9]+).*/\1 \2/'); set -- $v
+          if [ "$1" -lt 2 ] || { [ "$1" -eq 2 ] && [ "$2" -lt 42 ]; }; then echo "git $1.$2 is older than 2.42 (GIT_ATTR_SOURCE needs it): refusing" >&2; exit 1; fi
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -157,6 +162,9 @@ jobs:
     env:
       GIT_NO_REPLACE_OBJECTS: '1'
       NODE_OPTIONS: ''
+      # pushed git attributes are never read, from the working tree or the index (events.b@'s finding, 16:25 UTC):
+      # the attribute source is the empty tree (git 2.42 or later, checked below)
+      GIT_ATTR_SOURCE: 4b825dc642cb6eb9a060e54bf8d69288fbee4904
     steps:
       - uses: actions/checkout@v4
         with:
@@ -169,6 +177,8 @@ jobs:
         run: |
           if [ -e _site ] || [ -L _site ] || [ -n "$(git ls-tree HEAD _site)" ]; then echo "the pushed tree holds a _site path: refusing" >&2; exit 1; fi
           find . -path ./.git -prune -o -name .gitattributes -type f -print -exec rm -f {} +
+          v=$(git version | sed -E 's/^git version ([0-9]+)\.([0-9]+).*/\1 \2/'); set -- $v
+          if [ "$1" -lt 2 ] || { [ "$1" -eq 2 ] && [ "$2" -lt 42 ]; }; then echo "git $1.$2 is older than 2.42 (GIT_ATTR_SOURCE needs it): refusing" >&2; exit 1; fi
       - name: The built site, as data, into the runner's temp folder (never into the checkout)
         uses: actions/download-artifact@v4
         with:
