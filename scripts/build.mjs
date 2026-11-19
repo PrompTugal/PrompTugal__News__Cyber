@@ -31,7 +31,7 @@ ${bar.html}
 const foot = `<footer class="foot">
 <p>Weak signals from public sources, not an audit and not a warning service. Aggregates and totals only: no list of IPs, hosts, devices or exposed services, no victim data, no link to a leak site. To report an incident, go to <a href="https://www.cncs.gov.pt/">CNCS and CERT.PT</a>.</p>
 <p>If you publish data shown here and think we should not show it, <a href="${REPO}/issues/new?title=Take-down%20request">open an issue</a> and we take it down while we talk (Dinis Cruz, 18 November 2026).</p>
-<p>Licences: what PrompTugal.news makes (these pages, our records, the totals) is <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; every value from a source stays under that source's licence or terms, linked on its source page and in every JSON file (<code>license</code>). EU figures: Source: ENISA, EU Vulnerability Database (<a href="https://euvd.enisa.europa.eu/">euvd.enisa.europa.eu</a>), under <a href="https://www.enisa.europa.eu/about-enisa/legal-notice">ENISA's legal notice</a>.</p>
+<p>Licences: what PrompTugal.news makes (these pages, our records, the totals) is <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; every value from a source stays under that source's licence or terms, linked on its source page and in every JSON file (<code>license</code>).</p>
 <p class="foot-obs">Code Apache-2.0. Text CC BY 4.0. <a href="https://promptugal.news/principles/">Principles</a> · <a href="https://promptugal.news/report/">Report a problem</a> · <a href="/security/">Security</a> · <a href="${REPO}">Repository</a> · <a href="https://promptugal.news/">PrompTugal.news</a></p>
 </footer>`;
 

@@ -25,7 +25,7 @@ function run(dt, hist, euvd, euvdHist) {
     if (euvd) writeFileSync(join(dir, 'in/euvd.json'), JSON.stringify(euvd));
     if (euvdHist) writeFileSync(join(dir, 'src/api/v1/pulse/history/euvd-24h.json'), JSON.stringify({ points: euvdHist }));
     writeFileSync(join(dir, 'in/cisa-kev.json'), JSON.stringify(kev)); writeFileSync(join(dir, 'in/nvd-cve.json'), JSON.stringify(dt === undefined ? nvd(undefined) : nvd(dt)));
-    const r = spawnSync('node', ['scripts/pulse-read.mjs', '--from', 'in'], { cwd: dir, encoding: 'utf8' });
+    const r = spawnSync('node', ['scripts/pulse-read.mjs', '--from', 'in'], { cwd: dir, encoding: 'utf8', env: { ...process.env, PULSE_TEST_EUVD: '1' } });
     const out = r.status === 0 ? JSON.parse(readFileSync(join(dir, 'src/api/v1/pulse/history/nvd-daily.json'), 'utf8')) : null;
     return { ok: r.status === 0, err: r.stderr.trim(), out };
   } finally { rmSync(dir, { recursive: true, force: true }); }

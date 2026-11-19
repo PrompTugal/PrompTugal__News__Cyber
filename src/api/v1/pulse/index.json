@@ -1780,68 +1780,6 @@
           }
         }
       ]
-    },
-    {
-      "id": "euvd-24h",
-      "title": "EU view (ENISA EUVD): vulnerabilities new in the 24 hours before each read, by severity band, and those EUVD lists as exploited",
-      "source": "ENISA EUVD, via https://data.promptugal.news/api/v1/euvd/latest.json (CC BY 4.0, PrompTugal.news). Severity bands are from the CVSS base score by the standard ranges. Never added to the NVD figures: the two databases overlap.",
-      "credit": "Source: ENISA, EU Vulnerability Database (euvd.enisa.europa.eu)",
-      "source_license": {
-        "name": "ENISA legal notice (reproduction authorised with the source acknowledged)",
-        "url": "https://www.enisa.europa.eu/about-enisa/legal-notice"
-      },
-      "license": {
-        "name": "CC BY 4.0",
-        "url": "https://creativecommons.org/licenses/by/4.0/",
-        "holder": "PrompTugal.news"
-      },
-      "read_at": "2026-11-19T12:18:22Z",
-      "points": [
-        {
-          "read_at": "2026-11-19T12:18:22Z",
-          "window_hours": 24,
-          "total": 602,
-          "by_band": {
-            "CRITICAL": {
-              "total": 88
-            },
-            "HIGH": {
-              "total": 219
-            },
-            "MEDIUM": {
-              "total": 259
-            },
-            "LOW": {
-              "total": 30
-            },
-            "NONE": {
-              "total": 0
-            },
-            "unscored": {
-              "total": 6
-            }
-          },
-          "exploited_24h": 8,
-          "exploited_total": 1803
-        }
-      ]
-    },
-    {
-      "id": "euvd-new-daily",
-      "title": "EU view (ENISA EUVD): vulnerabilities new per complete UTC day, by severity band",
-      "source": "ENISA EUVD, counted per UTC day by data.b@, via https://data.promptugal.news/api/v1/euvd/latest.json (CC BY 4.0, PrompTugal.news). Never added to the NVD figures.",
-      "credit": "Source: ENISA, EU Vulnerability Database (euvd.enisa.europa.eu)",
-      "source_license": {
-        "name": "ENISA legal notice (reproduction authorised with the source acknowledged)",
-        "url": "https://www.enisa.europa.eu/about-enisa/legal-notice"
-      },
-      "license": {
-        "name": "CC BY 4.0",
-        "url": "https://creativecommons.org/licenses/by/4.0/",
-        "holder": "PrompTugal.news"
-      },
-      "read_at": "2026-11-19T12:18:22Z",
-      "points": []
     }
   ],
   "caveat": "Worldwide totals. Counts reflect the activity of public catalogues, not how secure anyone is. Weak signals, not an audit."

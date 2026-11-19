@@ -51,7 +51,10 @@ const addDays = (d, k) => { const t = new Date(d + 'T00:00:00Z'); t.setUTCDate(t
 const load = (f, empty) => (existsSync(f) ? JSON.parse(readFileSync(f, 'utf8')) : empty);
 const save = (f, o) => { writeFileSync(f + '.tmp', JSON.stringify(o, null, 2) + '\n'); renameSync(f + '.tmp', f); };
 
-const [kev, nvd, euvd] = [await get('kev'), await get('nvd'), await get('euvd')];
+// EUVD is paused (19 Nov 2026, about 13:37 UTC): rights@ has not cleared it (finding R10; ENISA's legal notice cannot be
+// quoted by machine and a person must read it). Not fetched, not kept, not shown until rights@ and Dinis clear it.
+const EUVD_ON = process.argv.includes('--from') && process.env.PULSE_TEST_EUVD === '1'; // only the tests, on crafted files, ever turn it on
+const [kev, nvd, euvd] = [await get('kev'), await get('nvd'), EUVD_ON ? await get('euvd') : null];
 
 // --- CISA KEV: CVEs added per week, counted by us from each entry's dateAdded. ---
 if (!isTime(kev.read_at) || !inRange(kev.read_at)) fail('kev: read_at is not a plausible ISO time');

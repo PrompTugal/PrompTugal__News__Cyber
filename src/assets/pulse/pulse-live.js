@@ -126,7 +126,8 @@
 
   async function refresh() {
     const out = [];
-    for (const [name, fn, u] of [['KEV', kev, SRC.kev], ['NVD', nvd, SRC.nvd], ['EUVD', eu, SRC.euvd]]) {
+    // EUVD is read only while the page carries the EU view (paused on 19 Nov 2026 until rights@ clears the source)
+    for (const [name, fn, u] of [['KEV', kev, SRC.kev], ['NVD', nvd, SRC.nvd], ...($('p-eu-read') ? [['EUVD', eu, SRC.euvd]] : [])]) {
       try { const data = await get(u); const r = fn(data); out.push(`${name}: ${r === 'live' ? 'the latest file' : 'the built copy is already the latest'}`); if (name === 'NVD') { try { await days(data); } catch { /* the built days stay */ } } }
       catch (e) { out.push(`${name}: the built copy (the latest file did not pass its checks or could not be read)`); const [id, src] = name === 'KEV' ? ['p-kev-state', $('p-kev-svg')] : name === 'NVD' ? ['p-nvd-state', $('p-nvd-read')] : ['p-eu-state', $('p-eu-read')]; if (src && src.dataset.read) mark(id, src.dataset.read); }
     }
