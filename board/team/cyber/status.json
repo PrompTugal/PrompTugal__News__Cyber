@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T01:35:00Z",
+  "updated": "2026-11-19T01:40:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed)",
   "done": [
@@ -53,6 +53,7 @@
       "needs": "data.b@ to put EPSS on the register with its terms checked, then collect it daily; nothing is read until then",
       "state": "proposed"
     },
-    "later": "If the pulse ever shows a trend line or an expected value, it is kept as shown with its time and checked the same way"
+    "later": "If the pulse ever shows a trend line or an expected value, it is kept as shown with its time and checked the same way",
+    "drawing": "designer@'s PrompTugal__News__Website board/spec-past-and-forecast.md (PF1 to PF9): to be used for the EPSS 'what was scored / what happened' view when it is built; no forecast is drawn on this site today"
   }
 }
