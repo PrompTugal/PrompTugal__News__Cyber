@@ -22,23 +22,33 @@ const after = afterArg || 'HEAD';
 const first = lines(git('log', '--format=%H', '--diff-filter=A', '--reverse', after, '--', 'scripts/check-signatures.mjs'))[0];
 if (!first) { console.error('check-signatures: cannot find the commit that added scripts/check-signatures.mjs'); process.exit(1); }
 const before = beforeArg && !/^0+$/.test(beforeArg) && tryGit('rev-parse', '--verify', '--quiet', `${beforeArg}^{commit}`);
-const added = lines(git('rev-list', '--no-merges', ...(before ? [`${before}..${after}`] : [after])));
+const added = lines(git('rev-list', ...(before ? [`${before}..${after}`] : [after]))); // merges included: a merge is a commit too
 const inScope = new Set([first, ...lines(git('rev-list', '--ancestry-path', `${first}..${after}`))]);
 
-// The allowed signers, from the keys published in this repository at the commit being checked's tip.
+// The allowed signers for a commit come from team/keys.json in its first parent, never from the commit itself, so a
+// commit cannot add the key it is signed with (conductor.b@, 19 Nov 2026, relaying signals.b@'s review). A new or rotated
+// key is added by a commit signed with a key already listed, or by a person. One bootstrap: the commit that added this
+// check is checked against its own tree, because the rule starts there.
 const dir = mkdtempSync(join(tmpdir(), 'sigcheck-'));
-const keys = JSON.parse(git('show', `${after}:team/keys.json`)).keys || [];
-const signers = []; const sessionOf = new Map();
-for (const k of keys) {
-  if (!k.agent || !k.bundle || !k.bundle.sign || k.status === 'superseded') continue;
-  if (!/^[a-z0-9]+(?:[.-][a-z0-9]+)*@[a-z0-9.-]+$/i.test(k.agent)) continue;
-  const pem = join(dir, `${signers.length}.pem`); writeFileSync(pem, k.bundle.sign);
-  const ssh = execFileSync('ssh-keygen', ['-i', '-m', 'PKCS8', '-f', pem], { encoding: 'utf8' }).trim().split(' ').slice(0, 2).join(' ');
-  signers.push(`${k.agent} namespaces="git" ${ssh}`);
-  if (!sessionOf.has(k.agent)) sessionOf.set(k.agent, new Set());
-  if (k.session) sessionOf.get(k.agent).add(k.session);
+const signerCache = new Map();
+function signersAt(rev) {
+  const blob = tryGit('rev-parse', `${rev}:team/keys.json`);
+  if (!blob) return { file: null, sessionOf: new Map() };
+  if (signerCache.has(blob)) return signerCache.get(blob);
+  const keys = JSON.parse(git('cat-file', 'blob', blob)).keys || [];
+  const signers = []; const sessionOf = new Map();
+  for (const k of keys) {
+    if (!k.agent || !k.bundle || !k.bundle.sign || k.status === 'superseded') continue;
+    if (!/^[a-z0-9]+(?:[.-][a-z0-9]+)*@[a-z0-9.-]+$/i.test(k.agent)) continue;
+    const pem = join(dir, `${blob}-${signers.length}.pem`); writeFileSync(pem, k.bundle.sign);
+    const ssh = execFileSync('ssh-keygen', ['-i', '-m', 'PKCS8', '-f', pem], { encoding: 'utf8' }).trim().split(' ').slice(0, 2).join(' ');
+    signers.push(`${k.agent} namespaces="git" ${ssh}`);
+    if (!sessionOf.has(k.agent)) sessionOf.set(k.agent, new Set());
+    if (k.session) sessionOf.get(k.agent).add(k.session);
+  }
+  const file = join(dir, `${blob}.allowed_signers`); writeFileSync(file, signers.join('\n') + '\n');
+  const out = { file, sessionOf }; signerCache.set(blob, out); return out;
 }
-const allowed = join(dir, 'allowed_signers'); writeFileSync(allowed, signers.join('\n') + '\n');
 
 const errors = []; let checked = 0;
 for (const c of added) {
@@ -47,8 +57,10 @@ for (const c of added) {
   const subject = git('log', '-1', '--format=%s', c);
   const agents = lines(git('log', '-1', '--format=%(trailers:key=Agent,valueonly)', c)).map(s => s.trim());
   const sessions = lines(git('log', '-1', '--format=%(trailers:key=Claude-Session,valueonly)', c)).map(s => s.trim());
+  const { file: allowed, sessionOf } = signersAt(c === first ? c : `${c}^1`);
+  if (!allowed) { errors.push(`${c.slice(0, 7)} ${subject}: its parent has no team/keys.json`); continue; }
   const v = spawnSync('git', ['-c', 'gpg.format=ssh', '-c', 'gpg.ssh.program=ssh-keygen', '-c', `gpg.ssh.allowedSignersFile=${allowed}`, 'verify-commit', c], { encoding: 'utf8' });
-  if (v.status !== 0) { errors.push(`${c.slice(0, 7)} ${subject}: no valid signature by a key in team/keys.json`); continue; }
+  if (v.status !== 0) { errors.push(`${c.slice(0, 7)} ${subject}: no valid signature by a key in its parent's team/keys.json`); continue; }
   const m = `${v.stdout}\n${v.stderr}`.match(/Good "git" signature for (\S+)/);
   const principal = m ? m[1] : null;
   if (!principal || agents.length !== 1 || agents[0] !== principal) { errors.push(`${c.slice(0, 7)} ${subject}: signed by ${principal || 'unknown'}, Agent: ${agents.join(', ') || 'none'}`); continue; }
