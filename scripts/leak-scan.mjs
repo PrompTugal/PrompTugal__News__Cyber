@@ -19,7 +19,7 @@
 // Public keys are allowed only in team/keys.json and team/keys/*.json, and only
 // when those files hold no private part. Any change to the allowlist below must
 // be narrow (one path, one kind) and say why.
-import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
+import { readFileSync, existsSync, statSync, lstatSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
@@ -128,11 +128,23 @@ export function scanText(path, text) {
 
 function isBinary(buf) { return buf.subarray(0, 8000).includes(0); }
 
+// A file with a NUL byte is still scanned (library.b@'s LIB-2026-067, relayed 19 Nov 2026): every exact secret shape and
+// the private and public key headers, read as latin1 so any byte sequence is seen. The entropy and assignment rules are
+// left out for binary files only, because compressed bytes are random by nature. Never returns the match.
+export function scanBinary(path, buf) {
+  const t = buf.toString('latin1'); const found = [];
+  for (const [kind, re] of SHAPES) if (re.test(t)) found.push({ line: 0, kind: `${kind} (in a binary file)` });
+  if (PUBLIC_BEGIN.test(t) && !PUBLIC_KEY_FILES(path)) found.push({ line: 0, kind: 'public key outside team/keys (in a binary file)' });
+  return found.filter(f => !allowed(path, f.kind));
+}
+
+// Symlinks are never followed: each is returned as a file, and the scan reports it (library.b@'s LIB-2026-067).
 function walk(dir) {
   if (!existsSync(dir)) return [];
   return readdirSync(dir).flatMap((n) => {
     const p = join(dir, n);
-    return statSync(p).isDirectory() ? walk(p) : [p];
+    const st = lstatSync(p);
+    return st.isDirectory() && !st.isSymbolicLink() ? walk(p) : [p];
   });
 }
 
@@ -154,10 +166,12 @@ function scanTree() {
     if (p.startsWith('.sg_vault/local/')) { errors.push(`${p}: a file from .sg_vault/local/ is in the tree (it holds vault keys)`); continue; }
     if (p.startsWith('.sg_vault/bare/')) { skipped++; continue; } // ciphertext, protected by the vault key
     const full = join(root, p);
-    if (!existsSync(full) || statSync(full).isDirectory()) continue; // deleted in the working tree
+    let st; try { st = lstatSync(full); } catch { continue; } // deleted in the working tree
+    if (st.isSymbolicLink()) { errors.push(`${p}: a symlink (never followed; remove it)`); continue; }
+    if (st.isDirectory()) continue;
     const buf = readFileSync(full);
-    if (isBinary(buf)) { skipped++; continue; }
     count++;
+    if (isBinary(buf)) { skipped++; for (const f of scanBinary(p, buf)) errors.push(`${p}: ${f.kind}`); for (const x of secrets) if (x && x.length >= 8 && buf.includes(x)) errors.push(`${p}: holds this checkout's vault key or token`); continue; }
     const t = buf.toString('utf8');
     for (const f of scanText(p, t)) errors.push(`${p}:${f.line}: ${f.kind}`);
     for (const x of secrets) if (x && x.length >= 8 && t.includes(x)) errors.push(`${p}: holds this checkout's vault key or token`);
@@ -200,5 +214,5 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.error(`FAILED (${errors.length}) in ${count} ${history ? 'commits' : 'files'}`);
     process.exit(1);
   }
-  console.log(history ? `OK (${count} commits)` : `OK (${count} files, ${skipped} binary skipped)`);
+  console.log(history ? `OK (${count} commits)` : `OK (${count} files, ${skipped} of them binary, scanned for exact shapes)`);
 }

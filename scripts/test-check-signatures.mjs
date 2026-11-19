@@ -71,12 +71,15 @@ try {
   // control 9: the checks run in jobs that have run no pushed code; GITHUB_ENV is per job, so a pushed build step that
   // writes it cannot reach them. Split the workflow into its jobs by their two-space headers.
   const jobs = {}; let cur = null;
-  for (const line of readFileSync(join(here, '../.github/workflows/pages.yml'), 'utf8').split('\n')) { const m = line.match(/^  ([a-z][a-z0-9_-]*):\s*$/); if (m) { cur = m[1]; jobs[cur] = ''; } else if (cur) jobs[cur] += line + '\n'; }
+  // comment lines are dropped first, so no test can be satisfied by a comment (library.b@'s LIB-2026-067)
+  for (const line of readFileSync(join(here, '../.github/workflows/pages.yml'), 'utf8').split('\n').filter(l => !/^\s*#/.test(l))) { const m = line.match(/^  ([a-z][a-z0-9_-]*):\s*$/); if (m) { cur = m[1]; jobs[cur] = ''; } else if (cur) jobs[cur] += line + '\n'; }
   const clean = j => !!jobs[j] && !/node scripts\/|npm |npx /.test(jobs[j]) && /GIT_NO_REPLACE_OBJECTS: '1'/.test(jobs[j]) && /NODE_OPTIONS: ''/.test(jobs[j]) && /NODE=\$\(readlink -f "\$\(command -v node\)"\)/.test(jobs[j]);
   expect('control 9: the verify job runs no pushed code, clears NODE_OPTIONS, sets GIT_NO_REPLACE_OBJECTS, uses an absolute node', clean('verify') && /check-signatures\.mjs" "\$TRUSTED_FROM"/.test(jobs.verify) && /check-commits\.mjs" "\$TRUSTED_FROM"/.test(jobs.verify), jobs.verify || 'no verify job');
   expect('control 9: the leak scan job runs no pushed code and takes the site only as data', clean('leakscan') && /download-artifact/.test(jobs.leakscan) && /find _site -type l/.test(jobs.leakscan), jobs.leakscan || 'no leakscan job');
   expect('control 9: a pushed build step writing GITHUB_ENV cannot change the checks (none run in the build job)', !!jobs.build && !/TRUSTED_DIR|check-signatures\.mjs" |check-commits\.mjs" |leak-scan\.mjs"/.test(jobs.build), jobs.build || 'no build job');
   expect('control 9: deploy and tag need verify, build and the leak scan', /needs: \[verify, build, leakscan\]/.test(jobs.deploy || '') && /needs\.verify\.result == 'success'/.test(jobs.tag || '') && /needs\.leakscan\.result == 'success'/.test(jobs.tag || ''), (jobs.deploy || '') + (jobs.tag || ''));
+  expect('the deployed bytes are the scanned bytes: Pages is uploaded only by the leak-scan job, after the scan', /upload-pages-artifact/.test(jobs.leakscan || '') && !/upload-pages-artifact/.test(jobs.build || '') && (jobs.leakscan || '').indexOf('leak-scan.mjs"') < (jobs.leakscan || '').indexOf('upload-pages-artifact'), jobs.leakscan || '');
+  expect('a pushed change to .gitattributes or the exemptions stops the run', /git diff --quiet "\$ANCHOR" "\$AFTER" -- \.gitattributes/.test(jobs.verify || '') && /commit-exemptions\.json/.test(jobs.verify || ''), 'verify');
   expect('control 9: symlinks on the checker paths are refused', /git ls-tree "\$ANCHOR" "scripts\/\$f"/.test(jobs.verify || '') && /not a plain file/.test(jobs.verify || ''), 'verify');
   const rel = readFileSync(join(here, 'release.sh'), 'utf8');
   const wf = readFileSync(join(here, '../.github/workflows/pages.yml'), 'utf8');

@@ -74,6 +74,11 @@ jobs:
           if ! git merge-base --is-ancestor "$base" "$ANCHOR" || ! git merge-base --is-ancestor "$ANCHOR" "$AFTER"; then
             echo "the anchor is not an ancestor of this push (force push or new history): refusing; a person decides" >&2; exit 1
           fi
+          # every config the checks read comes from A: a pushed change to git attributes or the exemptions stops the run
+          # (signals.b@'s finding, relayed 14:30 UTC); a person decides such a change
+          if ! git diff --quiet "$ANCHOR" "$AFTER" -- .gitattributes ':(glob)**/.gitattributes' scripts/commit-exemptions.json; then
+            echo "this push changes .gitattributes or the commit exemptions: refusing; a person decides" >&2; exit 1
+          fi
           dir="$RUNNER_TEMP/trusted"; mkdir -p "$dir"
           for f in check-commits.mjs check-signatures.mjs leak-scan.mjs; do
             mode=$(git ls-tree "$ANCHOR" "scripts/$f" | cut -d' ' -f1)
@@ -134,12 +139,6 @@ jobs:
           name: site
           path: _site
           retention-days: 1
-      - if: steps.mode.outputs.deploy == 'true'
-        uses: actions/configure-pages@v5
-      - if: steps.mode.outputs.deploy == 'true'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
   leakscan:
     needs: [verify, build]
     runs-on: ubuntu-latest
@@ -167,9 +166,19 @@ jobs:
           if [ -n "$(find _site -type l -print -quit)" ]; then echo "the built site holds a symlink: refusing" >&2; exit 1; fi
           mode=$(git ls-tree "$ANCHOR" scripts/leak-scan.mjs | cut -d' ' -f1)
           [ "$mode" = "100644" ] || [ "$mode" = "100755" ] || { echo "the trusted leak scan is missing at the anchor, or not a plain file: refusing" >&2; exit 1; }
-          git show "$ANCHOR:scripts/leak-scan.mjs" > "$RUNNER_TEMP/leak-scan.mjs"
+          # the trusted copy goes in a fresh folder made only after the site has been checked (events.b@'s finding)
+          t=$(mktemp -d "$RUNNER_TEMP/trusted-XXXXXX")
+          git show "$ANCHOR:scripts/leak-scan.mjs" > "$t/leak-scan.mjs"
           NODE=$(readlink -f "$(command -v node)")
-          "$NODE" "$RUNNER_TEMP/leak-scan.mjs"
+          "$NODE" "$t/leak-scan.mjs"
+          if [ -n "$(find _site -type l -print -quit)" ]; then echo "the built site holds a symlink after the scan: refusing" >&2; exit 1; fi
+      # the deployed bytes are the scanned bytes (library.b@'s LIB-2026-067): Pages gets this job's scanned copy
+      - if: needs.build.outputs.deploy == 'true'
+        uses: actions/configure-pages@v5
+      - if: needs.build.outputs.deploy == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
   deploy:
     needs: [verify, build, leakscan]
     if: needs.build.outputs.deploy == 'true'
