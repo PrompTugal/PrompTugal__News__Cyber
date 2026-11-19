@@ -15,7 +15,7 @@ for (const h of ['OPENSSH ', 'RSA ', 'EC ', 'DSA ', 'ENCRYPTED ', '']) {
   for (const path of ['README.md', 'team/keys.json']) expect(`private ${h || 'PKCS8 '}header in ${path}`, path, `${D}BEGIN ${h}PRIVATE KEY${D}\nx\n${D}END ${h}PRIVATE KEY${D}`, 'private key block', true);
 }
 // 2. OpenSSH public keys outside their published field are flagged, whatever their entropy.
-for (const t of ['ssh-ed25519', 'ssh-rsa', 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384', 'sk-ssh-ed25519@openssh.com']) {
+for (const t of ['ssh-ed25519', 'ssh-rsa', 'ssh-dss', 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384', 'ecdsa-sha2-nistp521', 'sk-ssh-ed25519@openssh.com', 'sk-ecdsa-sha2-nistp256@openssh.com']) {
   expect(`${t} in a page`, '_site/index.html', `<p>${ssh(t, b64(64))}</p>`, 'OpenSSH public key outside its published field', true);
   expect(`${t} low-entropy body`, 'docs/x.md', ssh(t, 'A'.repeat(68)), 'OpenSSH public key outside its published field', true);
   expect(`${t} in keys.json, another field`, 'team/keys.json', `{"note": "${ssh(t, b64(64))}"}`, 'OpenSSH public key outside its published field', true);
