@@ -85,6 +85,13 @@ try {
   expect('pushed .gitattributes are removed in both check jobs before anything runs', ['verify', 'leakscan'].every(j => /-name \.gitattributes -type f -print -exec rm -f/.test(jobs[j] || '')), 'verify, leakscan');
   expect('the anchor counts only a run whose verify and leakscan jobs passed by name', /\/actions\/runs\/\$\{x\.id\}\/jobs/.test(jobs.verify || '') && /\["verify", "leakscan"\]\.every\(n => jobs\.some\(k => k\.name === n && k\.conclusion === "success"\)\)/.test(jobs.verify || ''), 'verify');
   expect('pushed git attributes are never read in the check jobs (GIT_ATTR_SOURCE = the empty tree, git 2.42 or later enforced)', ['verify', 'leakscan'].every(j => /GIT_ATTR_SOURCE: 4b825dc642cb6eb9a060e54bf8d69288fbee4904/.test(jobs[j] || '') && /older than 2\.42/.test(jobs[j] || '')), 'verify, leakscan');
+  // the git version check fails closed: run it, as written, against a stub git printing a good, an old and an unreadable version
+  {
+    const vstep = (jobs.verify || '').match(/\n( +if \[\[ "\$\(git version\)"[^\n]*\n +if ! \[\[[^\n]*\n)/);
+    const vbin = join(dir, 'vbin'); mkdirSync(vbin, { recursive: true });
+    const tryv = out => { writeFileSync(join(vbin, 'git'), `#!/bin/sh\necho '${out}'\n`, { mode: 0o755 }); const o = spawnSync('bash', ['-c', vstep ? vstep[1] : 'exit 9'], { encoding: 'utf8', env: { ...process.env, PATH: `${vbin}:${process.env.PATH}` } }); return o.status === 0; };
+    expect('the git version check passes 2.56.1, refuses 2.41.0, refuses an unreadable version', !!vstep && tryv('git version 2.56.1') && !tryv('git version 2.41.0') && !tryv('git version banana') && !tryv(''), vstep ? 'ran' : 'no version check found');
+  }
   expect('the check, deploy and tag jobs run only on refs/heads/dev', ['verify', 'leakscan', 'deploy', 'tag'].every(j => /github\.ref == 'refs\/heads\/dev'/.test(jobs[j] || '')), 'jobs');
   expect('control 9: symlinks on the checker paths are refused', /git ls-tree "\$ANCHOR" "scripts\/\$f"/.test(jobs.verify || '') && /not a plain file/.test(jobs.verify || ''), 'verify');
   const rel = readFileSync(join(here, 'release.sh'), 'utf8');
