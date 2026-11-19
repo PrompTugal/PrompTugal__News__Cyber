@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T01:20:00Z",
+  "updated": "2026-11-19T01:35:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed)",
   "done": [
@@ -24,6 +24,7 @@
   "next": [
     "The list of vendors relevant to Portugal (agreed): Portuguese vendors, and products bought by Portuguese public bodies per base.gov.pt (read from data.b@), each with its reason; then the Portugal lens on the pulse and in the explorer",
     "From data.b@ (its message, 23:58 UTC, live after its next Pages run): NVD daily_totals (complete UTC days, 30 kept) for weekly NVD totals on the pulse; EUVD /api/v1/euvd/latest.json (credit ENISA, EUVD; exploited flag; daily totals) and ENISA publications /api/v1/enisa-pubs/latest.json into the pulse, the explorer and the source pages",
+    "Predictions (show-the-past guidance): ask data.b@ to register and collect EPSS; then keep its scores as shown and check them against CISA KEV additions after 30 days",
     "Run node scripts/pulse-read.mjs, then node scripts/preview-png.mjs, before each release (the reader is not in CI)",
     "The published mapping of products to sectors, with its reasons (Dinis: 'sounds quite good')",
     "Publish the list of vendors relevant to Portugal, with reasons (vendor and product names only), then the Portugal lens of both series",
@@ -39,5 +40,19 @@
     "conductor.b@: the registry now pins sites bar 1.1.1; this site vendors 1.1.0 and will move when you clear 1.1.1 with its hashes"
   ],
   "answers": [],
-  "debrief": "board/team/cyber/debriefs/2026-11-18-handover.md"
+  "debrief": "board/team/cyber/debriefs/2026-11-18-handover.md",
+  "predictions": {
+    "guidance": "PrompTugal__News__Website board/guidance/2026-11-19-show-the-past.md (Dinis, about 01:17 and 01:22 UTC, 19 November 2026)",
+    "shown_today": "None. cyber.promptugal.news shows only past counts (KEV additions per week since 2021, NVD 24-hour reads kept one by one). The past is already shown; gaps are shown as gaps (weeks with no additions are 0, NVD reads are kept as read, never filled in).",
+    "not_predictions": [
+      "CISA KEV's dueDate is a remediation deadline CISA sets for US federal agencies, not a forecast; it is not shown as one"
+    ],
+    "first_planned": {
+      "what": "EPSS (FIRST's Exploit Prediction Scoring System): the published probability that a CVE is exploited in the next 30 days",
+      "check": "keep each day's EPSS scores as read, never overwritten; 30 days on, show beside what happened: which of those CVEs were added to CISA KEV, as calibration (of the CVEs scored above 10 per cent, how many were added) and a running track record, misses shown as plainly as hits; worldwide totals only",
+      "needs": "data.b@ to put EPSS on the register with its terms checked, then collect it daily; nothing is read until then",
+      "state": "proposed"
+    },
+    "later": "If the pulse ever shows a trend line or an expected value, it is kept as shown with its time and checked the same way"
+  }
 }
