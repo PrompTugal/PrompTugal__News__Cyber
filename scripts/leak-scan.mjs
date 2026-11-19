@@ -24,7 +24,10 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 
-const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+// The repository being scanned is the one the scan is run in (its git top level), not the one the script file sits in, so
+// a trusted copy of this script, taken from the last release into a temporary folder, scans this tree (security@'s
+// control 7 widened, 19 Nov 2026). cyber.b@PrompTugal.dinis.
+const root = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim();
 
 // Built from parts so that this file does not match its own patterns.
 const DASHES = '-'.repeat(5);
