@@ -61,11 +61,13 @@ jobs:
           if [ -z "$BEFORE" ] || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null || ! git merge-base --is-ancestor "$base" "$BEFORE" || ! git merge-base --is-ancestor "$BEFORE" "$AFTER"; then
             echo "cannot find the release this push builds on (force push or new history): refusing; a person decides" >&2; exit 1
           fi
-          # a release tag counts only if its commit was already on dev before this push (a pushed tag alone is not trusted)
+          # the checks come from BEFORE, the dev this push builds on, already checked (security@'s third ruling, 3724c9ca2);
+          # never from a tag, the base or the pushed tree. A release tag may only widen the range, and only if it points
+          # to an ancestor of BEFORE (a pushed tag alone is not trusted)
           if [ -n "$last" ] && git merge-base --is-ancestor "$last" "$BEFORE"; then from="$last"; else from="$BEFORE"; fi
           dir="$RUNNER_TEMP/trusted"; mkdir -p "$dir"
           for f in check-commits.mjs check-signatures.mjs leak-scan.mjs; do
-            git show "$from:scripts/$f" > "$dir/$f" || { echo "the trusted copy of $f is missing at $from: refusing" >&2; exit 1; }
+            git show "$BEFORE:scripts/$f" > "$dir/$f" || { echo "the trusted copy of $f is missing at $BEFORE: refusing" >&2; exit 1; }
           done
           echo "TRUSTED_FROM=$from" >> "$GITHUB_ENV"; echo "TRUSTED_DIR=$dir" >> "$GITHUB_ENV"
       - name: Every commit since the last release carries an Agent trailer (trusted copy)
