@@ -7,7 +7,7 @@
 'use strict';
 (() => {
   const SRC = { kev: 'https://data.promptugal.news/api/v1/cisa-kev/latest.json', nvd: 'https://data.promptugal.news/api/v1/nvd-cve/latest.json', euvd: 'https://data.promptugal.news/api/v1/euvd/latest.json' };
-  const STALE_MS = 12 * 3600 * 1000; // both files are read every 6 hours: older than 12 hours is stale
+  const STALE_MS = 13 * 3600 * 1000; // data is collected twice a day (Dinis, about 16:30 UTC, 19 Nov 2026): older than 13 hours is stale
   const BANDS = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'NONE', 'unscored'];
   const SVGNS = 'http://www.w3.org/2000/svg';
   const $ = id => document.getElementById(id);
@@ -30,7 +30,7 @@
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   }
-  function mark(id, readAt) { const s = $(id); if (s) s.textContent = ago(readAt) > STALE_MS ? '(stale: older than 12 hours)' : ''; }
+  function mark(id, readAt) { const s = $(id); if (s) s.textContent = ago(readAt) > STALE_MS ? '(stale: older than 13 hours)' : ''; }
 
   function kev(d) {
     const svg = $('p-kev-svg'); if (!svg) return;

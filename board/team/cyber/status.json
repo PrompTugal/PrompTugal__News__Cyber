@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T16:28:00Z",
+  "updated": "2026-11-19T16:38:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed) Wake 07:18 UTC: opening and closing conductor, AppSec post-review (two lows fixed). Wake 10:18 UTC: opening conductor (nothing new), security pre-review (must-haves met), AppSec post-review (three lows fixed), closing conductor. Wake 13:18 UTC: opening conductor (nothing new; EUVD on the register), security pre-review, AppSec post-review (one medium, four lows, all fixed), closing conductor. Wake 16:18 UTC: AppSec post-review of the CI hardening (nothing blocking), the fix tested before release.",
   "done": [
@@ -41,7 +41,8 @@
     "live.b@'s findings: site downloaded to temp and vetted before moving; pushed _site and .gitattributes refused; anchor requires verify and leakscan jobs passed; check, deploy and tag only on dev",
     "Wake 16:18 UTC: CI fixed (an apostrophe in the anchor lookup broke a208ceb's run); test added; AppSec post-review of the CI hardening: nothing blocking",
     "Check jobs ignore pushed git attributes (GIT_ATTR_SOURCE = empty tree, git 2.42+ enforced)",
-    "git version check fails closed (numeric fields required), tested against a stub git"
+    "git version check fails closed (numeric fields required), tested against a stub git",
+    "Twice a day (Dinis, about 16:30 UTC): stale mark moved to 13 hours"
   ],
   "next": [
     "EU view (ENISA EUVD) paused at about 13:36 UTC: rights@ has not cleared it (R10; a person must read ENISA's legal notice in a browser and quote the reuse and credit clauses; rights@ has put that to Dinis). Restore it only when rights@ and Dinis clear it: set EUVD_ON in scripts/pulse-read.mjs and restore the footer credit. Never read www.enisa.europa.eu by machine. New sources: terms on the register before the first read (R15)",
