@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T14:20:00Z",
+  "updated": "2026-11-19T14:23:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed) Wake 07:18 UTC: opening and closing conductor, AppSec post-review (two lows fixed). Wake 10:18 UTC: opening conductor (nothing new), security pre-review (must-haves met), AppSec post-review (three lows fixed), closing conductor. Wake 13:18 UTC: opening conductor (nothing new; EUVD on the register), security pre-review, AppSec post-review (one medium, four lows, all fixed), closing conductor.",
   "done": [
@@ -34,7 +34,8 @@
     "Signing controls 6 and 7 complete: shallow clones refused (checker, release.sh, CI); 12 tests",
     "Signing controls 7 widened and 8: trailers, signatures, leak scan and exemptions from the last release (release.sh and CI), fail closed; 14 tests",
     "security@'s third ruling: CI checks from BEFORE only; 19 tests incl. the CI step run on a throwaway repo",
-    "security@'s fourth ruling: CI anchor = last successful github-pages deployment; checks from its tree; range anchor..AFTER; 24 tests"
+    "security@'s fourth ruling: CI anchor = last successful github-pages deployment; checks from its tree; range anchor..AFTER; 24 tests",
+    "Control 9: checks in their own CI jobs that run no pushed code; site to the leak scan as data only; 29 tests"
   ],
   "next": [
     "EU view (ENISA EUVD) paused at about 13:36 UTC: rights@ has not cleared it (R10; a person must read ENISA's legal notice in a browser and quote the reuse and credit clauses; rights@ has put that to Dinis). Restore it only when rights@ and Dinis clear it: set EUVD_ON in scripts/pulse-read.mjs and restore the footer credit. Never read www.enisa.europa.eu by machine. New sources: terms on the register before the first read (R15)",
@@ -50,7 +51,7 @@
     "An OpenAPI per source, listed in data.promptugal.news's Swagger of Swaggers",
     "London (Dinis, about 22:20 UTC, PrompTugal__News__Website board/guidance/2026-11-18-london.md): a UK view beside Portugal's, same limits, once data.b@ has NCSC advisories on the register with terms checked and collected; nothing read by cyber.b@ until then",
     "CNPD, Shadowserver, Cloudflare Radar, RIPEstat, abuse.ch stay unread: whether a free sub-site may read non-commercial sources is a licence question for rights@ and Dinis",
-    "security@'s word still to come on civic's findings (trusted checks in a separate job that runs no pushed code; GITHUB_ENV, GITHUB_PATH and symlink risks) and on workflow_dispatch; Dinis's branch protection and tag ruleset close the rest"
+    "Signing controls 1 to 9 are in place; Dinis's branch protection with a required check and a tag ruleset close what a pushed workflow file can still change"
   ],
   "asks": [
     "Dinis: EPSS (FIRST's exploit prediction scores) would be this site's first kept-and-checked prediction. Its scores carry no named licence and ask for attribution; FIRST's general terms allow copying for 'preventative cybersecurity uses' and need written permission otherwise, and do not name EPSS. data.b@ has asked you too (its status.json): may we read it, or should we ask FIRST in writing first?"

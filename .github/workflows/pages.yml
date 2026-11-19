@@ -17,11 +17,18 @@ env:
   # the first release is v0.1.0, and each later push to dev adds one.
   VERSION_BASE: '0.1'
 jobs:
-  build:
+  # Control 9 (security@'s fifth ruling, 16402a95c, from civic): the signature, trailer and leak checks run in jobs that
+  # have run no pushed code. They check out, take each check from the anchor A (the last successful github-pages
+  # deployment, read from GitHub's API) into RUNNER_TEMP, refuse symlinks there, clear NODE_OPTIONS, set
+  # GIT_NO_REPLACE_OBJECTS=1 and call node by an absolute path. The built site reaches the leak scan only as data.
+  # The workflow file itself still comes from the pushed tree: only Dinis's branch protection closes that.
+  verify:
     runs-on: ubuntu-latest
+    env:
+      GIT_NO_REPLACE_OBJECTS: '1'
+      NODE_OPTIONS: ''
     outputs:
-      version: ${{ steps.version.outputs.version }}
-      deploy: ${{ steps.mode.outputs.deploy }}
+      anchor: ${{ steps.trusted.outputs.anchor }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,16 +36,6 @@ jobs:
           persist-credentials: false
       - name: No release during a hold
         run: if [ -e board/HOLD.md ]; then echo "board/HOLD.md exists" >&2; exit 1; fi
-      - id: version
-        name: Work out the next version from the tags
-        run: |
-          last=$(git tag --list "v${VERSION_BASE}.*" | sed "s/^v${VERSION_BASE}\.//" | grep -E '^[0-9]+$' | sort -n | tail -1 || true)
-          if [ -z "$last" ]; then next=0; else next=$((last + 1)); fi
-          echo "version=v${VERSION_BASE}.${next}" >> "$GITHUB_OUTPUT"
-          echo "Version: v${VERSION_BASE}.${next}"
-      - id: mode
-        name: Deploy unless this is the template itself
-        run: if [ -e .factory-template ]; then echo deploy=false >> "$GITHUB_OUTPUT"; else echo deploy=true >> "$GITHUB_OUTPUT"; fi
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -62,11 +59,11 @@ jobs:
             })().catch(e => { console.error(String(e.message || e)); process.exit(1); });
           ')
           echo "ANCHOR=$anchor" >> "$GITHUB_ENV"
-      - name: Take every security check from the anchor's tree
+      - id: trusted
+        name: Take every security check from the anchor's tree
         # Every security check (trailers, signatures, leak scan) and its config comes from A's tree, never the pushed tree
-        # or a tag, and the range checked is A..AFTER; a missing A, an A that is not an ancestor of AFTER, or a missing
-        # copy fails (security@'s controls 7 and 8). The workflow file itself still comes from the pushed tree; only
-        # branch protection with a required check (Dinis's) closes that.
+        # or a tag, and the range checked is A..AFTER; a missing A, an A that is not an ancestor of AFTER, a missing copy
+        # or a symlink on a checker path fails (security@'s controls 7, 8 and 9).
         env:
           AFTER: ${{ github.sha }}
         run: |
@@ -78,17 +75,48 @@ jobs:
           fi
           dir="$RUNNER_TEMP/trusted"; mkdir -p "$dir"
           for f in check-commits.mjs check-signatures.mjs leak-scan.mjs; do
+            mode=$(git ls-tree "$ANCHOR" "scripts/$f" | cut -d' ' -f1)
+            [ "$mode" = "100644" ] || [ "$mode" = "100755" ] || { echo "the trusted copy of $f is missing at the anchor $ANCHOR, or not a plain file: refusing" >&2; exit 1; }
             git show "$ANCHOR:scripts/$f" > "$dir/$f" || { echo "the trusted copy of $f is missing at the anchor $ANCHOR: refusing" >&2; exit 1; }
           done
           echo "TRUSTED_FROM=$ANCHOR" >> "$GITHUB_ENV"; echo "TRUSTED_DIR=$dir" >> "$GITHUB_ENV"
-      - name: Every commit since the last release carries an Agent trailer (trusted copy)
+          echo "anchor=$ANCHOR" >> "$GITHUB_OUTPUT"
+      - name: Every commit since the anchor carries an Agent trailer (trusted copy)
         env:
           AFTER: ${{ github.sha }}
-        run: node "$TRUSTED_DIR/check-commits.mjs" "$TRUSTED_FROM" "$AFTER"
-      - name: Every new commit is signed by its agent's published key and names its session (trusted copy)
+        run: |
+          NODE=$(readlink -f "$(command -v node)")
+          "$NODE" "$TRUSTED_DIR/check-commits.mjs" "$TRUSTED_FROM" "$AFTER"
+      - name: Every commit since the anchor is signed by its agent's published key and names its session (trusted copy)
         env:
           AFTER: ${{ github.sha }}
-        run: node "$TRUSTED_DIR/check-signatures.mjs" "$TRUSTED_FROM" "$AFTER"
+        run: |
+          NODE=$(readlink -f "$(command -v node)")
+          "$NODE" "$TRUSTED_DIR/check-signatures.mjs" "$TRUSTED_FROM" "$AFTER"
+  build:
+    needs: verify
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      deploy: ${{ steps.mode.outputs.deploy }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: version
+        name: Work out the next version from the tags
+        run: |
+          last=$(git tag --list "v${VERSION_BASE}.*" | sed "s/^v${VERSION_BASE}\.//" | grep -E '^[0-9]+$' | sort -n | tail -1 || true)
+          if [ -z "$last" ]; then next=0; else next=$((last + 1)); fi
+          echo "version=v${VERSION_BASE}.${next}" >> "$GITHUB_OUTPUT"
+          echo "Version: v${VERSION_BASE}.${next}"
+      - id: mode
+        name: Deploy unless this is the template itself
+        run: if [ -e .factory-template ]; then echo deploy=false >> "$GITHUB_OUTPUT"; else echo deploy=true >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - run: node scripts/build.mjs
         env:
           SITE_VERSION: ${{ steps.version.outputs.version }}
@@ -97,18 +125,52 @@ jobs:
         run: node scripts/test-leak-scan.mjs
       - name: Pulse reader tests (daily NVD totals)
         run: node scripts/test-pulse-daily.mjs
-      - name: Signature check tests (pinned base, orphans, checker from the last release)
+      - name: Signature check tests (pinned base, orphans, checker from the anchor)
         run: node scripts/test-check-signatures.mjs
-      - name: Leak scan (tracked files and the built site; trusted copy)
-        run: node "$TRUSTED_DIR/leak-scan.mjs"
+      - name: The built site, as data for the leak scan
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: _site
+          retention-days: 1
       - if: steps.mode.outputs.deploy == 'true'
         uses: actions/configure-pages@v5
       - if: steps.mode.outputs.deploy == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
+  leakscan:
+    needs: [verify, build]
+    runs-on: ubuntu-latest
+    env:
+      GIT_NO_REPLACE_OBJECTS: '1'
+      NODE_OPTIONS: ''
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: The built site, as data
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: _site
+      - name: Leak scan (tracked files and the built site; the anchor's copy, no pushed code run)
+        env:
+          ANCHOR: ${{ needs.verify.outputs.anchor }}
+        run: |
+          [ -n "$ANCHOR" ] || { echo "no anchor from the verify job: refusing" >&2; exit 1; }
+          if [ -n "$(find _site -type l -print -quit)" ]; then echo "the built site holds a symlink: refusing" >&2; exit 1; fi
+          mode=$(git ls-tree "$ANCHOR" scripts/leak-scan.mjs | cut -d' ' -f1)
+          [ "$mode" = "100644" ] || [ "$mode" = "100755" ] || { echo "the trusted leak scan is missing at the anchor, or not a plain file: refusing" >&2; exit 1; }
+          git show "$ANCHOR:scripts/leak-scan.mjs" > "$RUNNER_TEMP/leak-scan.mjs"
+          NODE=$(readlink -f "$(command -v node)")
+          "$NODE" "$RUNNER_TEMP/leak-scan.mjs"
   deploy:
-    needs: build
+    needs: [verify, build, leakscan]
     if: needs.build.outputs.deploy == 'true'
     runs-on: ubuntu-latest
     permissions:
@@ -121,8 +183,8 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v4
   tag:
-    needs: [build, deploy]
-    if: ${{ always() && needs.build.result == 'success' && (needs.deploy.result == 'success' || needs.deploy.result == 'skipped') }}
+    needs: [verify, build, leakscan, deploy]
+    if: ${{ always() && needs.verify.result == 'success' && needs.build.result == 'success' && needs.leakscan.result == 'success' && (needs.deploy.result == 'success' || needs.deploy.result == 'skipped') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write

@@ -68,6 +68,16 @@ try {
   r = run(checker, release, orphan2); expect('an orphan signed with its own key fails', !r.ok && /does not descend from the trusted base/.test(r.out), r.out);
   const wfs = readFileSync(join(here, '../.github/workflows/pages.yml'), 'utf8');
   expect('CI refuses a shallow checkout and fetches the whole history', /is-shallow-repository/.test(wfs) && /fetch-depth: 0/.test(wfs), 'pages.yml');
+  // control 9: the checks run in jobs that have run no pushed code; GITHUB_ENV is per job, so a pushed build step that
+  // writes it cannot reach them. Split the workflow into its jobs by their two-space headers.
+  const jobs = {}; let cur = null;
+  for (const line of readFileSync(join(here, '../.github/workflows/pages.yml'), 'utf8').split('\n')) { const m = line.match(/^  ([a-z][a-z0-9_-]*):\s*$/); if (m) { cur = m[1]; jobs[cur] = ''; } else if (cur) jobs[cur] += line + '\n'; }
+  const clean = j => !!jobs[j] && !/node scripts\/|npm |npx /.test(jobs[j]) && /GIT_NO_REPLACE_OBJECTS: '1'/.test(jobs[j]) && /NODE_OPTIONS: ''/.test(jobs[j]) && /NODE=\$\(readlink -f "\$\(command -v node\)"\)/.test(jobs[j]);
+  expect('control 9: the verify job runs no pushed code, clears NODE_OPTIONS, sets GIT_NO_REPLACE_OBJECTS, uses an absolute node', clean('verify') && /check-signatures\.mjs" "\$TRUSTED_FROM"/.test(jobs.verify) && /check-commits\.mjs" "\$TRUSTED_FROM"/.test(jobs.verify), jobs.verify || 'no verify job');
+  expect('control 9: the leak scan job runs no pushed code and takes the site only as data', clean('leakscan') && /download-artifact/.test(jobs.leakscan) && /find _site -type l/.test(jobs.leakscan), jobs.leakscan || 'no leakscan job');
+  expect('control 9: a pushed build step writing GITHUB_ENV cannot change the checks (none run in the build job)', !!jobs.build && !/TRUSTED_DIR|check-signatures\.mjs" |check-commits\.mjs" |leak-scan\.mjs"/.test(jobs.build), jobs.build || 'no build job');
+  expect('control 9: deploy and tag need verify, build and the leak scan', /needs: \[verify, build, leakscan\]/.test(jobs.deploy || '') && /needs\.verify\.result == 'success'/.test(jobs.tag || '') && /needs\.leakscan\.result == 'success'/.test(jobs.tag || ''), (jobs.deploy || '') + (jobs.tag || ''));
+  expect('control 9: symlinks on the checker paths are refused', /git ls-tree "\$ANCHOR" "scripts\/\$f"/.test(jobs.verify || '') && /not a plain file/.test(jobs.verify || ''), 'verify');
   const rel = readFileSync(join(here, 'release.sh'), 'utf8');
   const wf = readFileSync(join(here, '../.github/workflows/pages.yml'), 'utf8');
   expect('CI refuses when there is no anchor (no fallback to an old checker)', /no anchor: no successful deployment recorded/.test(wf) && !/ref=c8fff24/.test(wf), 'pages.yml');
@@ -90,10 +100,10 @@ try {
   r = run(checker, release, git('rev-parse', 'HEAD')); expect('a backdated orphan is refused', !r.ok && /does not descend from the trusted base/.test(r.out) && r.out.includes(old.slice(0, 7)), r.out);
   git('reset', '-q', '--hard', release);
   // the CI step itself, run as written in pages.yml, on this throwaway repository (base swapped for this repo's base)
-  const step = wf.match(/- name: Take every security check from the anchor's tree[\s\S]*?run: \|\n([\s\S]*?)\n      - name:/);
+  const step = wf.match(/name: Take every security check from the anchor's tree[\s\S]*?run: \|\n([\s\S]*?)\n      - name:/);
   if (!step) throw new Error('cannot find the CI trusted-copy step in pages.yml');
   const body = step[1].split('\n').map(l => l.replace(/^ {10}/, '')).join('\n').replace(/base=[0-9a-f]{40}/, `base=${base}`);
-  const ci = (before, after) => { const t = join(dir, 'ci'); rmSync(t, { recursive: true, force: true }); mkdirSync(t); const o = spawnSync('bash', ['-euo', 'pipefail', '-c', body], { cwd: repo, encoding: 'utf8', env: { ...process.env, ANCHOR: before, AFTER: after, RUNNER_TEMP: t, GITHUB_ENV: join(t, 'env') } }); return { ok: o.status === 0, out: (o.stdout + o.stderr).trim() }; };
+  const ci = (before, after) => { const t = join(dir, 'ci'); rmSync(t, { recursive: true, force: true }); mkdirSync(t); const o = spawnSync('bash', ['-euo', 'pipefail', '-c', body], { cwd: repo, encoding: 'utf8', env: { ...process.env, ANCHOR: before, AFTER: after, RUNNER_TEMP: t, GITHUB_ENV: join(t, 'env'), GITHUB_OUTPUT: join(t, 'out') } }); return { ok: o.status === 0, out: (o.stdout + o.stderr).trim() }; };
   git('checkout', '-q', release);
   for (const f of ['check-commits.mjs', 'leak-scan.mjs']) writeFileSync(join(repo, 'scripts', f), readFileSync(join(here, f), 'utf8'));
   const full = commit('a release that carries all three checks');
