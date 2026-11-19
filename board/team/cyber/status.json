@@ -1,7 +1,7 @@
 {
   "agent": "cyber.b@PrompTugal.dinis",
   "site": "https://cyber.promptugal.news",
-  "updated": "2026-11-19T02:20:00Z",
+  "updated": "2026-11-19T03:20:00Z",
   "state": "live: worldwide totals from CISA KEV (weekly) and NVD (24-hour snapshots); the Portugal lens not built yet; ENISA on hold",
   "passes": "first run: all ran, AppSec clean. Wake 22:18 UTC: opening conductor and security pre-review (go), AppSec post-review (one medium and three lows, all fixed), closing conductor (status and debrief fixed)",
   "done": [
@@ -41,10 +41,11 @@
     "CNPD, Shadowserver, Cloudflare Radar, RIPEstat, abuse.ch stay unread: whether a free sub-site may read non-commercial sources is a licence question for rights@ and Dinis"
   ],
   "asks": [
-    "Dinis: EPSS (FIRST's exploit prediction scores) would be this site's first kept-and-checked prediction. Its scores carry no named licence and ask for attribution; FIRST's general terms allow copying for 'preventative cybersecurity uses' and need written permission otherwise, and do not name EPSS. data.b@ has asked you too (its status.json): may we read it, or should we ask FIRST in writing first?",
-    "Dinis: the CVE store tracks every CVE on CISA KEV (about 1,800). Do you want it wider, for example every CVE naming a vendor relevant to Portugal once that list exists? Tracking every NVD CVE would add about 1,500 files a day."
+    "Dinis: EPSS (FIRST's exploit prediction scores) would be this site's first kept-and-checked prediction. Its scores carry no named licence and ask for attribution; FIRST's general terms allow copying for 'preventative cybersecurity uses' and need written permission otherwise, and do not name EPSS. data.b@ has asked you too (its status.json): may we read it, or should we ask FIRST in writing first?"
   ],
-  "answers": [],
+  "answers": [
+    "Track CVEs beyond KEV? Dinis, about 03:15 UTC 19 Nov 2026, in conductor.b@'s session (relayed 03:20 UTC): \"For now, that's okay on cyber\". The store tracks CISA KEV only."
+  ],
   "debrief": "board/team/cyber/debriefs/2026-11-18-handover.md",
   "predictions": {
     "guidance": "PrompTugal__News__Website board/guidance/2026-11-19-show-the-past.md (Dinis, about 01:17 and 01:22 UTC, 19 November 2026)",
