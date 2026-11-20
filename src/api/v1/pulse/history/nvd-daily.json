@@ -26,6 +26,31 @@
         }
       },
       "counted_at": "2026-11-19T06:15:43Z"
+    },
+    {
+      "day": "2026-11-19",
+      "total": 1066,
+      "by_band": {
+        "CRITICAL": {
+          "total": 53
+        },
+        "HIGH": {
+          "total": 271
+        },
+        "MEDIUM": {
+          "total": 425
+        },
+        "LOW": {
+          "total": 53
+        },
+        "NONE": {
+          "total": 0
+        },
+        "unscored": {
+          "total": 264
+        }
+      },
+      "counted_at": "2026-11-20T07:17:07Z"
     }
   ]
 }
