@@ -85,3 +85,7 @@ main.x-main { max-width: 80rem; }
 td a + a, dd a + a { margin-left: 2px; }
 a.x-click:hover .b, a.x-click:focus .b, a.x-click:hover .b-part { opacity: .7; } a.x-click { cursor: pointer; }
 .x-id { white-space: nowrap; }
+
+/* the shared map on the home page (ptmap, vendored): a modest size, never wider than its column */
+.where-map{max-width:26rem;margin:.5rem 0 1rem}
+.where-map svg{width:100%;height:auto;display:block}

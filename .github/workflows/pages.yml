@@ -211,6 +211,8 @@ jobs:
         run: node scripts/test-pulse-daily.mjs
       - name: Signature check tests (pinned base, orphans, checker from the anchor)
         run: node scripts/test-check-signatures.mjs
+      - name: Shared map tests (the registry's pins and review decide)
+        run: node scripts/test-ptmap.mjs
       - name: The built site, as data for the leak scan
         uses: actions/upload-artifact@v4
         with:

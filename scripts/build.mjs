@@ -7,6 +7,7 @@ import { writeCvePages } from './cve-pages.mjs';
 import { cpSync, rmSync, readdirSync, readFileSync, writeFileSync, statSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { sitesBar, ASSETS as BAR, TEMPLATE as BAR_TEMPLATE } from './sites-bar.mjs';
+import { ptmap, ASSETS as MAP } from './ptmap.mjs';
 const version = process.env.SITE_VERSION || 'dev';
 rmSync('_site', { recursive: true, force: true });
 cpSync('src', '_site', { recursive: true });
@@ -19,6 +20,8 @@ const REPO = 'https://github.com/PrompTugal/PrompTugal__News__Cyber';
 const NAV = [['/', 'Pulse'], ['/explore/', 'Explore'], ['/cve/', 'CVEs'], ['/sources/', 'Sources'], ['/api/', 'API'], ['/how/', 'How'], ['/security/', 'Security']];
 const bar = await sitesBar('cyber.promptugal.news');
 console.log(`sites bar (${BAR}): from ${bar.from}`);
+const map = await ptmap();
+console.log(`shared map (${MAP}): from ${map.from}`);
 const mast = cur => `<a class="skip" href="#main">Skip to the content</a>
 ${bar.html}
 <header class="mast">
@@ -77,6 +80,11 @@ ${row('JSON', `<a href="/api/v1/sources/index.json">/api/v1/sources/index.json</
 </html>
 `);
 }
+
+// The shared map on the home page (<!--@map-->): ptmap, vendored and pinned (scripts/ptmap.mjs). Off, the section says so in words.
+const mapHtml = () => `<h2>Where</h2>
+<p>Every figure on this site is worldwide for now: none is for a single place${map.on ? ', so the map has no dots yet' : ''}. Portugal's own figures come with the Portugal lens; <a href="/london/">London</a> has one UK source on the register, not read yet; there is no EU marker while ENISA's EUVD is paused.</p>
+${map.on ? `<div id="ptmap" class="where-map"></div>\n<p class="muted">The shared map of the PrompTugal.news sites (ptmap ${esc(MAP.split('/').pop())}, by designer@). Outline: Natural Earth (public domain), via world-atlas (ISC licence, in the file).</p>` : '<p class="muted">The shared map is off in this build: see the build log.</p>'}`;
 
 // The pulse on the home page (<!--@pulse-->), from src/api/v1/pulse/index.json: numbers and our own labels only.
 const fmtTime = t => esc(String(t).replace('T', ' ').replace(/:\d\d(\.\d+)?Z$/, ' UTC'));
@@ -175,7 +183,9 @@ const cvePages = writeCvePages(esc); // the CVE store's pages, /cve/ (scripts/cv
 for (const f of walk('_site')) {
   if (!/\.(html|js|css|json|md|txt)$/.test(f)) continue;
   let s = readFileSync(f, 'utf8'); const o = s;
-  if (f.endsWith('.html')) s = (bar.assets ? s.replace('</head>', `<link rel="stylesheet" href="${BAR}/sites-bar.css">\n<script src="${BAR}/sites-bar.js" defer></script>\n</head>`) : s).replace('<!--@pulse-->', () => pulseHtml()).replace(/<!--@mast:([^>]*)-->/g, (_, cur) => mast(cur)).replaceAll('<!--@foot-->', foot);
+  if (f.endsWith('.html')) s = (bar.assets ? s.replace('</head>', `<link rel="stylesheet" href="${BAR}/sites-bar.css">\n<script src="${BAR}/sites-bar.js" defer></script>\n</head>`) : s);
+  if (f === join('_site', 'index.html') && map.on) s = s.replace('</head>', `<link rel="stylesheet" href="${MAP}/ptmap.css">\n<script src="${MAP}/ptmap.js" defer></script>\n<script src="/assets/ptmap/map.js" defer></script>\n</head>`);
+  if (f.endsWith('.html')) s = s.replace('<!--@pulse-->', () => pulseHtml()).replace('<!--@map-->', () => mapHtml()).replace(/<!--@mast:([^>]*)-->/g, (_, cur) => mast(cur)).replaceAll('<!--@foot-->', foot);
   if (s.includes('__VERSION__')) s = s.replaceAll('__VERSION__', version);
   if (s !== o) writeFileSync(f, s);
 }
