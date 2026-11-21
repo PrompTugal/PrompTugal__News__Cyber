@@ -21,6 +21,7 @@ node scripts/test-leak-scan.mjs
 node scripts/test-pulse-daily.mjs
 node scripts/test-check-signatures.mjs
 node scripts/test-ptmap.mjs
+node scripts/test-sectors.mjs
 trusted leak-scan.mjs
 trusted check-commits.mjs origin/dev HEAD
 sigcheck origin/dev HEAD
@@ -34,6 +35,7 @@ for i in 1 2 3 4 5; do
   node scripts/test-pulse-daily.mjs >/dev/null
   node scripts/test-check-signatures.mjs >/dev/null
   node scripts/test-ptmap.mjs >/dev/null
+  node scripts/test-sectors.mjs >/dev/null
   trusted leak-scan.mjs >/dev/null
   trusted check-commits.mjs origin/dev HEAD >/dev/null
   sigcheck origin/dev HEAD >/dev/null

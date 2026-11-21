@@ -1,0 +1,296 @@
+{
+ "about": "A proposed mapping of products on CISA's known-exploited list to classes of use, as the first step towards totals by sector. A proposal, not sector exposure: it says what kind of product an entry concerns, not who uses it, and nothing about Portugal's infrastructure.",
+ "status": "proposal",
+ "notice": "Proposal, not sector exposure. Weak signals, not an audit. Counts are CVEs on CISA KEV per class of product; a general-IT CVE concerns every sector at once, so the classes are never summed into sectors.",
+ "by": "cyber.b@PrompTugal.dinis",
+ "made": "2026-11-21",
+ "from": "Dinis Cruz's answer on 18 November 2026, about 23:41 UTC, when asked about publishing a mapping of products to sectors: \"I think that sounds quite good\". He has not approved this mapping.",
+ "license": {
+  "name": "CC BY 4.0",
+  "url": "https://creativecommons.org/licenses/by/4.0/",
+  "note": "This mapping is ours; the vendor and product names are CISA KEV's, as served."
+ },
+ "precedence": "A rule for a vendor and product beats a rule for the whole vendor; anything no rule matches is not classed yet.",
+ "classes": [
+  {
+   "id": "industrial-control",
+   "name": "Industrial and building control",
+   "reason": "Controllers, operator panels and their engineering software are used to run plants, networks and buildings, not offices.",
+   "typical_use": [
+    "energy",
+    "water",
+    "manufacturing",
+    "buildings"
+   ]
+  },
+  {
+   "id": "general-it",
+   "name": "General IT",
+   "reason": "General-purpose software and devices (operating systems, browsers, office and collaboration software, network and security appliances, enterprise and developer software) that organisations of every kind run; nothing in these entries ties them to one sector.",
+   "typical_use": [
+    "every sector"
+   ]
+  }
+ ],
+ "rules": [
+  {
+   "vendor": "Siemens",
+   "product": "SIMATIC CP",
+   "class": "industrial-control",
+   "evidence": "NVD CPEs: siemens simatic_cp_1543-1_firmware, siplus_net_cp_1543-1_firmware",
+   "reason": "A communication processor (CP 1543-1) for SIMATIC industrial controllers, as the NVD product names say."
+  },
+  {
+   "vendor": "Rockwell",
+   "product": "Multiple Products",
+   "class": "industrial-control",
+   "evidence": "NVD CPEs: rockwellautomation rslogix_5000, studio_5000_logix_designer, factorytalk_services_platform",
+   "reason": "The entry concerns Rockwell Automation's Logix controller software and FactoryTalk; only this entry is classed, not every Rockwell product."
+  },
+  {
+   "vendor": "Unitronics",
+   "product": "Vision PLC and HMI",
+   "class": "industrial-control",
+   "evidence": "NVD CPEs: unitronics vision and samba PLC/HMI firmware, visilogic",
+   "reason": "Programmable logic controllers with operator panels; only this entry is classed."
+  },
+  {
+   "vendor": "Delta Electronics",
+   "product": "DOPSoft 2",
+   "class": "industrial-control",
+   "evidence": "NVD CPE: deltaww dopsoft",
+   "reason": "Design software for Delta's industrial operator panels (HMI)."
+  },
+  {
+   "vendor": "Schneider Electric",
+   "product": "U.motion Builder",
+   "class": "industrial-control",
+   "evidence": "NVD CPE: schneider-electric u.motion_builder",
+   "reason": "Configuration software for U.motion building automation, as the product name says: building control, not office IT."
+  },
+  {
+   "vendor": "Microsoft",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Cisco",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Apple",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Adobe",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Google",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Oracle",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Apache",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Ivanti",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Fortinet",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Linux",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Citrix",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "VMware",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Broadcom",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "SonicWall",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Palo Alto Networks",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Mozilla",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Android",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Atlassian",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "SAP",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Red Hat",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "F5",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Juniper",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Check Point",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Sophos",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Zoho",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "SolarWinds",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Progress",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Trend Micro",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "IBM",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "GitLab",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Jenkins",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  },
+  {
+   "vendor": "Veeam",
+   "product": "*",
+   "class": "general-it",
+   "evidence": "computed: the distinct products of this vendor on CISA KEV now (shown beside the rule)",
+   "reason": "A vendor of general-purpose IT: its products on the list are used across every sector."
+  }
+ ]
+}

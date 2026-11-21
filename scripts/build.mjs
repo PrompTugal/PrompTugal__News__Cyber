@@ -4,6 +4,7 @@
 // cyber.b@PrompTugal.dinis, 2026-11-18: partials and source pages added. Every value written into a page
 // passes through esc(); a URL must be https:// or it is dropped (AppSec: no javascript: or data: links).
 import { writeCvePages } from './cve-pages.mjs';
+import { writeSectors } from './sectors.mjs';
 import { cpSync, rmSync, readdirSync, readFileSync, writeFileSync, statSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { sitesBar, ASSETS as BAR, TEMPLATE as BAR_TEMPLATE } from './sites-bar.mjs';
@@ -179,6 +180,8 @@ const fill = { site: 'PrompTugal.news Cyber', SITE: 'CYBER', line: pulse.state =
 writeFileSync('_site/preview.svg', tpl.replace(/\{\{(\w+)\}\}/g, (_, k) => esc(fill[k] ?? '')));
 
 const cvePages = writeCvePages(esc); // the CVE store's pages, /cve/ (scripts/cve-pages.mjs)
+const sectors = writeSectors(esc); // the proposed mapping of products to sectors, /sectors/ (scripts/sectors.mjs)
+if (sectors) console.log(`sectors (a proposal): ${sectors.classes.map(c => `${c.id} ${c.cves}`).join(', ')}, not classed yet ${sectors.not_classed_yet}, of ${sectors.on_kev_now}`);
 
 for (const f of walk('_site')) {
   if (!/\.(html|js|css|json|md|txt)$/.test(f)) continue;
